@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pizza Demo — Pizzeria Italienne à Tripoli | Forno a Legna</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { fredoka: ['Fredoka','sans-serif'], nunito: ['Nunito','sans-serif'], caveat: ['Caveat','cursive'] },
+      colors: {
+        brandRed:'#FF2E4C', brandOrange:'#FF7A00', brandYellow:'#FFC700', brandGreen:'#00B25C',
+        brandPink:'#FF4D8D', brandPurple:'#7C3AED', cream:'#FFF7E9', ink:'#1E0E0A',
+      },
+      boxShadow: {
+        pop:'6px 6px 0 #1E0E0A', pops:'8px 8px 0 #1E0E0A', popsm:'4px 4px 0 #1E0E0A',
+      }
+    }
+  }
+}
+</script>
+<style>
+*{ -webkit-tap-highlight-color:transparent; }
+html{ scroll-behavior:smooth; }
+body{ font-family:'Nunito',sans-serif; background:#FFF7E9; color:#1E0E0A; overflow-x:hidden; }
+.font-fredoka{ font-family:'Fredoka',sans-serif; }
+.font-caveat{ font-family:'Caveat',cursive; }
+/* mesh bg */
+.mesh-hero{
+  background:
+    radial-gradient(circle at 15% 20%, #FFE259 0 180px, transparent 181px),
+    radial-gradient(circle at 85% 15%, #FF4D8D55 0 220px, transparent 221px),
+    radial-gradient(circle at 80% 85%, #00B25C33 0 240px, transparent 241px),
+    radial-gradient(circle at 10% 90%, #7C3AED33 0 200px, transparent 201px),
+    linear-gradient(180deg, #FFF7E9 0%, #FFF0D1 60%, #FFF7E9 100%);
+}
+.grad-text{ background:linear-gradient(92deg,#FF2E4C 0%,#FF7A00 35%,#FFB800 60%,#00B25C 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.grad-btn{ background:linear-gradient(135deg,#FF2E4C 0%,#FF7A00 55%,#FFB800 100%); }
+.grad-green{ background:linear-gradient(135deg,#00B25C,#00E676); }
+.grad-purple{ background:linear-gradient(135deg,#7C3AED,#FF4D8D); }
+.grad-dark{ background:linear-gradient(135deg,#1E0E0A,#4A1D12); }
+.sticker{ border:3px solid #1E0E0A; box-shadow:5px 5px 0 #1E0E0A; }
+.sticker-sm{ border:2.5px solid #1E0E0A; box-shadow:3px 3px 0 #1E0E0A; }
+.wavy-divider{ display:block; width:100%; height:60px; margin-bottom:-1px; }
+/* marquee */
+@keyframes marquee{ 0%{transform:translateX(0)}100%{transform:translateX(-50%)} }
+.marquee-track{ display:flex; width:max-content; animation:marquee 22s linear infinite; }
+.marquee-track:hover{ animation-play-state:paused; }
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-16px) rotate(var(--r,0deg))}}
+.floaty{ animation:floaty 4s ease-in-out infinite; }
+@keyframes spinSlow{ to{transform:rotate(360deg)} }
+.spin-slow{ animation:spinSlow 28s linear infinite; }
+@keyframes wiggle{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.wiggle{ animation:wiggle 2.2s ease-in-out infinite; }
+@keyframes popIn{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.pop-in{ animation:popIn .45s cubic-bezier(.34,1.56,.64,1) both; }
+/* blob */
+.blob{ border-radius:46% 54% 52% 48% / 48% 46% 54% 52%; }
+/* menu card hover */
+.dish-card{ transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .3s; }
+.dish-card:hover{ transform:translateY(-8px) rotate(-.6deg); box-shadow:10px 10px 0 #1E0E0A; }
+/* pizza builder */
+#pizzaVisual{ transition:transform .4s; }
+.pizza-crust{ background:radial-gradient(circle, #FFD98A 0 58%, #E8A94A 58% 66%, #C47A1E 66% 71%, transparent 72%); }
+.pizza-sauce-tomate{ background:radial-gradient(circle, #E63A2E 0 56%, transparent 57%); }
+.pizza-sauce-blanche{ background:radial-gradient(circle, #FFF3DC 0 56%, transparent 57%); }
+.pizza-sauce-pesto{ background:radial-gradient(circle, #3FA34D 0 56%, transparent 57%); }
+.pizza-sauce-bbq{ background:radial-gradient(circle, #7A3B1E 0 56%, transparent 57%); }
+.cheese-layer{ background:radial-gradient(circle, #FFE066 0 52%, #FFC93C 52% 55%, transparent 56%); mix-blend-mode:multiply; opacity:.95; }
+.topping-dot{ position:absolute; border:2px solid #1E0E0A; box-shadow:1px 1px 0 #1E0E0A; }
+/* wheel */
+#wheel{ transition:transform 4.2s cubic-bezier(.12,.8,.12,1); }
+/* scrollbar */
+::-webkit-scrollbar{ width:11px; } ::-webkit-scrollbar-track{ background:#FFF0D1; } ::-webkit-scrollbar-thumb{ background:linear-gradient(#FF2E4C,#FF7A00); border-radius:99px; border:2px solid #FFF0D1; }
+/* reveal */
+.reveal{ opacity:0; transform:translateY(36px) scale(.98); transition:all .8s cubic-bezier(.22,1,.36,1); }
+.reveal.visible{ opacity:1; transform:none; }
+/* nav */
+#navbar{ transition:all .3s; }
+#navbar.scrolled{ background:rgba(255,247,233,.92); backdrop-filter:blur(14px); box-shadow:0 6px 0 rgba(30,14,10,.08); }
+/* cursor */
+#cursor{ position:fixed; width:22px; height:22px; border-radius:50%; background:#FF2E4C; border:2.5px solid #1E0E0A; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width .2s,height .2s,background .2s; mix-blend-mode:normal; display:none; }
+#cursorRing{ position:fixed; width:44px; height:44px; border-radius:50%; border:2.5px dashed #FF7A00; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); display:none; }
+@media(pointer:fine){ #cursor,#cursorRing{ display:block; } }
+/* preloader */
+#preloader{ position:fixed; inset:0; z-index:10000; background:linear-gradient(135deg,#FF2E4C,#FF7A00,#FFC700); display:flex; align-items:center; justify-content:center; flex-direction:column; transition:opacity .6s, visibility .6s; }
+#preloader.hide{ opacity:0; visibility:hidden; }
+@keyframes sliceSpin{0%{transform:rotate(-18deg) scale(1)}50%{transform:rotate(18deg) scale(1.15)}100%{transform:rotate(-18deg) scale(1)}}
+/* toast */
+.toast{ animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both; }
+/* gallery */
+.g-item img{ transition:transform .6s cubic-bezier(.22,1,.36,1); } .g-item:hover img{ transform:scale(1.12) rotate(1deg); }
+/* table seats */
+.table-seat{ transition:all .25s; cursor:pointer; } .table-seat.selected{ background:#1E0E0A!important; color:#FFC700!important; transform:scale(1.1) rotate(-3deg); }
+/* inputs */
+.f-input{ border:2.5px solid #1E0E0A; border-radius:14px; padding:.8rem 1rem; background:#fff; font-weight:700; width:100%; outline:none; transition:.2s; }
+.f-input:focus{ box-shadow:4px 4px 0 #FF2E4C; transform:translate(-2px,-2px); }
+/* timeline */
+.track-step{ transition:all .4s; } .track-step.active .dot{ background:linear-gradient(135deg,#00B25C,#00E676); border-color:#1E0E0A; transform:scale(1.2); } .track-step.active .lbl{ color:#1E0E0A; font-weight:900; }
+/* pattern */
+.dot-pattern{ background-image:radial-gradient(#1E0E0A22 2px, transparent 2.5px); background-size:22px 22px; }
+.zigzag{ background:linear-gradient(-45deg, transparent 12px, #FF2E4C 0) 0 0/24px 24px, linear-gradient(45deg, transparent 12px, #FF2E4C 0) 12px 0/24px 24px; height:24px; }
+.no-scrollbar::-webkit-scrollbar{ display:none; } .no-scrollbar{ scrollbar-width:none; }
+.chip-active{ background:#1E0E0A!important; color:#FFC700!important; transform:rotate(-2deg) scale(1.05); }
+.opt-card.selected{ background:#1E0E0A; color:#fff; transform:rotate(-1deg) scale(1.02); box-shadow:6px 6px 0 #FF2E4C; border-color:#1E0E0A; }
+.opt-card.selected small{ color:#FFC700!important; }
+@media(max-width:768px){ .wavy-divider{height:36px} }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="bg-cream sticker rounded-[2rem] px-10 py-8 text-center rotate-[-3deg]">
+    <div class="text-7xl mb-2" style="animation:sliceSpin 1.2s ease-in-out infinite">🍕</div>
+    <div class="font-fredoka font-bold text-3xl tracking-tight">PIZZA <span class="text-brandRed">DEMO</span></div>
+    <div class="font-caveat text-xl text-brandOrange">Tripoli • Forno a legna...</div>
+    <div class="mt-4 h-3 w-56 bg-cream border-2 border-ink rounded-full overflow-hidden mx-auto"><div id="loadBar" class="h-full grad-btn rounded-full" style="width:0%;transition:width .3s"></div></div>
+  </div>
+</div>
+
+<div id="cursor"></div><div id="cursorRing"></div>
+
+<!-- TOP BAR -->
+<div class="grad-btn text-white text-[13px] font-extrabold py-2 px-4 text-center relative z-50 border-b-[3px] border-ink">
+  <span class="hidden sm:inline"><i class="fa-solid fa-fire mr-2"></i>LIVRAISON GRATUITE dès 80 LYD à Tripoli</span>
+  <span class="sm:hidden">Livraison gratuite dès 80 LYD</span>
+  <span class="mx-2 opacity-60">|</span> <i class="fa-solid fa-phone mr-1"></i> +218 91 234 5678
+  <span class="hidden md:inline mx-2 opacity-60">|</span><span class="hidden md:inline"><i class="fa-solid fa-location-dot mr-1"></i> Hay Al Andalus, Tripoli — طرابلس</span>
+</div>
+
+<!-- NAVBAR -->
+<header id="navbar" class="sticky top-0 z-[100]">
+  <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
+    <a href="#accueil" class="flex items-center gap-3 group">
+      <div class="w-12 h-12 rounded-2xl grad-btn border-[3px] border-ink shadow-popsm flex items-center justify-center text-2xl rotate-[-6deg] group-hover:rotate-[6deg] transition-transform">🍕</div>
+      <div class="leading-none">
+        <div class="font-fredoka font-bold text-2xl tracking-tight">PIZZA <span class="grad-text">DEMO</span></div>
+        <div class="text-[11px] font-black tracking-[.22em] text-brandRed">TRIPOLI • ITALIANA</div>
+      </div>
+    </a>
+    <div class="hidden lg:flex items-center gap-1 font-extrabold text-[15px]">
+      <a href="#accueil" class="navlink px-4 py-2 rounded-full hover:bg-ink hover:text-brandYellow transition">Accueil</a>
+      <a href="#menu" class="navlink px-4 py-2 rounded-full hover:bg-ink hover:text-brandYellow transition">Menu</a>
+      <a href="#createur" class="navlink px-4 py-2 rounded-full hover:bg-ink hover:text-brandYellow transition">Créateur</a>
+      <a href="#offres" class="navlink px-4 py-2 rounded-full hover:bg-ink hover:text-brandYellow transition">Offres</a>
+      <a href="#galerie" class="navlink px-4 py-2 rounded-full hover:bg-ink hover:text-brandYellow transition">Galerie</a>
+      <a href="#avis" class="navlink px-4 py-2 rounded-full hover:bg-ink hover:text-brandYellow transition">Avis</a>
+      <a href="#contact" class="navlink px-4 py-2 rounded-full hover:bg-ink hover:text-brandYellow transition">Contact</a>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="openReservation()" class="hidden md:inline-flex font-fredoka font-semibold bg-white border-[3px] border-ink rounded-full px-5 py-2 shadow-popsm hover:-translate-y-0.5 hover:shadow-pop transition"><i class="fa-regular fa-calendar-check mr-2 text-brandRed"></i>Réserver</button>
+      <button onclick="toggleCart(true)" class="relative font-fredoka font-semibold text-white grad-btn border-[3px] border-ink rounded-full px-5 py-2 shadow-popsm hover:-translate-y-0.5 transition">
+        <i class="fa-solid fa-basket-shopping mr-2"></i><span class="hidden sm:inline">Commander</span>
+        <span id="cartCount" class="absolute -top-3 -right-2 bg-brandYellow text-ink border-[2.5px] border-ink rounded-full min-w-[28px] h-7 px-1 flex items-center justify-center font-black text-sm rotate-6">0</span>
+      </button>
+      <button id="burger" class="lg:hidden w-11 h-11 bg-brandYellow border-[3px] border-ink rounded-xl shadow-popsm flex items-center justify-center text-xl"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </nav>
+  <div id="mobileMenu" class="lg:hidden hidden mx-4 mb-3 bg-white border-[3px] border-ink rounded-2xl shadow-pop p-3 font-extrabold">
+    <div class="grid grid-cols-2 gap-2">
+      <a href="#accueil" class="mlink px-4 py-3 rounded-xl bg-cream border-2 border-ink">Accueil</a>
+      <a href="#menu" class="mlink px-4 py-3 rounded-xl bg-cream border-2 border-ink">Menu</a>
+      <a href="#createur" class="mlink px-4 py-3 rounded-xl bg-cream border-2 border-ink">Créateur</a>
+      <a href="#offres" class="mlink px-4 py-3 rounded-xl bg-cream border-2 border-ink">Offres</a>
+      <a href="#galerie" class="mlink px-4 py-3 rounded-xl bg-cream border-2 border-ink">Galerie</a>
+      <a href="#avis" class="mlink px-4 py-3 rounded-xl bg-cream border-2 border-ink">Avis</a>
+      <a href="#reservation" class="mlink px-4 py-3 rounded-xl grad-btn text-white border-2 border-ink">Réserver</a>
+      <a href="#contact" class="mlink px-4 py-3 rounded-xl grad-green text-white border-2 border-ink">Contact</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ============ HERO ============ -->
+<section id="accueil" class="mesh-hero relative overflow-hidden pt-8 pb-0">
+  <div class="absolute top-24 left-[6%] w-16 h-16 bg-brandPink rounded-full border-[3px] border-ink floaty opacity-90 hidden md:block" style="--r:-10deg"></div>
+  <div class="absolute top-40 right-[8%] w-12 h-12 bg-brandGreen rounded-2xl border-[3px] border-ink floaty hidden md:block" style="--r:12deg;animation-delay:.8s"></div>
+  <div class="absolute bottom-40 left-[3%] font-caveat text-2xl rotate-[-12deg] bg-white sticker-sm rounded-xl px-3 py-1 hidden lg:block">Mamma mia! 🤌</div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-10 items-center pb-10">
+    <div class="reveal visible">
+      <div class="inline-flex items-center gap-2 bg-white sticker-sm rounded-full pl-2 pr-4 py-1.5 font-extrabold text-sm rotate-[-2deg]">
+        <span class="grad-green text-white text-xs px-3 py-1 rounded-full border-2 border-ink"><i class="fa-solid fa-fire"></i> FORNO A LEGNA</span>
+        Authentique depuis 2012 • Tripoli
+      </div>
+      <h1 class="font-fredoka font-bold leading-[.95] mt-5 text-[13vw] sm:text-7xl xl:text-[5.6rem] tracking-tight">
+        LA VRAIE<br><span class="grad-text drop-shadow-sm">PIZZA ITALIENNE</span><br>AU CŒUR DE <span class="relative inline-block">TRIPOLI<span class="absolute -bottom-2 left-0 w-full h-4 bg-brandYellow border-2 border-ink rounded-full -z-10 rotate-[-1deg]"></span></span>
+      </h1>
+      <p class="mt-5 text-lg font-semibold text-ink/70 max-w-xl">Pâte fermentée 48h, tomates San Marzano, fior di latte & four à bois à 450°C. Livrée chaude en <b class="text-brandRed">25 minutes</b> partout à Tripoli — de Gargaresh à Tajoura.</p>
+      <div class="flex flex-wrap gap-3 mt-7">
+        <button onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})" class="font-fredoka font-semibold text-lg text-white grad-btn border-[3px] border-ink rounded-full px-8 py-3.5 shadow-pop hover:-translate-y-1 hover:shadow-pops transition"><i class="fa-solid fa-pizza-slice mr-2"></i>Voir le Menu</button>
+        <button onclick="document.getElementById('createur').scrollIntoView({behavior:'smooth'})" class="font-fredoka font-semibold text-lg bg-white border-[3px] border-ink rounded-full px-8 py-3.5 shadow-pop hover:-translate-y-1 hover:bg-brandYellow transition"><i class="fa-solid fa-wand-magic-sparkles mr-2 text-brandPurple"></i>Créer ma Pizza</button>
+      </div>
+      <div class="flex items-center gap-5 mt-8">
+        <div class="flex -space-x-3">
+          <img src="https://i.pravatar.cc/80?img=12" class="w-11 h-11 rounded-full border-[3px] border-ink object-cover bg-white" alt="client">
+          <img src="https://i.pravatar.cc/80?img=32" class="w-11 h-11 rounded-full border-[3px] border-ink object-cover bg-white" alt="client">
+          <img src="https://i.pravatar.cc/80?img=47" class="w-11 h-11 rounded-full border-[3px] border-ink object-cover bg-white" alt="client">
+          <div class="w-11 h-11 rounded-full border-[3px] border-ink bg-ink text-brandYellow flex items-center justify-center text-xs font-black">15k+</div>
+        </div>
+        <div class="text-sm font-extrabold"><div class="text-brandOrange tracking-tight"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> 4.9/5</div><div class="text-ink/60">2 400+ avis vérifiés à Tripoli</div></div>
+        <div class="hidden sm:flex items-center gap-2 bg-brandGreen text-white border-[3px] border-ink rounded-2xl px-3 py-2 shadow-popsm font-black text-sm rotate-2"><span class="w-2.5 h-2.5 bg-green-300 rounded-full animate-pulse"></span>OUVERT • jusqu'à 00:00</div>
+      </div>
+      <div class="grid grid-cols-3 gap-3 mt-7 max-w-md">
+        <div class="bg-white sticker-sm rounded-2xl p-3 text-center rotate-[-2deg]"><div class="font-fredoka font-bold text-2xl text-brandRed">48h</div><div class="text-xs font-black text-ink/60">FERMENTATION</div></div>
+        <div class="bg-white sticker-sm rounded-2xl p-3 text-center rotate-[1.5deg]"><div class="font-fredoka font-bold text-2xl text-brandOrange">450°C</div><div class="text-xs font-black text-ink/60">FOUR À BOIS</div></div>
+        <div class="bg-white sticker-sm rounded-2xl p-3 text-center rotate-[-1deg]"><div class="font-fredoka font-bold text-2xl text-brandGreen">25min</div><div class="text-xs font-black text-ink/60">LIVRAISON</div></div>
+      </div>
+    </div>
+
+    <div class="relative flex justify-center items-center reveal visible">
+      <div class="absolute w-[105%] max-w-[560px] aspect-square blob grad-btn opacity-15 blur-2xl"></div>
+      <div class="absolute w-[88%] max-w-[480px] aspect-square bg-white border-[4px] border-ink blob shadow-pops rotate-3"></div>
+      <div class="relative w-[86%] max-w-[460px]">
+        <img id="heroPizza" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=900&q=80" alt="Pizza Demo signature" class="w-full aspect-square object-cover rounded-full border-[5px] border-ink shadow-pops spin-slow">
+        <div class="absolute inset-0 rounded-full border-[10px] border-white/20 pointer-events-none"></div>
+        <div class="absolute -left-4 sm:-left-10 top-8 bg-brandYellow sticker rounded-2xl px-4 py-2 rotate-[-10deg] floaty"><div class="text-[11px] font-black">DÈS</div><div class="font-fredoka font-bold text-2xl leading-none">38 LYD</div></div>
+        <div class="absolute -right-2 sm:-right-8 top-1/3 bg-white sticker rounded-2xl px-4 py-2 rotate-[8deg] floaty flex items-center gap-2" style="animation-delay:.6s"><span class="w-10 h-10 rounded-full grad-green flex items-center justify-center text-white border-2 border-ink"><i class="fa-solid fa-motorcycle"></i></span><div class="leading-tight"><div class="font-black text-sm">Livraison éclair</div><div class="text-xs font-bold text-ink/60">Hay Al Andalus • Gargaresh</div></div></div>
+        <div class="absolute left-6 -bottom-4 bg-ink text-white rounded-2xl px-5 py-3 rotate-[-4deg] shadow-pop flex items-center gap-3 border-[3px] border-ink">
+          <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=200&q=80" class="w-12 h-12 rounded-xl object-cover border-2 border-brandYellow" alt="part">
+          <div><div class="font-fredoka font-semibold">Demo Special Tripoli</div><div class="text-brandYellow font-black text-sm">68 LYD <span class="line-through text-white/40 ml-1">80</span></div></div>
+          <button onclick="addToCart('demo-special',1)" class="w-10 h-10 rounded-full grad-btn border-2 border-white flex items-center justify-center hover:scale-110 transition"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        <div class="absolute -top-2 right-10 bg-brandPink text-white sticker-sm rounded-full px-4 py-1 font-caveat text-xl rotate-6 wiggle">100% Halal!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- marquee -->
+  <div class="bg-ink text-white border-y-[4px] border-ink py-3 overflow-hidden -rotate-1 scale-[1.02] relative z-10">
+    <div class="marquee-track font-fredoka font-semibold text-lg gap-0">
+      <div class="flex items-center gap-8 pr-8 whitespace-nowrap" id="marqueeContent">
+        <span>PIZZA NAPOLETANA <span class="text-brandYellow">✦</span></span><span>FORNO A LEGNA <span class="text-brandPink">✦</span></span><span>PÂTE 48H <span class="text-brandGreen">✦</span></span><span>BURRATA FRESCA <span class="text-brandYellow">✦</span></span><span>LIVRAISON TRIPOLI <span class="text-brandOrange">✦</span></span><span>TIRAMISU MAISON <span class="text-brandPink">✦</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<section class="bg-brandYellow border-b-[4px] border-ink">
+  <div class="max-w-7xl mx-auto px-4 py-4 grid grid-cols-2 md:grid-cols-4 gap-3 font-extrabold text-sm">
+    <div class="flex items-center gap-3 bg-white/70 border-2 border-ink rounded-2xl px-3 py-2"><span class="w-10 h-10 rounded-xl bg-brandRed text-white flex items-center justify-center border-2 border-ink text-lg"><i class="fa-solid fa-wheat-awn"></i></span>Farine italienne Caputo</div>
+    <div class="flex items-center gap-3 bg-white/70 border-2 border-ink rounded-2xl px-3 py-2"><span class="w-10 h-10 rounded-xl grad-green text-white flex items-center justify-center border-2 border-ink text-lg"><i class="fa-solid fa-leaf"></i></span>Produits frais & Halal</div>
+    <div class="flex items-center gap-3 bg-white/70 border-2 border-ink rounded-2xl px-3 py-2"><span class="w-10 h-10 rounded-xl grad-purple text-white flex items-center justify-center border-2 border-ink text-lg"><i class="fa-solid fa-user-chef"></i></span>Chef Napolitain Enzo</div>
+    <div class="flex items-center gap-3 bg-white/70 border-2 border-ink rounded-2xl px-3 py-2"><span class="w-10 h-10 rounded-xl bg-ink text-brandYellow flex items-center justify-center border-2 border-ink text-lg"><i class="fa-solid fa-money-bill-wave"></i></span>Cash • Carte • Mobile</div>
+  </div>
+</section>
+
+<!-- BEST SELLERS -->
+<section id="specialites" class="max-w-7xl mx-auto px-4 sm:px-6 pt-16 pb-6">
+  <div class="flex flex-wrap items-end justify-between gap-4 reveal">
+    <div>
+      <div class="inline-block bg-brandPink text-white font-black text-sm px-4 py-1.5 rounded-full border-[3px] border-ink shadow-popsm rotate-[-2deg]"><i class="fa-solid fa-crown mr-2"></i>LES INCONTOURNABLES</div>
+      <h2 class="font-fredoka font-bold text-4xl sm:text-5xl mt-3">Best-sellers <span class="font-caveat text-brandOrange text-5xl">qui font danser Tripoli !</span></h2>
+    </div>
+    <div class="flex gap-2">
+      <button onclick="scrollBest(-1)" class="w-12 h-12 bg-white border-[3px] border-ink rounded-full shadow-popsm hover:bg-brandYellow transition"><i class="fa-solid fa-arrow-left"></i></button>
+      <button onclick="scrollBest(1)" class="w-12 h-12 bg-ink text-brandYellow border-[3px] border-ink rounded-full shadow-popsm hover:bg-brandRed hover:text-white transition"><i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+  <div id="bestRow" class="flex gap-5 overflow-x-auto no-scrollbar snap-x snap-mandatory py-8 px-1 reveal"></div>
+</section>
+
+<!-- MENU -->
+<section id="menu" class="relative bg-white border-y-[4px] border-ink dot-pattern py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="text-center reveal">
+      <div class="inline-block grad-btn text-white font-black text-sm px-5 py-2 rounded-full border-[3px] border-ink shadow-popsm rotate-2">NOTRE MENU • antipasti • pizze • dolci</div>
+      <h2 class="font-fredoka font-bold text-4xl sm:text-6xl mt-4">Un festival de <span class="grad-text">saveurs italiennes</span></h2>
+      <p class="font-caveat text-2xl text-ink/60 mt-1">Fatto con amore, mangiato con gioia!</p>
+    </div>
+
+    <div class="mt-8 bg-cream sticker rounded-[1.8rem] p-4 sm:p-5 flex flex-col lg:flex-row gap-4 items-stretch lg:items-center reveal">
+      <div class="relative flex-1">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-ink/40"></i>
+        <input id="searchInput" oninput="renderMenu()" placeholder="Rechercher une pizza, un dessert... (ex: burrata, diavola)" class="f-input !pl-11 !rounded-full">
+      </div>
+      <div class="flex flex-wrap gap-2 justify-center" id="catChips">
+        <button data-cat="all" onclick="setCat('all',this)" class="chip chip-active font-extrabold text-sm px-5 py-2.5 rounded-full bg-white border-[2.5px] border-ink transition">Toutes</button>
+        <button data-cat="classiques" onclick="setCat('classiques',this)" class="chip font-extrabold text-sm px-5 py-2.5 rounded-full bg-white border-[2.5px] border-ink transition">Classiques</button>
+        <button data-cat="speciales" onclick="setCat('speciales',this)" class="chip font-extrabold text-sm px-5 py-2.5 rounded-full bg-white border-[2.5px] border-ink transition">Spécialités</button>
+        <button data-cat="calzone" onclick="setCat('calzone',this)" class="chip font-extrabold text-sm px-5 py-2.5 rounded-full bg-white border-[2.5px] border-ink transition">Calzone</button>
+        <button data-cat="dolci" onclick="setCat('dolci',this)" class="chip font-extrabold text-sm px-5 py-2.5 rounded-full bg-white border-[2.5px] border-ink transition">Desserts & Boissons</button>
+      </div>
+      <div class="flex gap-2 justify-center">
+        <button id="vegToggle" onclick="toggleVeg()" class="font-extrabold text-sm px-4 py-2.5 rounded-full bg-white border-[2.5px] border-ink flex items-center gap-2"><i class="fa-solid fa-seedling text-brandGreen"></i>Veggie</button>
+        <select id="sortSelect" onchange="renderMenu()" class="font-extrabold text-sm px-4 py-2.5 rounded-full bg-white border-[2.5px] border-ink outline-none cursor-pointer"><option value="pop">Plus populaires</option><option value="asc">Prix croissant</option><option value="desc">Prix décroissant</option></select>
+      </div>
+    </div>
+
+    <div id="menuGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8"></div>
+    <div id="menuEmpty" class="hidden text-center py-16"><div class="text-6xl mb-3">🍕</div><div class="font-fredoka font-semibold text-2xl">Mamma mia, rien trouvé !</div><p class="font-bold text-ink/50">Essaie un autre mot ou crée ta propre pizza.</p></div>
+  </div>
+</section>
+
+<!-- BUILDER -->
+<section id="createur" class="relative py-16 overflow-hidden" style="background:linear-gradient(135deg,#1E0E0A 0%,#3B1420 45%,#5B1E0E 70%,#7C2D12 100%)">
+  <div class="absolute inset-0 opacity-20" style="background-image:radial-gradient(#FFC700 2px,transparent 2.5px);background-size:26px 26px"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 relative">
+    <div class="text-center reveal">
+      <div class="inline-block bg-brandYellow font-black text-sm px-5 py-2 rounded-full border-[3px] border-white shadow-pop rotate-[-2deg]">PIZZA STUDIO • 100% PERSONNALISÉ</div>
+      <h2 class="font-fredoka font-bold text-4xl sm:text-6xl mt-4 text-white">Deviens le <span class="text-brandYellow">Pizzaiolo !</span></h2>
+      <p class="text-white/70 font-bold mt-2">Compose ta pizza, vois-la se construire en direct, et ajoute-la au panier.</p>
+    </div>
+
+    <div class="grid lg:grid-cols-[1fr_380px_340px] gap-6 mt-10">
+      <!-- options -->
+      <div class="bg-cream border-[3px] border-ink rounded-[1.8rem] shadow-pop p-5 sm:p-7 reveal">
+        <div class="mb-6"><h3 class="font-fredoka font-semibold text-xl mb-3"><span class="w-8 h-8 inline-flex items-center justify-center bg-brandRed text-white rounded-full border-2 border-ink mr-2 text-sm">1</span>Taille</h3>
+          <div id="sizeOpts" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div></div>
+        <div class="mb-6"><h3 class="font-fredoka font-semibold text-xl mb-3"><span class="w-8 h-8 inline-flex items-center justify-center bg-brandOrange text-white rounded-full border-2 border-ink mr-2 text-sm">2</span>Pâte</h3>
+          <div id="doughOpts" class="grid sm:grid-cols-2 gap-3"></div></div>
+        <div class="mb-6"><h3 class="font-fredoka font-semibold text-xl mb-3"><span class="w-8 h-8 inline-flex items-center justify-center bg-brandGreen text-white rounded-full border-2 border-ink mr-2 text-sm">3</span>Sauce</h3>
+          <div id="sauceOpts" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div></div>
+        <div class="mb-2"><h3 class="font-fredoka font-semibold text-xl mb-3"><span class="w-8 h-8 inline-flex items-center justify-center grad-purple text-white rounded-full border-2 border-ink mr-2 text-sm">4</span>Fromages & Garnitures <span class="text-sm font-nunito font-bold text-ink/50">(multi-choix)</span></h3>
+          <div id="cheeseOpts" class="flex flex-wrap gap-2 mb-3"></div>
+          <div id="topOpts" class="flex flex-wrap gap-2"></div></div>
+      </div>
+      <!-- visual -->
+      <div class="bg-white border-[3px] border-ink rounded-[1.8rem] shadow-pop p-6 flex flex-col items-center reveal">
+        <div class="font-caveat text-2xl text-brandRed -rotate-2">Ta création en direct...</div>
+        <div id="pizzaVisual" class="relative w-64 h-64 sm:w-72 sm:h-72 my-4">
+          <div class="absolute inset-0 rounded-full border-[4px] border-ink pizza-crust shadow-pop"></div>
+          <div id="sauceLayer" class="absolute inset-[10%] rounded-full pizza-sauce-tomate"></div>
+          <div id="cheeseLayer" class="absolute inset-[10%] rounded-full cheese-layer"></div>
+          <div id="topsLayer" class="absolute inset-[12%]"></div>
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none"><div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-[1px] border-2 border-white/40"></div></div>
+        </div>
+        <div id="builderBadges" class="flex flex-wrap gap-2 justify-center min-h-[32px]"></div>
+        <div class="w-full bg-cream border-2 border-ink rounded-2xl p-4 mt-3 text-sm font-extrabold">
+          <div class="flex justify-between"><span class="text-ink/60">Taille</span><span id="sumSize">Moyenne 32cm</span></div>
+          <div class="flex justify-between"><span class="text-ink/60">Pâte</span><span id="sumDough">Classique</span></div>
+          <div class="flex justify-between"><span class="text-ink/60">Suppléments</span><span id="sumExtra">0 LYD</span></div>
+          <div class="flex justify-between"><span class="text-ink/60">Calories estimées</span><span id="sumCal">~850 kcal</span></div>
+        </div>
+      </div>
+      <!-- summary -->
+      <div class="flex flex-col gap-5 reveal">
+        <div class="grad-btn border-[3px] border-ink rounded-[1.8rem] shadow-pop p-6 text-white rotate-1">
+          <div class="font-black text-sm tracking-widest opacity-80">PRIX TOTAL</div>
+          <div class="font-fredoka font-bold text-6xl"><span id="builderPrice">45</span><span class="text-2xl"> LYD</span></div>
+          <div class="font-caveat text-2xl text-brandYellow">Fatta a mano per te!</div>
+          <input id="builderName" placeholder="Nom de ta pizza (ex: Tripoli Inferno)" class="mt-3 w-full rounded-xl border-[2.5px] border-ink px-4 py-2.5 text-ink font-bold outline-none">
+          <button onclick="addBuilderToCart()" class="mt-3 w-full bg-ink text-brandYellow font-fredoka font-semibold text-lg rounded-full py-3 border-[3px] border-white/20 hover:bg-black hover:scale-[1.02] transition"><i class="fa-solid fa-basket-shopping mr-2"></i>Ajouter au panier</button>
+          <button onclick="randomPizza()" class="mt-2 w-full bg-white/15 font-extrabold rounded-full py-2.5 border-2 border-white/30 hover:bg-white/25 transition"><i class="fa-solid fa-dice mr-2"></i>Surprends-moi !</button>
+        </div>
+        <div class="bg-brandYellow border-[3px] border-ink rounded-[1.5rem] shadow-pop p-5 -rotate-1">
+          <div class="font-fredoka font-semibold text-lg"><i class="fa-solid fa-lightbulb mr-2"></i>Astuce du Chef Enzo</div>
+          <p class="font-bold text-sm mt-1">Burrata + roquette + tomates cerises = la combinaison préférée des Tripolitains. Essaie la pâte farcie au fromage, c'est une tuerie !</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFERS -->
+<section id="offres" class="py-16 max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="text-center reveal">
+    <div class="inline-block bg-ink text-brandYellow font-black text-sm px-5 py-2 rounded-full border-[3px] border-ink shadow-popsm rotate-2">OFFRES EXPLOSIVES • Tripoli only</div>
+    <h2 class="font-fredoka font-bold text-4xl sm:text-6xl mt-4">Des promos <span class="grad-text">qui claquent !</span></h2>
+  </div>
+
+  <div class="grid lg:grid-cols-3 gap-6 mt-10">
+    <div class="lg:col-span-2 grad-dark border-[3px] border-ink rounded-[2rem] shadow-pop p-7 sm:p-9 relative overflow-hidden reveal">
+      <div class="absolute -right-10 -top-10 w-56 h-56 rounded-full bg-brandYellow/20 blur-2xl"></div>
+      <div class="absolute right-6 bottom-6 opacity-20 text-[9rem] leading-none select-none">🍕</div>
+      <div class="inline-flex items-center gap-2 bg-brandRed text-white font-black text-sm px-4 py-1.5 rounded-full border-2 border-white/30"><span class="w-2 h-2 bg-white rounded-full animate-ping"></span>WEEK-END FAMIGLIA</div>
+      <h3 class="font-fredoka font-bold text-3xl sm:text-5xl text-white mt-3 leading-tight">2 PIZZAS GRANDES<br>+ 4 BOISSONS + TIRAMISU<br><span class="text-brandYellow">129 LYD</span> <span class="line-through text-white/40 text-2xl">176 LYD</span></h3>
+      <p class="text-white/70 font-bold mt-2">Valable vendredi → dimanche • Sur place, à emporter & livraison.</p>
+      <div class="flex gap-3 mt-5">
+        <div class="bg-white border-[3px] border-ink rounded-2xl px-4 py-2 text-center min-w-[76px] -rotate-2"><div id="cdD" class="font-fredoka font-bold text-3xl">00</div><div class="text-[11px] font-black">JOURS</div></div>
+        <div class="bg-white border-[3px] border-ink rounded-2xl px-4 py-2 text-center min-w-[76px] rotate-2"><div id="cdH" class="font-fredoka font-bold text-3xl">00</div><div class="text-[11px] font-black">HEURES</div></div>
+        <div class="bg-white border-[3px] border-ink rounded-2xl px-4 py-2 text-center min-w-[76px] -rotate-1"><div id="cdM" class="font-fredoka font-bold text-3xl">00</div><div class="text-[11px] font-black">MIN</div></div>
+        <div class="bg-brandYellow border-[3px] border-ink rounded-2xl px-4 py-2 text-center min-w-[76px] rotate-1"><div id="cdS" class="font-fredoka font-bold text-3xl">00</div><div class="text-[11px] font-black">SEC</div></div>
+      </div>
+      <div class="flex flex-wrap gap-3 mt-6">
+        <button onclick="addToCart('pack-familia',1)" class="font-fredoka font-semibold bg-brandYellow border-[3px] border-ink rounded-full px-7 py-3 shadow-popsm hover:-translate-y-1 transition text-ink"><i class="fa-solid fa-bolt mr-2"></i>J'en profite !</button>
+        <button onclick="copyCode('FAMIGLIA129')" class="font-extrabold text-white border-[2.5px] border-dashed border-white/60 rounded-full px-6 py-3 hover:bg-white/10 transition"><i class="fa-regular fa-copy mr-2"></i>Code: FAMIGLIA129</button>
+      </div>
+    </div>
+
+    <div class="bg-white border-[3px] border-ink rounded-[2rem] shadow-pop p-6 text-center reveal relative overflow-hidden">
+      <div class="absolute top-0 left-0 right-0 h-3 grad-btn"></div>
+      <h3 class="font-fredoka font-bold text-2xl mt-2">ROUE DE LA FORTUNA</h3>
+      <p class="font-caveat text-xl text-brandRed">Tourne & gagne jusqu'à -20% !</p>
+      <div class="relative w-60 h-60 mx-auto my-4">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-10 text-3xl drop-shadow">🔻</div>
+        <div id="wheel" class="w-60 h-60 rounded-full border-[5px] border-ink shadow-pop overflow-hidden relative" style="background:conic-gradient(#FF2E4C 0 60deg,#FFC700 60deg 120deg,#00B25C 120deg 180deg,#7C3AED 180deg 240deg,#FF7A00 240deg 300deg,#FF4D8D 300deg 360deg)">
+          <div class="absolute inset-0 flex items-center justify-center"><div class="w-16 h-16 bg-ink text-brandYellow rounded-full border-4 border-white flex items-center justify-center text-2xl font-black">?</div></div>
+          <div class="absolute inset-0 font-black text-white text-[11px]" id="wheelLabels"></div>
+        </div>
+      </div>
+      <button id="spinBtn" onclick="spinWheel()" class="w-full font-fredoka font-semibold text-lg text-white grad-purple border-[3px] border-ink rounded-full py-3 shadow-popsm hover:-translate-y-0.5 transition"><i class="fa-solid fa-rotate mr-2"></i>TOURNER LA ROUE</button>
+      <div id="wheelResult" class="mt-3 font-extrabold text-sm min-h-[24px] text-brandGreen"></div>
+      <div class="text-xs font-bold text-ink/50">1 tour par visite • Gain applicable au panier</div>
+    </div>
+  </div>
+
+  <div class="grid sm:grid-cols-3 gap-5 mt-6">
+    <div class="bg-brandYellow border-[3px] border-ink rounded-3xl shadow-pop p-5 rotate-[-1deg] reveal"><div class="font-black text-sm bg-ink text-white inline-block px-3 py-1 rounded-full">ÉTUDIANTS -15%</div><h4 class="font-fredoka font-semibold text-xl mt-2">Show ta carte, on s'occupe du reste !</h4><p class="text-sm font-bold text-ink/60">Universités de Tripoli • Sur place.</p></div>
+    <div class="grad-green border-[3px] border-ink rounded-3xl shadow-pop p-5 rotate-[1deg] text-white reveal"><div class="font-black text-sm bg-white text-brandGreen inline-block px-3 py-1 rounded-full">MIDI EXPRESS 29 LYD</div><h4 class="font-fredoka font-semibold text-xl mt-2">Margherita + boisson en 15 min</h4><p class="text-sm font-bold text-white/70">Lun-Jeu • 12h-15h • À emporter.</p></div>
+    <div class="bg-brandPink border-[3px] border-ink rounded-3xl shadow-pop p-5 rotate-[-1deg] text-white reveal"><div class="font-black text-sm bg-white text-brandPink inline-block px-3 py-1 rounded-full">FIDÉLITÉ</div><h4 class="font-fredoka font-semibold text-xl mt-2">8 pizzas = la 9ème OFFERTE</h4><p class="text-sm font-bold text-white/80">Carte tamponnée en caisse & en ligne.</p></div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="galerie" class="bg-ink py-16 border-y-[4px] border-ink relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex flex-wrap items-end justify-between gap-4 reveal">
+      <div><div class="inline-block bg-brandYellow font-black text-sm px-4 py-1.5 rounded-full border-[3px] border-white rotate-[-2deg]">GALERIE • dal forno</div>
+      <h2 class="font-fredoka font-bold text-4xl sm:text-5xl text-white mt-3">Ça sent bon jusqu'ici <span class="font-caveat text-brandYellow">buonissimo !</span></h2></div>
+      <div class="text-white/60 font-bold text-sm"><i class="fa-brands fa-instagram mr-2 text-brandPink"></i>@pizzademo.tripoli • 48k abonnés</div>
+    </div>
+    <div id="galleryGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 auto-rows-[160px] md:auto-rows-[190px] reveal"></div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="avis" class="py-16 max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="text-center reveal"><div class="inline-block grad-green text-white font-black text-sm px-5 py-2 rounded-full border-[3px] border-ink shadow-popsm -rotate-2">ILS NOUS ADORENT • 4.9/5</div>
+  <h2 class="font-fredoka font-bold text-4xl sm:text-6xl mt-4">Tripoli <span class="grad-text">en parle mieux que nous</span></h2></div>
+  <div class="grid lg:grid-cols-[1fr_380px] gap-6 mt-10">
+    <div class="relative reveal">
+      <div id="reviewTrack" class="overflow-hidden rounded-[2rem] border-[3px] border-ink shadow-pop bg-white"><div id="reviewInner" class="flex transition-transform duration-500"></div></div>
+      <div class="flex items-center justify-center gap-3 mt-5">
+        <button onclick="moveReview(-1)" class="w-11 h-11 bg-white border-[3px] border-ink rounded-full shadow-popsm hover:bg-brandYellow"><i class="fa-solid fa-arrow-left"></i></button>
+        <div id="reviewDots" class="flex gap-2"></div>
+        <button onclick="moveReview(1)" class="w-11 h-11 bg-ink text-brandYellow border-[3px] border-ink rounded-full shadow-popsm hover:bg-brandRed hover:text-white"><i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+    </div>
+    <div class="bg-cream sticker rounded-[2rem] p-6 reveal">
+      <h3 class="font-fredoka font-semibold text-2xl">Laisse ton avis !</h3>
+      <p class="font-bold text-sm text-ink/60">Ton retour fait grandir la famiglia.</p>
+      <div class="flex gap-1 mt-3 text-2xl" id="starPick"><button onclick="setStars(1)" class="starBtn text-brandYellow"><i class="fa-solid fa-star"></i></button><button onclick="setStars(2)" class="starBtn text-brandYellow"><i class="fa-solid fa-star"></i></button><button onclick="setStars(3)" class="starBtn text-brandYellow"><i class="fa-solid fa-star"></i></button><button onclick="setStars(4)" class="starBtn text-brandYellow"><i class="fa-solid fa-star"></i></button><button onclick="setStars(5)" class="starBtn text-brandYellow"><i class="fa-solid fa-star"></i></button></div>
+      <input id="revName" placeholder="Ton prénom (ex: Sara de Tajoura)" class="f-input mt-3 !py-2.5 text-sm">
+      <textarea id="revText" rows="3" placeholder="Raconte ton expérience..." class="f-input mt-3 !py-2.5 text-sm resize-none"></textarea>
+      <button onclick="submitReview()" class="mt-3 w-full font-fredoka font-semibold text-white grad-btn border-[3px] border-ink rounded-full py-3 shadow-popsm hover:-translate-y-0.5 transition">Publier mon avis</button>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVATION -->
+<section id="reservation" class="relative py-16 bg-gradient-to-br from-brandYellow via-[#FF9D2E] to-brandPink border-y-[4px] border-ink overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-8 items-start">
+    <div class="reveal">
+      <div class="inline-block bg-white font-black text-sm px-4 py-1.5 rounded-full border-[3px] border-ink shadow-popsm rotate-[-2deg]">RÉSERVATION • sans stress</div>
+      <h2 class="font-fredoka font-bold text-4xl sm:text-5xl mt-3 text-ink">Ta table t'attend <span class="font-caveat text-white drop-shadow">déjà !</span></h2>
+      <div class="bg-white/90 sticker rounded-3xl p-5 mt-6">
+        <div class="font-fredoka font-semibold mb-3">Choisis ta table <span class="text-sm font-nunito font-bold text-ink/50">(vert = libre)</span></div>
+        <div id="tablesMap" class="grid grid-cols-4 gap-3"></div>
+        <div class="flex gap-4 mt-3 text-xs font-black"><span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-brandGreen inline-block border border-ink"></span>Libre</span><span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-ink inline-block"></span>Sélectionnée</span><span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-ink/20 inline-block border border-ink"></span>Occupée</span></div>
+      </div>
+      <div class="grid grid-cols-3 gap-3 mt-4">
+        <div class="bg-ink text-white rounded-2xl p-4 border-[3px] border-ink text-center"><i class="fa-solid fa-users text-brandYellow text-xl"></i><div class="font-black mt-1">120 places</div><div class="text-xs font-bold opacity-60">Terrasse + salle</div></div>
+        <div class="bg-white rounded-2xl p-4 border-[3px] border-ink text-center"><i class="fa-solid fa-baby text-brandPink text-xl"></i><div class="font-black mt-1">Kids friendly</div><div class="text-xs font-bold opacity-60">Aire de jeux</div></div>
+        <div class="bg-white rounded-2xl p-4 border-[3px] border-ink text-center"><i class="fa-solid fa-moon text-brandPurple text-xl"></i><div class="font-black mt-1">Soirées live</div><div class="text-xs font-bold opacity-60">Jeu & Ven</div></div>
+      </div>
+    </div>
+    <div class="bg-white sticker rounded-[2rem] p-6 sm:p-8 reveal rotate-1">
+      <h3 class="font-fredoka font-semibold text-2xl">Réserver en 30 secondes</h3>
+      <div class="grid sm:grid-cols-2 gap-3 mt-4">
+        <input id="resName" placeholder="Nom complet *" class="f-input">
+        <input id="resPhone" placeholder="Téléphone * (+218...)" class="f-input">
+        <input id="resDate" type="date" class="f-input">
+        <select id="resTime" class="f-input"><option value="">Heure *</option><option>12:00</option><option>13:30</option><option>15:00</option><option>18:00</option><option>19:30</option><option>20:30</option><option>21:30</option><option>22:30</option></select>
+        <select id="resGuests" class="f-input"><option value="">Convives *</option><option>1-2 personnes</option><option>3-4 personnes</option><option>5-8 personnes</option><option>9+ (groupe / fête)</option></select>
+        <select id="resZone" class="f-input"><option>Terrasse vue mer</option><option>Salle familiale</option><option>Coin romantique</option><option>Près du four à bois</option><option>Espace enfants</option></select>
+      </div>
+      <textarea id="resNote" rows="2" placeholder="Occasion spéciale ? Anniversaire, demande..." class="f-input mt-3 resize-none"></textarea>
+      <button onclick="submitReservation()" class="mt-4 w-full font-fredoka font-semibold text-lg text-white grad-btn border-[3px] border-ink rounded-full py-3.5 shadow-pop hover:-translate-y-0.5 transition"><i class="fa-regular fa-calendar-check mr-2"></i>Confirmer ma réservation</button>
+      <p class="text-center text-xs font-bold text-ink/50 mt-2">Confirmation immédiate par SMS & WhatsApp • Sans acompte</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="py-16 max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="text-center reveal"><div class="inline-block bg-ink text-white font-black text-sm px-5 py-2 rounded-full border-[3px] border-ink shadow-popsm rotate-1">NOUS TROUVER • Tripoli طرابلس</div>
+  <h2 class="font-fredoka font-bold text-4xl sm:text-6xl mt-4">À deux pas de <span class="grad-text">la mer !</span></h2></div>
+  <div class="grid lg:grid-cols-3 gap-6 mt-10">
+    <div class="space-y-4 reveal">
+      <div class="bg-white sticker rounded-3xl p-5 flex gap-4"><span class="w-12 h-12 shrink-0 rounded-2xl grad-btn text-white flex items-center justify-center border-[2.5px] border-ink text-xl"><i class="fa-solid fa-location-dot"></i></span><div><div class="font-fredoka font-semibold text-lg">Pizza Demo — Hay Al Andalus</div><div class="font-bold text-sm text-ink/60">Rue Sidi Issa, à 200m du front de mer<br>Tripoli, Libye</div><a href="https://maps.google.com/?q=Hay+Al+Andalus+Tripoli+Libya" target="_blank" class="text-brandRed font-black text-sm hover:underline">Itinéraire →</a></div></div>
+      <div class="bg-white sticker rounded-3xl p-5 flex gap-4"><span class="w-12 h-12 shrink-0 rounded-2xl grad-green text-white flex items-center justify-center border-[2.5px] border-ink text-xl"><i class="fa-solid fa-clock"></i></span><div class="w-full"><div class="font-fredoka font-semibold text-lg">Horaires</div><div class="text-sm font-bold space-y-1"><div class="flex justify-between"><span>Lun — Jeu</span><span>11:30 – 00:00</span></div><div class="flex justify-between"><span>Vendredi</span><span>14:00 – 00:00</span></div><div class="flex justify-between"><span>Sam — Dim</span><span>11:30 – 00:30</span></div></div></div></div>
+      <div class="bg-ink text-white rounded-3xl p-5 border-[3px] border-ink shadow-pop flex gap-4"><span class="w-12 h-12 shrink-0 rounded-2xl bg-brandYellow text-ink flex items-center justify-center border-[2.5px] border-white/20 text-xl"><i class="fa-solid fa-truck-fast"></i></span><div class="w-full"><div class="font-fredoka font-semibold text-lg text-brandYellow">Calculateur de livraison</div><select id="zoneSelect" onchange="calcDelivery()" class="mt-2 w-full rounded-xl border-2 border-white/20 bg-white/10 px-3 py-2.5 font-bold text-sm outline-none text-white"></select><div id="zoneInfo" class="text-sm font-bold mt-2 text-white/80">Choisis ton quartier à Tripoli.</div></div></div>
+    </div>
+    <div class="lg:col-span-2 reveal">
+      <div class="border-[3px] border-ink rounded-[2rem] overflow-hidden shadow-pop bg-white">
+        <div class="flex items-center gap-2 bg-ink px-5 py-3"><span class="w-3 h-3 rounded-full bg-brandRed"></span><span class="w-3 h-3 rounded-full bg-brandYellow"></span><span class="w-3 h-3 rounded-full bg-brandGreen"></span><span class="ml-2 text-white/70 font-bold text-sm">Pizza Demo — Tripoli sur la carte</span></div>
+        <iframe title="Carte Tripoli" src="https://www.openstreetmap.org/export/embed.html?bbox=13.05%2C32.82%2C13.30%2C32.94&layer=mapnik&marker=32.8872%2C13.1913" class="w-full h-[340px] sm:h-[420px]" loading="lazy" style="border:0"></iframe>
+        <div class="grid sm:grid-cols-3 gap-3 p-4 bg-cream">
+          <a href="tel:+218912345678" class="bg-white border-[2.5px] border-ink rounded-2xl p-3 flex items-center gap-3 hover:-translate-y-0.5 transition"><span class="w-10 h-10 rounded-xl grad-btn text-white flex items-center justify-center border-2 border-ink"><i class="fa-solid fa-phone"></i></span><span class="font-black text-sm">+218 91 234 5678</span></a>
+          <a href="https://wa.me/218912345678" target="_blank" class="bg-white border-[2.5px] border-ink rounded-2xl p-3 flex items-center gap-3 hover:-translate-y-0.5 transition"><span class="w-10 h-10 rounded-xl grad-green text-white flex items-center justify-center border-2 border-ink"><i class="fa-brands fa-whatsapp"></i></span><span class="font-black text-sm">WhatsApp direct</span></a>
+          <button onclick="toggleCart(true)" class="bg-ink text-brandYellow border-[2.5px] border-ink rounded-2xl p-3 flex items-center gap-3 hover:-translate-y-0.5 transition font-black text-sm"><span class="w-10 h-10 rounded-xl bg-brandYellow text-ink flex items-center justify-center border-2 border-brandYellow"><i class="fa-solid fa-basket-shopping"></i></span>Commander now</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-ink text-white pt-14 pb-8 border-t-[4px] border-ink relative overflow-hidden">
+  <div class="absolute inset-0 opacity-10" style="background-image:radial-gradient(#FFC700 1.5px,transparent 2px);background-size:24px 24px"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 relative grid md:grid-cols-4 gap-8">
+    <div><div class="flex items-center gap-3"><div class="w-12 h-12 rounded-2xl grad-btn border-[3px] border-white/20 flex items-center justify-center text-2xl rotate-[-6deg]">🍕</div><div class="font-fredoka font-bold text-2xl">PIZZA <span class="text-brandYellow">DEMO</span></div></div>
+      <p class="text-white/60 font-bold text-sm mt-3">La pizzeria italienne préférée de Tripoli depuis 2012. Forno a legna, amore e gioia — dans chaque part.</p>
+      <div class="flex gap-2 mt-4"><a href="#" class="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center hover:bg-brandPink transition"><i class="fa-brands fa-instagram"></i></a><a href="#" class="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center hover:bg-blue-500 transition"><i class="fa-brands fa-facebook-f"></i></a><a href="#" class="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center hover:bg-black transition"><i class="fa-brands fa-tiktok"></i></a><a href="#" class="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center hover:bg-brandGreen transition"><i class="fa-brands fa-whatsapp"></i></a></div></div>
+    <div><div class="font-fredoka font-semibold text-brandYellow mb-3">LIENS RAPIDES</div><div class="grid gap-2 font-bold text-sm text-white/70"><a href="#menu" class="hover:text-brandYellow">Menu complet</a><a href="#createur" class="hover:text-brandYellow">Créateur de pizza</a><a href="#offres" class="hover:text-brandYellow">Offres & Roue</a><a href="#reservation" class="hover:text-brandYellow">Réserver une table</a><a href="#avis" class="hover:text-brandYellow">Avis clients</a></div></div>
+    <div><div class="font-fredoka font-semibold text-brandYellow mb-3">CONTACT</div><div class="font-bold text-sm text-white/70 space-y-2"><div><i class="fa-solid fa-location-dot mr-2 text-brandRed"></i>Hay Al Andalus, Tripoli</div><div><i class="fa-solid fa-phone mr-2 text-brandGreen"></i>+218 91 234 5678</div><div><i class="fa-solid fa-envelope mr-2 text-brandYellow"></i>ciao@pizzademo.ly</div><div><i class="fa-solid fa-clock mr-2 text-brandPink"></i>Ouvert 7j/7 jusqu'à minuit</div></div></div>
+    <div class="bg-white/5 border-2 border-white/15 rounded-3xl p-5"><div class="font-fredoka font-semibold text-brandYellow">NEWSLETTER FAMIGLIA</div><p class="text-xs font-bold text-white/60 mt-1">-10% sur ta première commande en ligne.</p><div class="flex gap-2 mt-3"><input id="nlInput" placeholder="ton@email.com" class="flex-1 min-w-0 rounded-full bg-white/10 border-2 border-white/20 px-4 py-2.5 text-sm font-bold outline-none focus:border-brandYellow placeholder:text-white/40"><button onclick="subscribeNL()" class="w-11 h-11 shrink-0 rounded-full grad-btn flex items-center justify-center border-2 border-white/20 hover:scale-110 transition"><i class="fa-solid fa-paper-plane"></i></button></div><div id="nlMsg" class="text-xs font-black mt-2 text-brandGreen"></div></div>
+  </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 relative mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-2 text-xs font-bold text-white/40"><span>© 2026 Pizza Demo Tripoli • Fatto con amore in Libia 🇱🇾🇮🇹</span><span>Paiement: Cash • Carte locale • Sadad • Moamalat</span></div>
+</footer>
+
+<!-- CART DRAWER -->
+<div id="cartOverlay" onclick="toggleCart(false)" class="fixed inset-0 bg-ink/60 backdrop-blur-sm z-[200] hidden"></div>
+<aside id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-[430px] bg-cream z-[201] border-l-[4px] border-ink flex flex-col translate-x-full transition-transform duration-300">
+  <div class="grad-btn p-5 border-b-[3px] border-ink flex items-center justify-between text-white">
+    <div><div class="font-fredoka font-semibold text-2xl"><i class="fa-solid fa-basket-shopping mr-2"></i>Ton Panier</div><div class="text-xs font-bold opacity-80" id="cartSub">0 article • Livraison Tripoli</div></div>
+    <button onclick="toggleCart(false)" class="w-10 h-10 bg-ink rounded-full border-2 border-white/30 flex items-center justify-center hover:rotate-90 transition"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="px-4 pt-4"><div class="bg-white border-[2.5px] border-ink rounded-2xl p-3 flex gap-2"><input id="promoInput" placeholder="Code promo (ex: DEMO10)" class="flex-1 min-w-0 bg-transparent font-black text-sm outline-none uppercase"><button onclick="applyPromo()" class="bg-ink text-brandYellow font-black text-sm px-4 py-2 rounded-xl hover:bg-black">OK</button></div><div id="promoMsg" class="text-xs font-black mt-1 px-1"></div></div>
+  <div id="cartItems" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+  <div class="bg-white border-t-[3px] border-ink p-5 space-y-1.5 font-extrabold text-sm">
+    <div class="flex justify-between text-ink/60"><span>Sous-total</span><span id="ctSub">0 LYD</span></div>
+    <div class="flex justify-between text-ink/60"><span>Remise <span id="ctDiscLbl"></span></span><span id="ctDisc" class="text-brandGreen">0 LYD</span></div>
+    <div class="flex justify-between text-ink/60"><span>Livraison <span class="text-xs">(offerte dès 80 LYD)</span></span><span id="ctDel">—</span></div>
+    <div class="flex justify-between font-fredoka font-bold text-2xl pt-1 border-t-2 border-dashed border-ink/20"><span>Total</span><span id="ctTotal" class="text-brandRed">0 LYD</span></div>
+    <button onclick="openCheckout()" class="w-full font-fredoka font-semibold text-lg text-white grad-btn border-[3px] border-ink rounded-full py-3.5 shadow-popsm hover:-translate-y-0.5 transition mt-2"><i class="fa-solid fa-fire mr-2"></i>Commander • <span id="ctBtnTotal">0 LYD</span></button>
+    <button onclick="toggleCart(false);document.getElementById('menu').scrollIntoView({behavior:'smooth'})" class="w-full font-extrabold text-sm py-2 hover:text-brandRed transition">+ Ajouter d'autres délices</button>
+  </div>
+</aside>
+
+<!-- CHECKOUT MODAL -->
+<div id="checkoutModal" class="fixed inset-0 z-[210] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-ink/70 backdrop-blur-sm" onclick="closeCheckout()"></div>
+  <div class="relative bg-cream border-[4px] border-ink rounded-[2rem] shadow-pops w-full max-w-[560px] max-h-[92vh] overflow-y-auto pop-in">
+    <div class="grad-green p-6 border-b-[3px] border-ink text-white sticky top-0 z-10"><div class="font-fredoka font-semibold text-2xl">Finaliser la commande</div><div class="text-sm font-bold opacity-80">Livraison chaude en 25-40 min à Tripoli</div><button onclick="closeCheckout()" class="absolute top-5 right-5 w-10 h-10 bg-ink rounded-full border-2 border-white/30 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="p-6 space-y-3">
+      <div class="grid sm:grid-cols-2 gap-3"><input id="coName" placeholder="Nom complet *" class="f-input"><input id="coPhone" placeholder="Téléphone * 09X XXX XXXX" class="f-input"></div>
+      <div class="grid sm:grid-cols-2 gap-3"><select id="coZone" class="f-input" onchange="refreshTotals()"></select><input id="coAddr" placeholder="Adresse précise * (rue, immeuble...)" class="f-input"></div>
+      <div><div class="font-fredoka font-semibold mb-2">Mode de paiement</div><div class="grid grid-cols-3 gap-2" id="payOpts">
+        <button data-pay="cash" onclick="setPay('cash',this)" class="payBtn opt-card selected bg-white border-[2.5px] border-ink rounded-2xl p-3 text-center font-black text-sm"><i class="fa-solid fa-money-bill-wave text-xl block mb-1 text-brandGreen"></i>Cash<small class="block font-bold text-ink/50">à la livraison</small></button>
+        <button data-pay="card" onclick="setPay('card',this)" class="payBtn opt-card bg-white border-[2.5px] border-ink rounded-2xl p-3 text-center font-black text-sm"><i class="fa-solid fa-credit-card text-xl block mb-1 text-brandPurple"></i>Carte<small class="block font-bold text-ink/50">Moamalat</small></button>
+        <button data-pay="sadad" onclick="setPay('sadad',this)" class="payBtn opt-card bg-white border-[2.5px] border-ink rounded-2xl p-3 text-center font-black text-sm"><i class="fa-solid fa-mobile-screen text-xl block mb-1 text-brandOrange"></i>Sadad<small class="block font-bold text-ink/50">Mobile</small></button>
+      </div></div>
+      <textarea id="coNote" rows="2" placeholder="Instructions (étage, sans oignons, sonnez 2x...)" class="f-input resize-none"></textarea>
+      <div class="bg-white border-[2.5px] border-ink rounded-2xl p-4 font-extrabold text-sm space-y-1"><div class="flex justify-between"><span>Sous-total</span><span id="coSub">0 LYD</span></div><div class="flex justify-between text-brandGreen"><span>Remise</span><span id="coDisc">0 LYD</span></div><div class="flex justify-between"><span>Livraison (<span id="coZoneLbl">—</span>)</span><span id="coDel">0 LYD</span></div><div class="flex justify-between font-fredoka font-bold text-xl border-t-2 border-dashed border-ink/20 pt-2"><span>Total à payer</span><span id="coTotal" class="text-brandRed">0 LYD</span></div></div>
+      <button onclick="placeOrder()" class="w-full font-fredoka font-semibold text-lg text-white grad-btn border-[3px] border-ink rounded-full py-3.5 shadow-pop hover:-translate-y-0.5 transition"><i class="fa-solid fa-check-double mr-2"></i>Confirmer • <span id="coBtnTotal">0 LYD</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- TRACKING MODAL -->
+<div id="trackModal" class="fixed inset-0 z-[220] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-ink/80 backdrop-blur-sm"></div>
+  <div class="relative bg-cream border-[4px] border-ink rounded-[2rem] shadow-pops w-full max-w-[480px] p-7 text-center pop-in max-h-[92vh] overflow-y-auto">
+    <div class="w-20 h-20 mx-auto rounded-full grad-green border-[3px] border-ink shadow-pop flex items-center justify-center text-3xl text-white"><i class="fa-solid fa-check"></i></div>
+    <h3 class="font-fredoka font-bold text-3xl mt-3">Grazie mille !</h3>
+    <p class="font-bold text-ink/60 text-sm">Commande <span id="orderNum" class="text-brandRed font-black">PD-0000</span> confirmée.<br>Notre four s'allume déjà pour toi.</p>
+    <div class="bg-white border-[2.5px] border-ink rounded-2xl p-4 mt-4 text-left space-y-3" id="trackSteps">
+      <div class="track-step flex gap-3 items-start" data-s="0"><span class="dot w-8 h-8 shrink-0 rounded-full bg-ink/10 border-[2.5px] border-ink flex items-center justify-center text-sm"><i class="fa-solid fa-receipt"></i></span><span class="lbl text-sm font-bold text-ink/40">Commande reçue <span class="block text-xs font-semibold">On prépare ta pâte...</span></span></div>
+      <div class="track-step flex gap-3 items-start" data-s="1"><span class="dot w-8 h-8 shrink-0 rounded-full bg-ink/10 border-[2.5px] border-ink flex items-center justify-center text-sm"><i class="fa-solid fa-fire"></i></span><span class="lbl text-sm font-bold text-ink/40">Au four à bois 450°C <span class="block text-xs font-semibold">90 secondes de magie</span></span></div>
+      <div class="track-step flex gap-3 items-start" data-s="2"><span class="dot w-8 h-8 shrink-0 rounded-full bg-ink/10 border-[2.5px] border-ink flex items-center justify-center text-sm"><i class="fa-solid fa-motorcycle"></i></span><span class="lbl text-sm font-bold text-ink/40">Livreur en route <span class="block text-xs font-semibold" id="trackEta">Arrivée estimée: 30 min</span></span></div>
+      <div class="track-step flex gap-3 items-start" data-s="3"><span class="dot w-8 h-8 shrink-0 rounded-full bg-ink/10 border-[2.5px] border-ink flex items-center justify-center text-sm"><i class="fa-solid fa-house"></i></span><span class="lbl text-sm font-bold text-ink/40">Buon appetito ! <span class="block text-xs font-semibold">Dis-nous tout en avis</span></span></div>
+    </div>
+    <div class="h-2.5 bg-ink/10 rounded-full mt-4 overflow-hidden border-2 border-ink"><div id="trackBar" class="h-full grad-btn rounded-full transition-all duration-700" style="width:5%"></div></div>
+    <button onclick="closeTrack()" class="mt-5 w-full font-fredoka font-semibold bg-ink text-brandYellow rounded-full py-3 border-[3px] border-ink hover:bg-black transition">Parfait, j'ai faim !</button>
+  </div>
+</div>
+
+<!-- RESERVATION SUCCESS -->
+<div id="resModal" class="fixed inset-0 z-[220] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-ink/70 backdrop-blur-sm" onclick="document.getElementById('resModal').style.display='none'"></div>
+  <div class="relative bg-white border-[4px] border-ink rounded-[2rem] shadow-pops w-full max-w-[420px] p-7 text-center pop-in">
+    <div class="font-caveat text-3xl text-brandRed">Prenotazione confermata!</div>
+    <h3 class="font-fredoka font-bold text-2xl">Table réservée</h3>
+    <div class="border-[2.5px] border-dashed border-ink rounded-2xl p-4 mt-3 font-bold text-sm bg-cream" id="resTicket"></div>
+    <div class="mt-3 text-5xl tracking-[.3em] font-black select-none">▦▦▦▦</div>
+    <div class="text-xs font-bold text-ink/50">Présente ce code à l'entrée • Hay Al Andalus</div>
+    <button onclick="document.getElementById('resModal').style.display='none'" class="mt-4 w-full font-fredoka font-semibold text-white grad-btn border-[3px] border-ink rounded-full py-3">Magnifico !</button>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" class="fixed inset-0 z-[230] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-ink/90" onclick="closeLight()"></div>
+  <img id="lightImg" src="" class="relative max-w-full max-h-[82vh] rounded-3xl border-[4px] border-white shadow-pops object-contain pop-in" alt="photo">
+  <button onclick="closeLight()" class="absolute top-5 right-5 w-12 h-12 bg-white border-[3px] border-ink rounded-full text-xl hover:rotate-90 transition"><i class="fa-solid fa-xmark"></i></button>
+</div>
+
+<div id="toasts" class="fixed bottom-5 left-5 z-[300] space-y-2 max-w-[320px]"></div>
+
+<div class="fixed bottom-5 right-5 z-[150] flex flex-col gap-2 items-end">
+  <button id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="hidden w-12 h-12 bg-white border-[3px] border-ink rounded-full shadow-pop hover:bg-brandYellow transition"><i class="fa-solid fa-arrow-up"></i></button>
+  <a href="https://wa.me/218912345678" target="_blank" class="w-14 h-14 rounded-full grad-green border-[3px] border-ink shadow-pop flex items-center justify-center text-white text-2xl hover:scale-110 transition"><i class="fa-brands fa-whatsapp"></i></a>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const U = (id,w=800)=>`https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
+const MENU = [
+ {id:'marghe', name:'Margherita D.O.P', cat:'classiques', price:38, old:null, rating:4.9, orders:'2.1k', desc:'San Marzano, fior di latte, basilic frais, huile d\u2019olive EVO.', img:U('photo-1574071318508-1cdbab80d002'), tags:['veg'], badge:'Best-seller'},
+ {id:'diavola', name:'Diavola Pepperoni', cat:'classiques', price:52, old:60, rating:4.8, orders:'1.8k', desc:'Pepperoni halal épicé, mozzarella, miel piquant, origan.', img:U('photo-1513104890138-7c749659a591'), tags:['spicy'], badge:'-13%'},
+ {id:'napo', name:'Napoletana', cat:'classiques', price:45, old:null, rating:4.7, orders:'1.2k', desc:'Anchois de Sicile, câpres, olives Taggiasche, tomate.', img:U('photo-1565299624946-b28f40a0ae38'), tags:[], badge:null},
+ {id:'capri', name:'Capricciosa', cat:'classiques', price:55, old:null, rating:4.8, orders:'980', desc:'Jambon halal, champignons, artichauts, olives, œuf.', img:U('photo-1593560708920-61dd98c46a4e'), tags:[], badge:null},
+ {id:'quattro', name:'Quattro Formaggi', cat:'speciales', price:58, old:null, rating:4.9, orders:'1.5k', desc:'Mozzarella, gorgonzola, parmesan 24 mois, ricotta fumée.', img:U('photo-1541745537411-b8046dc6d66c'), tags:['veg'], badge:'Chef choice'},
+ {id:'demo-special', name:'Demo Special Tripoli', cat:'speciales', price:68, old:80, rating:5.0, orders:'3.2k', desc:'Viande épicée locale, burrata crémeuse, roquette, tomates cerises, sauce Demo secrète.', img:U('photo-1604382354936-07c5d9983bd3'), tags:['signature'], badge:'Signature'},
+ {id:'truffe', name:'Tartufo & Burrata', cat:'speciales', price:85, old:null, rating:4.9, orders:'640', desc:'Crème de truffe noire, burrata di Puglia, roquette, parmesan.', img:U('photo-1595854341625-f33ee10dbf94'), tags:['veg','premium'], badge:'Premium'},
+ {id:'mare', name:'Frutti di Mare', cat:'speciales', price:72, old:null, rating:4.7, orders:'720', desc:'Crevettes, calamars, moules de la côte libyenne, ail, persil.', img:U('photo-1590947132387-155cc02f3212'), tags:[], badge:null},
+ {id:'veggie', name:'Arcobaleno Veggie', cat:'speciales', price:48, old:null, rating:4.6, orders:'890', desc:'Poivrons tricolores, courgettes grillées, champignons, pesto.', img:U('photo-1565299507177-b0ac66763828'), tags:['veg'], badge:null},
+ {id:'calzone', name:'Calzone Ripieno', cat:'calzone', price:54, old:null, rating:4.8, orders:'760', desc:'Chausson doré, ricotta, épinards, mozzarella, sauce tomate à part.', img:U('photo-1601050690597-df0568f70950'), tags:[], badge:null},
+ {id:'calzone-diavola', name:'Calzone Diavola XL', cat:'calzone', price:59, old:null, rating:4.7, orders:'540', desc:'Pepperoni, scamorza fumée, oignons caramélisés, sauce BBQ.', img:U('photo-1585238342024-78d387f4a707'), tags:['spicy'], badge:null},
+ {id:'tiramisu', name:'Tiramisu Classico', cat:'dolci', price:28, old:null, rating:5.0, orders:'2.4k', desc:'Mascarpone, café arabica, cacao amer — recette de Nonna.', img:U('photo-1551024506-0bccd828d307'), tags:['veg','sweet'], badge:'Fait maison'},
+ {id:'panna', name:'Panna Cotta Fruits', cat:'dolci', price:24, old:null, rating:4.8, orders:'910', desc:'Vanille Bourbon, coulis de fruits rouges, menthe.', img:U('photo-1488477181946-6428a0291777'), tags:['veg','sweet'], badge:null},
+ {id:'cannoli', name:'Cannoli Siciliani (x3)', cat:'dolci', price:22, old:null, rating:4.7, orders:'680', desc:'Coques croustillantes, ricotta sucrée, pistaches, chocolat.', img:U('photo-1565958011703-44f9829ba187'), tags:['veg','sweet'], badge:null},
+ {id:'sanpel', name:'San Pellegrino 50cl', cat:'dolci', price:12, old:null, rating:4.5, orders:'1.1k', desc:'Limonade italienne — Limone / Aranciata / Chinotto.', img:U('photo-1554866585-cd94860890b7'), tags:['drink'], badge:null},
+ {id:'jus', name:'Jus d\u2019Avocat Royal', cat:'dolci', price:18, old:null, rating:4.9, orders:'1.3k', desc:'Avocat, lait frais, miel, amandes — le préféré de Tripoli.', img:U('photo-1541544741938-0af808871cc0'), tags:['drink','veg'], badge:null},
+ {id:'mojito', name:'Mojito Classique 0%', cat:'dolci', price:20, old:null, rating:4.6, orders:'840', desc:'Menthe fraîche, citron vert, glace pilée, soda.', img:U('photo-1581636625402-29b2a704ef13'), tags:['drink'], badge:null},
+ {id:'pack-familia', name:'Pack Famiglia Week-end', cat:'speciales', price:129, old:176, rating:5.0, orders:'980', desc:'2 grandes pizzas au choix + 4 boissons + tiramisu familial.', img:U('photo-1517248135467-4c7edcad34c4'), tags:['pack'], badge:'-27%'},
+];
+const ZONES = {
+ 'Hay Al Andalus':{fee:10,time:'20-30 min'}, 'Gargaresh':{fee:12,time:'25-35 min'}, 'Ghot Al Sha\u2019al':{fee:10,time:'20-30 min'},
+ 'Janour':{fee:12,time:'25-35 min'}, 'Souq Al Jomaa':{fee:15,time:'30-40 min'}, 'Tajoura':{fee:18,time:'35-45 min'},
+ 'Ain Zara':{fee:15,time:'30-40 min'}, 'Bab Ben Ghashir':{fee:12,time:'25-35 min'}, 'Centre-ville (Medina)':{fee:10,time:'20-30 min'},
+ 'Dahra / Zawiyat Dahmani':{fee:10,time:'20-30 min'}, 'Siyahiya':{fee:14,time:'30-40 min'}, 'Qasr Ben Ghashir':{fee:22,time:'40-55 min'}
+};
+const GALLERY = [
+ {img:U('photo-1574071318508-1cdbab80d002',700), t:'Notre four à bois', c:'col-span-2 row-span-2'},
+ {img:U('photo-1513104890138-7c749659a591',600), t:'Diavola signature', c:''},
+ {img:U('photo-1556910103-1c02745aae4d',600), t:'En cuisine', c:''},
+ {img:U('photo-1565299624946-b28f40a0ae38',600), t:'Part de bonheur', c:''},
+ {img:U('photo-1517248135467-4c7edcad34c4',600), t:'La salle Famiglia', c:''},
+ {img:U('photo-1604382354936-07c5d9983bd3',600), t:'Margherita D.O.P', c:'col-span-2'},
+ {img:U('photo-1551024506-0bccd828d307',600), t:'Dolci maison', c:''},
+ {img:U('photo-1555396273-367ea4eb4db5',600), t:'Terrasse du soir', c:''},
+];
+let REVIEWS = [
+ {n:'Ahmed Al-Misrati', z:'Hay Al Andalus', s:5, t:'Meilleure pizza de Tripoli, sans débat ! La Demo Special avec la burrata... j\u2019ai cru être à Naples. Livraison en 22 minutes chrono.', img:'https://i.pravatar.cc/100?img=11', d:'Il y a 2 jours'},
+ {n:'Sara Ben Ali', z:'Tajoura', s:5, t:'Cadre magnifique, terrasse parfaite en famille. Le créateur de pizza est génial, mes enfants ont adoré composer la leur. Tiramisu incroyable.', img:'https://i.pravatar.cc/100?img=47', d:'Il y a 5 jours'},
+ {n:'Marco Rossi', z:'Gargaresh', s:5, t:'Sono italiano e vi dico: questa è vera pizza napoletana! Impasto perfetto, cornicione alveolato. Complimenti Chef Enzo!', img:'https://i.pravatar.cc/100?img=13', d:'Il y a 1 semaine'},
+ {n:'Youssef El-Gheriani', z:'Souq Al Jomaa', s:4, t:'Calzone énorme et bien garni, pâte fine comme j\u2019aime. Service rapide même un vendredi soir. Je recommande le pack famiglia.', img:'https://i.pravatar.cc/100?img=59', d:'Il y a 2 semaines'},
+];
+
+/* ================= STATE ================= */
+let cart = []; let activeCat='all'; let vegOnly=false; let promo=null; let payMethod='cash';
+let builder = {size:'M', dough:'Classique', sauce:'tomate', cheese:['Mozzarella'], tops:[]};
+const SIZES=[{k:'S',n:'Petite 26cm',p:0},{k:'M',n:'Moyenne 32cm',p:15},{k:'L',n:'Grande 40cm',p:28},{k:'XL',n:'XXL 50cm',p:45}];
+const DOUGHS=[{n:'Classique',p:0,d:'Fermentée 48h'},{n:'Fine Croustillante',p:5,d:'Style romana'},{n:'Épaisse Moelleuse',p:6,d:'Style Chicago soft'},{n:'Farcie Fromage',p:14,d:'Bords mozzarella'}];
+const SAUCES=[{k:'tomate',n:'Tomate San Marzano',p:0,c:'#E63A2E'},{k:'blanche',n:'Blanche Crème',p:4,c:'#FFF3DC'},{k:'pesto',n:'Pesto Basilic',p:6,c:'#3FA34D'},{k:'bbq',n:'BBQ Fumée',p:4,c:'#7A3B1E'}];
+const CHEESES=[{n:'Mozzarella',p:0},{n:'Burrata',p:12},{n:'Parmesan 24 mois',p:8},{n:'Gorgonzola',p:9},{n:'Ricotta fumée',p:7},{n:'Scamorza',p:8}];
+const TOPS=[{n:'Pepperoni',p:8,c:'#C0392B',e:'🍕'},{n:'Champignons',p:6,c:'#D9C6A5'},{n:'Poivrons',p:5,c:'#27AE60'},{n:'Olives noires',p:5,c:'#2C2C2C'},{n:'Oignons rouges',p:4,c:'#9B59B6'},{n:'Jambon halal',p:9,c:'#F1948A'},{n:'Thon',p:10,c:'#7FB3D5'},{n:'Crevettes',p:14,c:'#F5B041'},{n:'Roquette',p:6,c:'#1E8449'},{n:'Maïs',p:4,c:'#F7DC6F'},{n:'Jalapeños',p:5,c:'#196F3D'},{n:'Truffe',p:18,c:'#5D4037'}];
+
+/* ================= HELPERS ================= */
+const $=id=>document.getElementById(id);
+function toast(msg, type='ok'){
+  const colors={ok:'grad-green',info:'grad-btn',warn:'bg-ink',pink:'grad-purple'};
+  const icons={ok:'fa-check',info:'fa-bell',warn:'fa-triangle-exclamation',pink:'fa-gift'};
+  const el=document.createElement('div');
+  el.className=`toast ${colors[type]} text-white border-[2.5px] border-ink rounded-2xl px-4 py-3 shadow-pop font-extrabold text-sm flex items-center gap-3`;
+  el.innerHTML=`<span class="w-8 h-8 shrink-0 bg-white/20 rounded-full flex items-center justify-center border border-white/30"><i class="fa-solid ${icons[type]}"></i></span><span>${msg}</span>`;
+  $('toasts').appendChild(el);
+  setTimeout(()=>{el.style.transition='all .4s';el.style.opacity='0';el.style.transform='translateX(-20px)';setTimeout(()=>el.remove(),400)},3200);
+}
+function boom(big=false){
+  confetti({particleCount:big?160:60, spread:big?100:70, origin:{y:.6}, colors:['#FF2E4C','#FF7A00','#FFC700','#00B25C','#FF4D8D','#7C3AED']});
+}
+
+/* ================= MENU RENDER ================= */
+function tagBadge(t){
+  if(t==='veg') return `<span class="text-[10px] font-black bg-brandGreen text-white px-2 py-0.5 rounded-full border border-ink">VEGGIE</span>`;
+  if(t==='spicy') return `<span class="text-[10px] font-black bg-brandRed text-white px-2 py-0.5 rounded-full border border-ink">SPICY 🌶</span>`;
+  if(t==='signature') return `<span class="text-[10px] font-black bg-ink text-brandYellow px-2 py-0.5 rounded-full border border-ink">SIGNATURE</span>`;
+  if(t==='premium') return `<span class="text-[10px] font-black grad-purple text-white px-2 py-0.5 rounded-full border border-ink">PREMIUM</span>`;
+  if(t==='sweet') return `<span class="text-[10px] font-black bg-brandPink text-white px-2 py-0.5 rounded-full border border-ink">DOLCE</span>`;
+  if(t==='drink') return `<span class="text-[10px] font-black bg-blue-500 text-white px-2 py-0.5 rounded-full border border-ink">FRESH</span>`;
+  if(t==='pack') return `<span class="text-[10px] font-black bg-brandYellow text-ink px-2 py-0.5 rounded-full border border-ink">PACK</span>`;
+  return '';
+}
+function dishCard(d){
+  return `<article class="dish-card bg-cream border-[3px] border-ink rounded-[1.6rem] overflow-hidden shadow-popsm flex flex-col">
+    <div class="relative h-48 overflow-hidden border-b-[3px] border-ink">
+      <img src="${d.img}" alt="${d.name}" loading="lazy" onerror="this.src='${U('photo-1513104890138-7c749659a591',600)}'" class="w-full h-full object-cover">
+      ${d.badge?`<span class="absolute top-3 left-3 bg-brandYellow font-black text-xs px-3 py-1 rounded-full border-2 border-ink rotate-[-4deg] shadow-popsm">${d.badge}</span>`:''}
+      <span class="absolute top-3 right-3 bg-white font-black text-xs px-2.5 py-1 rounded-full border-2 border-ink flex items-center gap-1"><i class="fa-solid fa-star text-brandOrange"></i>${d.rating}</span>
+      ${d.old?`<span class="absolute bottom-3 left-3 bg-brandRed text-white font-black text-xs px-3 py-1 rounded-full border-2 border-ink">-${Math.round((1-d.price/d.old)*100)}%</span>`:''}
+    </div>
+    <div class="p-4 flex flex-col flex-1">
+      <div class="flex flex-wrap gap-1 mb-1.5">${d.tags.map(tagBadge).join('')}</div>
+      <h3 class="font-fredoka font-semibold text-lg leading-tight">${d.name}</h3>
+      <p class="text-[13px] font-bold text-ink/55 mt-1 flex-1">${d.desc}</p>
+      <div class="text-xs font-black text-ink/40 mt-2"><i class="fa-solid fa-bag-shopping mr-1"></i>${d.orders} commandes • Tripoli</div>
+      <div class="flex items-center justify-between mt-3">
+        <div><span class="font-fredoka font-bold text-2xl ${d.old?'text-brandRed':''}">${d.price} <span class="text-sm">LYD</span></span>${d.old?`<span class="line-through text-ink/35 font-black text-sm ml-1">${d.old}</span>`:''}</div>
+        <button onclick="addToCart('${d.id}',1)" class="font-fredoka font-semibold text-white grad-btn border-[2.5px] border-ink rounded-full px-4 py-2 shadow-popsm hover:scale-105 active:scale-95 transition"><i class="fa-solid fa-plus mr-1"></i>Ajouter</button>
+      </div>
+    </div></article>`;
+}
+function renderMenu(){
+  const q=($('searchInput').value||'').toLowerCase().trim();
+  const sort=$('sortSelect').value;
+  let list=MENU.filter(d=>(activeCat==='all'||d.cat===activeCat)&&(!vegOnly||d.tags.includes('veg')||d.tags.includes('drink'))&&(!q||(d.name+' '+d.desc).toLowerCase().includes(q)));
+  if(sort==='asc') list=[...list].sort((a,b)=>a.price-b.price);
+  if(sort==='desc') list=[...list].sort((a,b)=>b.price-a.price);
+  if(sort==='pop') list=[...list].sort((a,b)=>b.rating-a.rating);
+  $('menuGrid').innerHTML=list.map(dishCard).join('');
+  $('menuEmpty').classList.toggle('hidden',list.length>0);
+}
+function setCat(c,btn){activeCat=c;document.querySelectorAll('#catChips .chip').forEach(b=>b.classList.remove('chip-active'));btn.classList.add('chip-active');renderMenu();}
+function toggleVeg(){vegOnly=!vegOnly;$('vegToggle').classList.toggle('chip-active',vegOnly);$('vegToggle').style.background=vegOnly?'#1E0E0A':'';$('vegToggle').style.color=vegOnly?'#FFC700':'';renderMenu();toast(vegOnly?'Mode Veggie activé — que du vert !':'Mode Veggie désactivé','info');}
+function renderBest(){
+  const best=[...MENU].sort((a,b)=>b.rating-a.rating).slice(0,6);
+  $('bestRow').innerHTML=best.map((d,i)=>`<div class="snap-start shrink-0 w-[290px] sm:w-[330px] ${i%2?'rotate-1':'-rotate-1'}">${dishCard(d)}</div>`).join('');
+}
+function scrollBest(dir){$('bestRow').scrollBy({left:dir*360,behavior:'smooth'});}
+
+/* ================= CART ================= */
+function findDish(id){return MENU.find(m=>m.id===id);}
+function addToCart(id,qty=1,custom=null){
+  if(custom){
+    const ex=cart.find(c=>c.customKey===custom.key);
+    if(ex) ex.qty+=qty; else cart.push({id:'custom-'+Date.now(),name:custom.name,price:custom.price,img:U('photo-1604382354936-07c5d9983bd3',400),qty,customKey:custom.key,desc:custom.desc});
+  } else {
+    const d=findDish(id); if(!d) return;
+    const ex=cart.find(c=>c.id===id);
+    if(ex) ex.qty+=qty; else cart.push({id:d.id,name:d.name,price:d.price,img:d.img,qty,desc:d.desc});
+  }
+  refreshTotals(); boom(false);
+  const dname=custom?custom.name:findDish(id).name;
+  toast(`<b>${dname}</b> ajouté au panier !`,'ok');
+  const badge=$('cartCount'); badge.classList.remove('pop-in'); void badge.offsetWidth; badge.classList.add('pop-in');
+}
+function chQty(idx,delta){cart[idx].qty+=delta; if(cart[idx].qty<=0) cart.splice(idx,1); refreshTotals();}
+function rmItem(idx){cart.splice(idx,1); refreshTotals();}
+function cartSubtotal(){return cart.reduce((s,c)=>s+c.price*c.qty,0);}
+function deliveryFee(){const st=cartSubtotal(); if(st===0) return 0; if(st>=80) return 0; const z=$('coZone')?.value||$('zoneSelect')?.value; if(z&&ZONES[z]) return ZONES[z].fee; return 12;}
+function discountAmt(){if(!promo) return 0; const st=cartSubtotal(); if(promo.type==='pct') return Math.round(st*promo.val/100); if(promo.type==='flat') return Math.min(promo.val,st); return 0;}
+function refreshTotals(){
+  const count=cart.reduce((s,c)=>s+c.qty,0);
+  $('cartCount').textContent=count;
+  $('cartSub').textContent=`${count} article${count>1?'s':''} • Livraison Tripoli`;
+  const box=$('cartItems');
+  if(!cart.length){box.innerHTML=`<div class="text-center py-12"><div class="text-6xl mb-3">🧺</div><div class="font-fredoka font-semibold text-xl">Panier vide...</div><p class="font-bold text-sm text-ink/50">Une petite Diavola pour te consoler ?</p><button onclick="toggleCart(false);document.getElementById('menu').scrollIntoView({behavior:'smooth'})" class="mt-4 font-fredoka font-semibold bg-brandYellow border-[2.5px] border-ink rounded-full px-6 py-2.5 shadow-popsm">Découvrir le menu</button></div>`;}
+  else box.innerHTML=cart.map((c,i)=>`<div class="bg-white border-[2.5px] border-ink rounded-2xl p-3 flex gap-3 items-center pop-in">
+    <img src="${c.img}" onerror="this.src='${U('photo-1513104890138-7c749659a591',300)}'" class="w-16 h-16 rounded-xl object-cover border-2 border-ink shrink-0" alt="">
+    <div class="flex-1 min-w-0"><div class="font-fredoka font-semibold leading-tight truncate">${c.name}</div><div class="text-xs font-bold text-ink/50 truncate">${c.desc||''}</div>
+      <div class="flex items-center gap-2 mt-1.5"><button onclick="chQty(${i},-1)" class="w-7 h-7 rounded-full bg-cream border-2 border-ink font-black hover:bg-brandRed hover:text-white">−</button><span class="font-black text-sm w-5 text-center">${c.qty}</span><button onclick="chQty(${i},1)" class="w-7 h-7 rounded-full bg-cream border-2 border-ink font-black hover:bg-brandGreen hover:text-white">+</button>
+      <span class="ml-auto font-fredoka font-bold">${c.price*c.qty} LYD</span></div></div>
+    <button onclick="rmItem(${i})" class="self-start text-ink/30 hover:text-brandRed"><i class="fa-solid fa-trash-can"></i></button></div>`).join('');
+  const st=cartSubtotal(), disc=discountAmt(), del=deliveryFee(), tot=Math.max(0,st-disc+del);
+  $('ctSub').textContent=st+' LYD'; $('ctDisc').textContent='-'+disc+' LYD';
+  $('ctDiscLbl').textContent=promo?`(${promo.code})`:'';
+  $('ctDel').textContent=st===0?'—':(del===0?'GRATUITE 🎉':del+' LYD');
+  $('ctDel').className=del===0&&st>0?'text-brandGreen font-black':'';
+  $('ctTotal').textContent=tot+' LYD'; $('ctBtnTotal').textContent=tot+' LYD';
+  $('coSub').textContent=st+' LYD'; $('coDisc').textContent='-'+disc+' LYD';
+  const z=$('coZone')?.value; $('coZoneLbl').textContent=z||'—'; $('coDel').textContent=(st===0?'0':del)+' LYD';
+  $('coTotal').textContent=tot+' LYD'; $('coBtnTotal').textContent=tot+' LYD';
+}
+function toggleCart(open){
+  $('cartDrawer').style.transform=open?'translateX(0)':'translateX(100%)';
+  $('cartOverlay').classList.toggle('hidden',!open);
+  document.body.style.overflow=open?'hidden':'';
+}
+const PROMOS={'DEMO10':{type:'pct',val:10,msg:'-10% appliqués !'},'FAMIGLIA129':{type:'flat',val:15,msg:'Pack Famiglia : -15 LYD !'},'BENVENUTO':{type:'pct',val:15,msg:'Bienvenue ! -15% offerts'},'WHEEL20':{type:'pct',val:20,msg:'Jackpot roue : -20% !'},'WHEEL10':{type:'pct',val:10,msg:'Roue : -10% !'},'FREEDEL':{type:'flat',val:12,msg:'Livraison offerte !'}};
+function applyPromo(){
+  const code=($('promoInput').value||'').trim().toUpperCase();
+  if(!code) return;
+  if(PROMOS[code]){promo={code,...PROMOS[code]};$('promoMsg').textContent='✓ '+PROMOS[code].msg;$('promoMsg').className='text-xs font-black mt-1 px-1 text-brandGreen';toast(`Code <b>${code}</b> activé !`,'pink');boom(false);}
+  else{$('promoMsg').textContent='✕ Code invalide. Essaie DEMO10';$('promoMsg').className='text-xs font-black mt-1 px-1 text-brandRed';}
+  refreshTotals();
+}
+function copyCode(c){navigator.clipboard?.writeText(c);$('promoInput').value=c;applyPromo();}
+
+/* ================= CHECKOUT ================= */
+function openCheckout(){
+  if(!cart.length){toast('Ton panier est vide, ajoute une pizza d\u2019abord !','warn');return;}
+  toggleCart(false);
+  $('checkoutModal').style.display='flex'; document.body.style.overflow='hidden'; refreshTotals();
+}
+function closeCheckout(){$('checkoutModal').style.display='none';document.body.style.overflow='';}
+function setPay(m,btn){payMethod=m;document.querySelectorAll('.payBtn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');}
+function placeOrder(){
+  const name=$('coName').value.trim(), phone=$('coPhone').value.trim(), zone=$('coZone').value, addr=$('coAddr').value.trim();
+  if(name.length<3){toast('Indique ton nom complet','warn');return;}
+  if(!/^(\+218|0)?\s?9\d[\s-]?\d{3}[\s-]?\d{4}$/.test(phone.replace(/\s/g,''))&&phone.replace(/\D/g,'').length<9){toast('Numéro libyen invalide (ex: 091 234 5678)','warn');return;}
+  if(!zone){toast('Choisis ton quartier de livraison','warn');return;}
+  if(addr.length<5){toast('Précise ton adresse (rue, repère...)','warn');return;}
+  const num='PD-'+Math.floor(1000+Math.random()*9000);
+  $('orderNum').textContent=num;
+  const mins=ZONES[zone]?ZONES[zone].time:'30-40 min';
+  $('trackEta').textContent='Arrivée estimée: '+mins+' • '+zone;
+  closeCheckout(); $('trackModal').style.display='flex'; document.body.style.overflow='hidden';
+  boom(true);
+  document.querySelectorAll('#trackSteps .track-step').forEach(s=>s.classList.remove('active'));
+  const bars=['12%','38%','68%','100%'];
+  bars.forEach((w,i)=>setTimeout(()=>{document.querySelector(`#trackSteps [data-s="${i}"]`).classList.add('active');$('trackBar').style.width=w;if(i===1)boom(false);},600+i*2200));
+  cart=[]; promo=null; $('promoInput').value=''; $('promoMsg').textContent=''; refreshTotals();
+}
+function closeTrack(){$('trackModal').style.display='none';document.body.style.overflow='';}
+
+/* ================= BUILDER ================= */
+function renderBuilderOpts(){
+  $('sizeOpts').innerHTML=SIZES.map(s=>`<button onclick="setSize('${s.k}')" data-k="${s.k}" class="sizeBtn opt-card ${builder.size===s.k?'selected':''} bg-white border-[2.5px] border-ink rounded-2xl p-3 text-center font-black text-sm">${s.n}<small class="block font-bold text-ink/50">+${s.p} LYD</small></button>`).join('');
+  $('doughOpts').innerHTML=DOUGHS.map(d=>`<button onclick="setDough('${d.n}')" class="opt-card ${builder.dough===d.n?'selected':''} bg-white border-[2.5px] border-ink rounded-2xl p-3 text-left font-black text-sm">${d.n}<small class="block font-bold text-ink/50">${d.d} • +${d.p} LYD</small></button>`).join('');
+  $('sauceOpts').innerHTML=SAUCES.map(s=>`<button onclick="setSauce('${s.k}')" class="opt-card ${builder.sauce===s.k?'selected':''} bg-white border-[2.5px] border-ink rounded-2xl p-3 text-center font-black text-xs"><span class="w-8 h-8 rounded-full border-2 border-ink block mx-auto mb-1" style="background:${s.c}"></span>${s.n}<small class="block font-bold text-ink/50">+${s.p}</small></button>`).join('');
+  $('cheeseOpts').innerHTML=CHEESES.map(c=>`<button onclick="toggleCheese('${c.n}')" class="opt-card ${builder.cheese.includes(c.n)?'selected':''} bg-white border-[2.5px] border-ink rounded-full px-4 py-2 font-black text-[13px]">🧀 ${c.n} <span class="opacity-70">+${c.p}</span></button>`).join('');
+  $('topOpts').innerHTML=TOPS.map(t=>`<button onclick="toggleTop('${t.n}')" class="opt-card ${builder.tops.includes(t.n)?'selected':''} bg-white border-[2.5px] border-ink rounded-full px-4 py-2 font-black text-[13px]">${t.n} <span class="opacity-70">+${t.p}</span></button>`).join('');
+}
+function setSize(k){builder.size=k;renderBuilderOpts();updatePizza();}
+function setDough(n){builder.dough=n;renderBuilderOpts();updatePizza();}
+function setSauce(k){builder.sauce=k;renderBuilderOpts();updatePizza();}
+function toggleCheese(n){if(builder.cheese.includes(n)){if(builder.cheese.length>1)builder.cheese=builder.cheese.filter(c=>c!==n);else{toast('Garde au moins un fromage !','warn');return;}}else builder.cheese.push(n);renderBuilderOpts();updatePizza();}
+function toggleTop(n){if(builder.tops.includes(n))builder.tops=builder.tops.filter(t=>t!==n);else{if(builder.tops.length>=8){toast('Max 8 garnitures, chef !','warn');return;}builder.tops.push(n);}renderBuilderOpts();updatePizza();}
+function builderPrice(){
+  const base=30; const sz=SIZES.find(s=>s.k===builder.size).p; const dg=DOUGHS.find(d=>d.n===builder.dough).p;
+  const sc=SAUCES.find(s=>s.k===builder.sauce).p;
+  const ch=builder.cheese.reduce((s,n)=>s+(CHEESES.find(c=>c.n===n)?.p||0),0);
+  const tp=builder.tops.reduce((s,n)=>s+(TOPS.find(t=>t.n===n)?.p||0),0);
+  return {total:base+sz+dg+sc+ch+tp, extra:dg+sc+ch+tp};
+}
+function updatePizza(){
+  const sc=SAUCES.find(s=>s.k===builder.sauce);
+  $('sauceLayer').className=`absolute inset-[10%] rounded-full pizza-sauce-${builder.sauce}`;
+  $('cheeseLayer').style.opacity=builder.cheese.length? .55+builder.cheese.length*.12 : 0;
+  const layer=$('topsLayer'); layer.innerHTML='';
+  const all=[...builder.cheese.map(c=>({n:c,c:'#FFF6D6',r:9})),...builder.tops.map(n=>{const t=TOPS.find(x=>x.n===n);return{n,c:t.c,r:7};})];
+  let seed=builder.cheese.length*7+builder.tops.length*13+builder.size.charCodeAt(0);
+  const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};
+  all.forEach((t,i)=>{
+    const nDots=t.r>8?7:5;
+    for(let j=0;j<nDots;j++){
+      const a=rnd()*Math.PI*2, r=8+rnd()*32;
+      const x=50+Math.cos(a)*r, y=50+Math.sin(a)*r;
+      const d=document.createElement('div');
+      d.className='topping-dot'; d.style.cssText=`left:${x}%;top:${y}%;width:${t.r+3}px;height:${t.r+3}px;background:${t.c};border-radius:${t.n.includes('Poivron')||t.n.includes('Oignon')||t.n.includes('Roquette')?'4px':'50%'};transform:translate(-50%,-50%) rotate(${rnd()*90}deg)`;
+      layer.appendChild(d);
+    }
+  });
+  const scale={S:.86,M:1,L:1.1,XL:1.18}[builder.size];
+  $('pizzaVisual').style.transform=`scale(${scale}) rotate(${(seed%7)-3}deg)`;
+  const {total,extra}=builderPrice();
+  $('builderPrice').textContent=total;
+  $('sumSize').textContent=SIZES.find(s=>s.k===builder.size).n;
+  $('sumDough').textContent=builder.dough;
+  $('sumExtra').textContent='+'+extra+' LYD';
+  $('sumCal').textContent='~'+(650+builder.cheese.length*90+builder.tops.length*35+(builder.size==='XL'?400:builder.size==='L'?250:builder.size==='S'?-150:0))+' kcal';
+  $('builderBadges').innerHTML=[...builder.cheese.map(c=>`<span class="text-[11px] font-black bg-white border-2 border-ink rounded-full px-2.5 py-0.5">🧀 ${c}</span>`),...builder.tops.map(t=>`<span class="text-[11px] font-black bg-brandYellow border-2 border-ink rounded-full px-2.5 py-0.5">${t}</span>`)].join('')||'<span class="text-xs font-bold text-white/60">Ajoute des garnitures...</span>';
+}
+function randomPizza(){
+  const pick=a=>a[Math.floor(Math.random()*a.length)];
+  builder.size=pick(SIZES).k; builder.dough=pick(DOUGHS).n; builder.sauce=pick(SAUCES).k;
+  builder.cheese=[pick(CHEESES).n, 'Mozzarella']; builder.cheese=[...new Set(builder.cheese)];
+  builder.tops=[...TOPS].sort(()=>Math.random()-.5).slice(0,3+Math.floor(Math.random()*3)).map(t=>t.n);
+  renderBuilderOpts();updatePizza();toast('Le destin a choisi pour toi !','pink');
+}
+function addBuilderToCart(){
+  const {total}=builderPrice();
+  const name=($('builderName').value.trim()||'Pizza Création Demo').slice(0,34);
+  const desc=`${SIZES.find(s=>s.k===builder.size).n} • ${builder.dough} • ${SAUCES.find(s=>s.k===builder.sauce).n} • ${[...builder.cheese,...builder.tops].join(', ')}`;
+  addToCart(null,1,{name:'🍕 '+name,price:total,key:name+desc+Date.now(),desc});
+  $('builderName').value='';
+}
+
+/* ================= WHEEL / COUNTDOWN ================= */
+let spinning=false, wheelDeg=0;
+const PRIZES=[{l:'-10%',c:'WHEEL10'},{l:'Tiramisu',c:null,free:'tiramisu'},{l:'Livraison',c:'FREEDEL'},{l:'-20%',c:'WHEEL20'},{l:'Boisson',c:null,free:'sanpel'},{l:'-15%',c:'BENVENUTO'}];
+function renderWheelLabels(){
+  $('wheelLabels').innerHTML=PRIZES.map((p,i)=>{const a=i*60+30;return `<span class="absolute left-1/2 top-1/2" style="transform:translate(-50%,-50%) rotate(${a}deg) translateY(-88px)">${p.l}</span>`;}).join('');
+}
+function spinWheel(){
+  if(spinning){return;}
+  if(localStorage.getItem('demo_spin')){toast('Tu as déjà tourné ! Reviens demain.','warn');return;}
+  spinning=true; $('spinBtn').style.opacity='.6';
+  const idx=Math.floor(Math.random()*PRIZES.length);
+  const target=360*6+(360-(idx*60+30));
+  wheelDeg+=target; $('wheel').style.transform=`rotate(${wheelDeg}deg)`;
+  setTimeout(()=>{
+    spinning=false;$('spinBtn').style.opacity='1';localStorage.setItem('demo_spin','1');
+    const p=PRIZES[idx];
+    if(p.c){$('promoInput').value=p.c;applyPromo();$('wheelResult').textContent=`🎉 GAGNÉ : ${p.l} — code ${p.c} appliqué !`;}
+    else{addToCart(p.free,1);$('wheelResult').textContent=`🎉 GAGNÉ : ${p.l} OFFERT ajouté au panier !`;}
+    boom(true);
+  },4400);
+}
+function tickCountdown(){
+  const now=new Date(); const d=new Date(now);
+  d.setDate(d.getDate()+((7-d.getDay())%7)); d.setHours(23,59,59,0);
+  if(d<now)d.setDate(d.getDate()+7);
+  let s=Math.max(0,Math.floor((d-now)/1000));
+  const dd=Math.floor(s/86400);s%=86400;const hh=Math.floor(s/3600);s%=3600;const mm=Math.floor(s/60);const ss=s%60;
+  $('cdD').textContent=String(dd).padStart(2,'0');$('cdH').textContent=String(hh).padStart(2,'0');$('cdM').textContent=String(mm).padStart(2,'0');$('cdS').textContent=String(ss).padStart(2,'0');
+}
+
+/* ================= GALLERY / REVIEWS ================= */
+function renderGallery(){$('galleryGrid').innerHTML=GALLERY.map(g=>`<div class="g-item ${g.c} relative rounded-3xl overflow-hidden border-[3px] border-white/20 cursor-pointer group" onclick="openLight('${g.img}')"><img src="${g.img}" loading="lazy" onerror="this.src='${U('photo-1513104890138-7c749659a591',600)}'" class="w-full h-full object-cover" alt="${g.t}"><div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4"><span class="text-white font-fredoka font-semibold">${g.t} <i class="fa-solid fa-expand ml-1"></i></span></div></div>`).join('');}
+function openLight(src){$('lightImg').src=src;$('lightbox').style.display='flex';}
+function closeLight(){$('lightbox').style.display='none';}
+let revIdx=0, starVal=5;
+function renderReviews(){
+  $('reviewInner').innerHTML=REVIEWS.map(r=>`<div class="min-w-full p-7 sm:p-9">
+    <div class="flex items-center gap-1 text-brandOrange text-lg">${'<i class="fa-solid fa-star"></i>'.repeat(r.s)}${'<i class="fa-regular fa-star"></i>'.repeat(5-r.s)}</div>
+    <p class="font-fredoka text-xl sm:text-2xl leading-snug mt-3">“${r.t}”</p>
+    <div class="flex items-center gap-3 mt-5"><img src="${r.img}" class="w-12 h-12 rounded-full border-[2.5px] border-ink object-cover" alt=""><div><div class="font-black">${r.n}</div><div class="text-xs font-bold text-ink/50">${r.z} • ${r.d} • <span class="text-brandGreen">✓ Achat vérifié</span></div></div></div></div>`).join('');
+  $('reviewDots').innerHTML=REVIEWS.map((_,i)=>`<button onclick="goReview(${i})" class="h-2.5 rounded-full transition-all ${i===revIdx?'w-8 grad-btn':'w-2.5 bg-ink/20'}"></button>`).join('');
+  $('reviewInner').style.transform=`translateX(-${revIdx*100}%)`;
+}
+function moveReview(d){revIdx=(revIdx+d+REVIEWS.length)%REVIEWS.length;renderReviews();}
+function goReview(i){revIdx=i;renderReviews();}
+function setStars(n){starVal=n;document.querySelectorAll('#starPick .starBtn').forEach((b,i)=>{b.style.color=i<n?'#FFB800':'#E5E0D5';b.style.transform=i<n?'scale(1.15) rotate(-8deg)':'scale(1)';});}
+function submitReview(){
+  const n=$('revName').value.trim(), t=$('revText').value.trim();
+  if(n.length<2||t.length<5){toast('Ajoute ton prénom et un petit mot','warn');return;}
+  REVIEWS.unshift({n,z:'Tripoli',s:starVal,t,img:`https://i.pravatar.cc/100?u=${Date.now()}`,d:'À l\u2019instant'});
+  $('revName').value='';$('revText').value='';revIdx=0;renderReviews();boom(false);toast('Merci ! Ton avis est publié.','ok');
+}
+
+/* ================= RESERVATION ================= */
+let selTable=null;
+function renderTables(){
+  const busy=new Set([3,7,11]);
+  $('tablesMap').innerHTML=Array.from({length:12},(_,i)=>{const n=i+1;const isB=busy.has(n);
+    return `<button ${isB?'disabled':''} onclick="selTableF(${n},this)" class="table-seat ${isB?'bg-ink/15 text-ink/30 border-2 border-ink/20':'bg-brandGreen text-white border-2 border-ink'} rounded-2xl py-3 font-fredoka font-semibold text-sm">T${n}<span class="block text-[10px] font-nunito font-bold opacity-70">${n%3===0?'4 pers':n%2?'2 pers':'6 pers'}</span></button>`;}).join('');
+}
+function selTableF(n,btn){selTable=n;document.querySelectorAll('.table-seat').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');toast(`Table T${n} sélectionnée`,'info');}
+function openReservation(){document.getElementById('reservation').scrollIntoView({behavior:'smooth'});}
+function submitReservation(){
+  const n=$('resName').value.trim(), p=$('resPhone').value.trim(), d=$('resDate').value, t=$('resTime').value, g=$('resGuests').value;
+  if(n.length<3){toast('Indique ton nom','warn');return;}
+  if(p.replace(/\D/g,'').length<9){toast('Téléphone invalide','warn');return;}
+  if(!d){toast('Choisis une date','warn');return;}
+  if(!t||!g){toast('Heure et convives requis','warn');return;}
+  const code='TBL-'+Math.floor(1000+Math.random()*9000);
+  $('resTicket').innerHTML=`<div class="font-fredoka text-lg">${n}</div><div>${d} à ${t} • ${g}</div><div>${$('resZone').value} ${selTable?'• Table T'+selTable:''}</div><div class="mt-2 inline-block bg-ink text-brandYellow px-4 py-1 rounded-full font-black">${code}</div>`;
+  $('resModal').style.display='flex';boom(true);
+}
+
+/* ================= DELIVERY / MISC ================= */
+function initZones(){
+  const opts=Object.keys(ZONES).map(z=>`<option>${z}</option>`).join('');
+  $('zoneSelect').innerHTML='<option value="">— Ton quartier —</option>'+opts;
+  $('coZone').innerHTML='<option value="">— Quartier de livraison * —</option>'+opts;
+}
+function calcDelivery(){
+  const z=$('zoneSelect').value;
+  $('zoneInfo').innerHTML=!z?'Choisis ton quartier à Tripoli.':`📍 <b>${z}</b> → <b class="${ZONES[z].fee===10?'text-brandGreen':''}">${ZONES[z].fee} LYD</b> • ${ZONES[z].time} ${ZONES[z].fee<=12?'• <span class="text-brandGreen">Rapide !</span>':''}`;
+  refreshTotals();
+}
+function subscribeNL(){const v=$('nlInput').value.trim();if(!v.includes('@')){toast('Email invalide','warn');return;}$('nlMsg').textContent='✓ Bienvenue ! Code BENVENUTO (-15%) envoyé.';$('promoInput').value='BENVENUTO';toast('Code BENVENUTO prêt dans ton panier !','pink');boom(false);}
+
+/* ================= INIT / FX ================= */
+function initFx(){
+  // preloader
+  let p=0;const iv=setInterval(()=>{p+=Math.random()*22;$('loadBar').style.width=Math.min(100,p)+'%';if(p>=100){clearInterval(iv);setTimeout(()=>$('preloader').classList.add('hide'),350);}},180);
+  // marquee duplicate
+  $('marqueeContent').parentElement.appendChild($('marqueeContent').cloneNode(true));
+  // nav
+  window.addEventListener('scroll',()=>{$('navbar').classList.toggle('scrolled',scrollY>20);$('topBtn').classList.toggle('hidden',scrollY<600);});
+  $('burger').onclick=()=>$('mobileMenu').classList.toggle('hidden');
+  document.querySelectorAll('.mlink').forEach(a=>a.onclick=()=>$('mobileMenu').classList.add('hidden'));
+  // reveal
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}}),{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  // cursor
+  const c=$('cursor'),r=$('cursorRing');let mx=0,my=0,rx=0,ry=0;
+  addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;c.style.left=mx+'px';c.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.16;ry+=(my-ry)*.16;r.style.left=rx+'px';r.style.top=ry+'px';requestAnimationFrame(loop);})();
+  document.querySelectorAll('button,a,.table-seat').forEach(el=>{el.addEventListener('mouseenter',()=>{c.style.width='36px';c.style.height='36px';c.style.background='#FFC700';});el.addEventListener('mouseleave',()=>{c.style.width='22px';c.style.height='22px';c.style.background='#FF2E4C';});});
+  // date min
+  $('resDate').min=new Date().toISOString().split('T')[0];
+  setInterval(tickCountdown,1000);tickCountdown();
+  setInterval(()=>{if(document.visibilityState==='visible')moveReview(1);},6000);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  initZones();renderBest();renderMenu();renderBuilderOpts();updatePizza();renderWheelLabels();renderGallery();renderReviews();renderTables();setStars(5);refreshTotals();initFx();
+});
+</script>
+</body>
+</html>
