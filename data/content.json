@@ -1,0 +1,768 @@
+{
+  "version": 2,
+  "updatedAt": "2026-10-05T09:29:25.566Z",
+  "settings": {
+    "brand1": "PIZZA",
+    "brand2": "DEMO",
+    "tagline": "TRIPOLI • ITALIANA",
+    "topbar": {
+      "promo": "LIVRAISON GRATUITE dès 80 LYD à Tripoli",
+      "promoShort": "Livraison gratuite dès 80 LYD",
+      "phone": "+218 91 234 5678",
+      "address": "Hay Al Andalus, Tripoli — طرابلس"
+    },
+    "hero": {
+      "pill": "FORNO A LEGNA",
+      "badge": "Authentique depuis 2012 • Tripoli",
+      "line1": "LA VRAIE",
+      "line2": "PIZZA ITALIENNE",
+      "line3a": "AU CŒUR DE",
+      "line3b": "TRIPOLI",
+      "subtitle": "Pâte fermentée 48h, tomates San Marzano, fior di latte & four à bois à 450°C. Livrée chaude en 25 minutes partout à Tripoli — de Gargaresh à Tajoura.",
+      "cta1": "Voir le Menu",
+      "cta2": "Créer ma Pizza",
+      "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=900&q=80",
+      "priceFrom": 38,
+      "featuredItem": "demo-special",
+      "sticker": "100% Halal!",
+      "rating": "4.9/5",
+      "ratingText": "2 400+ avis vérifiés à Tripoli",
+      "openLine": "OUVERT • jusqu'à 00:00"
+    },
+    "stats": [
+      {
+        "value": "48h",
+        "label": "FERMENTATION",
+        "color": "brandRed"
+      },
+      {
+        "value": "450°C",
+        "label": "FOUR À BOIS",
+        "color": "brandOrange"
+      },
+      {
+        "value": "25min",
+        "label": "LIVRAISON",
+        "color": "brandGreen"
+      }
+    ],
+    "trust": [
+      {
+        "icon": "fa-wheat-awn",
+        "text": "Farine italienne Caputo"
+      },
+      {
+        "icon": "fa-leaf",
+        "text": "Produits frais & Halal"
+      },
+      {
+        "icon": "fa-user-chef",
+        "text": "Chef Napolitain Enzo"
+      },
+      {
+        "icon": "fa-money-bill-wave",
+        "text": "Cash • Carte • Mobile"
+      }
+    ],
+    "contact": {
+      "phone": "+218 91 234 5678",
+      "phoneHref": "+218912345678",
+      "whatsapp": "218912345678",
+      "email": "ciao@pizzademo.ly",
+      "addressName": "Pizza Demo — Hay Al Andalus",
+      "addressLines": "Rue Sidi Issa, à 200m du front de mer\nTripoli, Libye",
+      "mapUrl": "https://www.openstreetmap.org/export/embed.html?bbox=13.05%2C32.82%2C13.30%2C32.94&layer=mapnik&marker=32.8872%2C13.1913",
+      "mapsLink": "https://maps.google.com/?q=Hay+Al+Andalus+Tripoli+Libya",
+      "instagram": "@pizzademo.tripoli • 48k abonnés"
+    },
+    "hours": [
+      {
+        "days": "Lun — Jeu",
+        "time": "11:30 – 00:00"
+      },
+      {
+        "days": "Vendredi",
+        "time": "14:00 – 00:00"
+      },
+      {
+        "days": "Sam — Dim",
+        "time": "11:30 – 00:30"
+      }
+    ],
+    "freeDeliveryFrom": 80,
+    "footerAbout": "La pizzeria italienne préférée de Tripoli depuis 2012. Forno a legna, amore e gioia — dans chaque part.",
+    "copyright": "© 2026 Pizza Demo Tripoli • Fatto con amore in Libia 🇱🇾🇮🇹",
+    "payments": "Paiement: Cash • Carte locale • Sadad • Moamalat",
+    "newsletterText": "-10% sur ta première commande en ligne."
+  },
+  "categories": [
+    {
+      "id": "classiques",
+      "label": "Classiques"
+    },
+    {
+      "id": "speciales",
+      "label": "Spécialités"
+    },
+    {
+      "id": "calzone",
+      "label": "Calzone"
+    },
+    {
+      "id": "dolci",
+      "label": "Desserts & Boissons"
+    }
+  ],
+  "menu": [
+    {
+      "id": "marghe",
+      "name": "Margherita D.O.P",
+      "cat": "classiques",
+      "price": 38,
+      "old": null,
+      "rating": 4.9,
+      "orders": "2.1k",
+      "desc": "San Marzano, fior di latte, basilic frais, huile d'olive EVO.",
+      "img": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "veg"
+      ],
+      "badge": "Best-seller"
+    },
+    {
+      "id": "diavola",
+      "name": "Diavola Pepperoni",
+      "cat": "classiques",
+      "price": 52,
+      "old": 60,
+      "rating": 4.8,
+      "orders": "1.8k",
+      "desc": "Pepperoni halal épicé, mozzarella, miel piquant, origan.",
+      "img": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "spicy"
+      ],
+      "badge": "-13%"
+    },
+    {
+      "id": "napo",
+      "name": "Napoletana",
+      "cat": "classiques",
+      "price": 45,
+      "old": null,
+      "rating": 4.7,
+      "orders": "1.2k",
+      "desc": "Anchois de Sicile, câpres, olives Taggiasche, tomate.",
+      "img": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80",
+      "tags": [],
+      "badge": null
+    },
+    {
+      "id": "capri",
+      "name": "Capricciosa",
+      "cat": "classiques",
+      "price": 55,
+      "old": null,
+      "rating": 4.8,
+      "orders": "980",
+      "desc": "Jambon halal, champignons, artichauts, olives, œuf.",
+      "img": "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=800&q=80",
+      "tags": [],
+      "badge": null
+    },
+    {
+      "id": "quattro",
+      "name": "Quattro Formaggi",
+      "cat": "speciales",
+      "price": 58,
+      "old": null,
+      "rating": 4.9,
+      "orders": "1.5k",
+      "desc": "Mozzarella, gorgonzola, parmesan 24 mois, ricotta fumée.",
+      "img": "https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "veg"
+      ],
+      "badge": "Chef choice"
+    },
+    {
+      "id": "demo-special",
+      "name": "Demo Special Tripoli",
+      "cat": "speciales",
+      "price": 68,
+      "old": 80,
+      "rating": 5,
+      "orders": "3.2k",
+      "desc": "Viande épicée locale, burrata crémeuse, roquette, tomates cerises, sauce Demo secrète.",
+      "img": "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "signature"
+      ],
+      "badge": "Signature"
+    },
+    {
+      "id": "truffe",
+      "name": "Tartufo & Burrata",
+      "cat": "speciales",
+      "price": 85,
+      "old": null,
+      "rating": 4.9,
+      "orders": "640",
+      "desc": "Crème de truffe noire, burrata di Puglia, roquette, parmesan.",
+      "img": "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "veg",
+        "premium"
+      ],
+      "badge": "Premium"
+    },
+    {
+      "id": "mare",
+      "name": "Frutti di Mare",
+      "cat": "speciales",
+      "price": 72,
+      "old": null,
+      "rating": 4.7,
+      "orders": "720",
+      "desc": "Crevettes, calamars, moules de la côte libyenne, ail, persil.",
+      "img": "https://images.unsplash.com/photo-1590947132387-155cc02f3212?auto=format&fit=crop&w=800&q=80",
+      "tags": [],
+      "badge": null
+    },
+    {
+      "id": "veggie",
+      "name": "Arcobaleno Veggie",
+      "cat": "speciales",
+      "price": 48,
+      "old": null,
+      "rating": 4.6,
+      "orders": "890",
+      "desc": "Poivrons tricolores, courgettes grillées, champignons, pesto.",
+      "img": "https://images.unsplash.com/photo-1565299507177-b0ac66763828?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "veg"
+      ],
+      "badge": null
+    },
+    {
+      "id": "calzone",
+      "name": "Calzone Ripieno",
+      "cat": "calzone",
+      "price": 54,
+      "old": null,
+      "rating": 4.8,
+      "orders": "760",
+      "desc": "Chausson doré, ricotta, épinards, mozzarella, sauce tomate à part.",
+      "img": "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80",
+      "tags": [],
+      "badge": null
+    },
+    {
+      "id": "calzone-diavola",
+      "name": "Calzone Diavola XL",
+      "cat": "calzone",
+      "price": 59,
+      "old": null,
+      "rating": 4.7,
+      "orders": "540",
+      "desc": "Pepperoni, scamorza fumée, oignons caramélisés, sauce BBQ.",
+      "img": "https://images.unsplash.com/photo-1585238342024-78d387f4a707?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "spicy"
+      ],
+      "badge": null
+    },
+    {
+      "id": "tiramisu",
+      "name": "Tiramisu Classico",
+      "cat": "dolci",
+      "price": 28,
+      "old": null,
+      "rating": 5,
+      "orders": "2.4k",
+      "desc": "Mascarpone, café arabica, cacao amer — recette de Nonna.",
+      "img": "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "veg",
+        "sweet"
+      ],
+      "badge": "Fait maison"
+    },
+    {
+      "id": "panna",
+      "name": "Panna Cotta Fruits",
+      "cat": "dolci",
+      "price": 24,
+      "old": null,
+      "rating": 4.8,
+      "orders": "910",
+      "desc": "Vanille Bourbon, coulis de fruits rouges, menthe.",
+      "img": "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "veg",
+        "sweet"
+      ],
+      "badge": null
+    },
+    {
+      "id": "cannoli",
+      "name": "Cannoli Siciliani (x3)",
+      "cat": "dolci",
+      "price": 22,
+      "old": null,
+      "rating": 4.7,
+      "orders": "680",
+      "desc": "Coques croustillantes, ricotta sucrée, pistaches, chocolat.",
+      "img": "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "veg",
+        "sweet"
+      ],
+      "badge": null
+    },
+    {
+      "id": "sanpel",
+      "name": "San Pellegrino 50cl",
+      "cat": "dolci",
+      "price": 12,
+      "old": null,
+      "rating": 4.5,
+      "orders": "1.1k",
+      "desc": "Limonade italienne — Limone / Aranciata / Chinotto.",
+      "img": "https://images.unsplash.com/photo-1554866585-cd94860890b7?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "drink"
+      ],
+      "badge": null
+    },
+    {
+      "id": "jus",
+      "name": "Jus d'Avocat Royal",
+      "cat": "dolci",
+      "price": 18,
+      "old": null,
+      "rating": 4.9,
+      "orders": "1.3k",
+      "desc": "Avocat, lait frais, miel, amandes — le préféré de Tripoli.",
+      "img": "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "drink",
+        "veg"
+      ],
+      "badge": null
+    },
+    {
+      "id": "mojito",
+      "name": "Mojito Classique 0%",
+      "cat": "dolci",
+      "price": 20,
+      "old": null,
+      "rating": 4.6,
+      "orders": "840",
+      "desc": "Menthe fraîche, citron vert, glace pilée, soda.",
+      "img": "https://images.unsplash.com/photo-1581636625402-29b2a704ef13?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "drink"
+      ],
+      "badge": null
+    },
+    {
+      "id": "pack-familia",
+      "name": "Pack Famiglia Week-end",
+      "cat": "speciales",
+      "price": 129,
+      "old": 176,
+      "rating": 5,
+      "orders": "980",
+      "desc": "2 grandes pizzas au choix + 4 boissons + tiramisu familial.",
+      "img": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
+      "tags": [
+        "pack"
+      ],
+      "badge": "-27%"
+    }
+  ],
+  "zones": {
+    "Hay Al Andalus": {
+      "fee": 10,
+      "time": "20-30 min"
+    },
+    "Gargaresh": {
+      "fee": 12,
+      "time": "25-35 min"
+    },
+    "Ghot Al Sha'al": {
+      "fee": 10,
+      "time": "20-30 min"
+    },
+    "Janour": {
+      "fee": 12,
+      "time": "25-35 min"
+    },
+    "Souq Al Jomaa": {
+      "fee": 15,
+      "time": "30-40 min"
+    },
+    "Tajoura": {
+      "fee": 18,
+      "time": "35-45 min"
+    },
+    "Ain Zara": {
+      "fee": 15,
+      "time": "30-40 min"
+    },
+    "Bab Ben Ghashir": {
+      "fee": 12,
+      "time": "25-35 min"
+    },
+    "Centre-ville (Medina)": {
+      "fee": 10,
+      "time": "20-30 min"
+    },
+    "Dahra / Zawiyat Dahmani": {
+      "fee": 10,
+      "time": "20-30 min"
+    },
+    "Siyahiya": {
+      "fee": 14,
+      "time": "30-40 min"
+    },
+    "Qasr Ben Ghashir": {
+      "fee": 22,
+      "time": "40-55 min"
+    }
+  },
+  "gallery": [
+    {
+      "img": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=700&q=80",
+      "t": "Notre four à bois",
+      "c": "col-span-2 row-span-2"
+    },
+    {
+      "img": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80",
+      "t": "Diavola signature",
+      "c": ""
+    },
+    {
+      "img": "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=80",
+      "t": "En cuisine",
+      "c": ""
+    },
+    {
+      "img": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80",
+      "t": "Part de bonheur",
+      "c": ""
+    },
+    {
+      "img": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
+      "t": "La salle Famiglia",
+      "c": ""
+    },
+    {
+      "img": "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=600&q=80",
+      "t": "Margherita D.O.P",
+      "c": "col-span-2"
+    },
+    {
+      "img": "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=600&q=80",
+      "t": "Dolci maison",
+      "c": ""
+    },
+    {
+      "img": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
+      "t": "Terrasse du soir",
+      "c": ""
+    }
+  ],
+  "reviews": [
+    {
+      "n": "Ahmed Al-Misrati",
+      "z": "Hay Al Andalus",
+      "s": 5,
+      "t": "Meilleure pizza de Tripoli, sans débat ! La Demo Special avec la burrata... j'ai cru être à Naples. Livraison en 22 minutes chrono.",
+      "img": "https://i.pravatar.cc/100?img=11",
+      "d": "Il y a 2 jours"
+    },
+    {
+      "n": "Sara Ben Ali",
+      "z": "Tajoura",
+      "s": 5,
+      "t": "Cadre magnifique, terrasse parfaite en famille. Le créateur de pizza est génial, mes enfants ont adoré composer la leur. Tiramisu incroyable.",
+      "img": "https://i.pravatar.cc/100?img=47",
+      "d": "Il y a 5 jours"
+    },
+    {
+      "n": "Marco Rossi",
+      "z": "Gargaresh",
+      "s": 5,
+      "t": "Sono italiano e vi dico: questa è vera pizza napoletana! Impasto perfetto, cornicione alveolato. Complimenti Chef Enzo!",
+      "img": "https://i.pravatar.cc/100?img=13",
+      "d": "Il y a 1 semaine"
+    },
+    {
+      "n": "Youssef El-Gheriani",
+      "z": "Souq Al Jomaa",
+      "s": 4,
+      "t": "Calzone énorme et bien garni, pâte fine comme j'aime. Service rapide même un vendredi soir. Je recommande le pack famiglia.",
+      "img": "https://i.pravatar.cc/100?img=59",
+      "d": "Il y a 2 semaines"
+    }
+  ],
+  "promos": {
+    "DEMO10": {
+      "type": "pct",
+      "val": 10,
+      "msg": "-10% appliqués !"
+    },
+    "FAMIGLIA129": {
+      "type": "flat",
+      "val": 15,
+      "msg": "Pack Famiglia : -15 LYD !"
+    },
+    "BENVENUTO": {
+      "type": "pct",
+      "val": 15,
+      "msg": "Bienvenue ! -15% offerts"
+    },
+    "WHEEL20": {
+      "type": "pct",
+      "val": 20,
+      "msg": "Jackpot roue : -20% !"
+    },
+    "WHEEL10": {
+      "type": "pct",
+      "val": 10,
+      "msg": "Roue : -10% !"
+    },
+    "FREEDEL": {
+      "type": "flat",
+      "val": 12,
+      "msg": "Livraison offerte !"
+    }
+  },
+  "builder": {
+    "basePrice": 30,
+    "sizes": [
+      {
+        "k": "S",
+        "n": "Petite 26cm",
+        "p": 0
+      },
+      {
+        "k": "M",
+        "n": "Moyenne 32cm",
+        "p": 15
+      },
+      {
+        "k": "L",
+        "n": "Grande 40cm",
+        "p": 28
+      },
+      {
+        "k": "XL",
+        "n": "XXL 50cm",
+        "p": 45
+      }
+    ],
+    "doughs": [
+      {
+        "n": "Classique",
+        "p": 0,
+        "d": "Fermentée 48h"
+      },
+      {
+        "n": "Fine Croustillante",
+        "p": 5,
+        "d": "Style romana"
+      },
+      {
+        "n": "Épaisse Moelleuse",
+        "p": 6,
+        "d": "Style Chicago soft"
+      },
+      {
+        "n": "Farcie Fromage",
+        "p": 14,
+        "d": "Bords mozzarella"
+      }
+    ],
+    "sauces": [
+      {
+        "k": "tomate",
+        "n": "Tomate San Marzano",
+        "p": 0,
+        "c": "#E63A2E"
+      },
+      {
+        "k": "blanche",
+        "n": "Blanche Crème",
+        "p": 4,
+        "c": "#FFF3DC"
+      },
+      {
+        "k": "pesto",
+        "n": "Pesto Basilic",
+        "p": 6,
+        "c": "#3FA34D"
+      },
+      {
+        "k": "bbq",
+        "n": "BBQ Fumée",
+        "p": 4,
+        "c": "#7A3B1E"
+      }
+    ],
+    "cheeses": [
+      {
+        "n": "Mozzarella",
+        "p": 0
+      },
+      {
+        "n": "Burrata",
+        "p": 12
+      },
+      {
+        "n": "Parmesan 24 mois",
+        "p": 8
+      },
+      {
+        "n": "Gorgonzola",
+        "p": 9
+      },
+      {
+        "n": "Ricotta fumée",
+        "p": 7
+      },
+      {
+        "n": "Scamorza",
+        "p": 8
+      }
+    ],
+    "toppings": [
+      {
+        "n": "Pepperoni",
+        "p": 8,
+        "c": "#C0392B"
+      },
+      {
+        "n": "Champignons",
+        "p": 6,
+        "c": "#D9C6A5"
+      },
+      {
+        "n": "Poivrons",
+        "p": 5,
+        "c": "#27AE60"
+      },
+      {
+        "n": "Olives noires",
+        "p": 5,
+        "c": "#2C2C2C"
+      },
+      {
+        "n": "Oignons rouges",
+        "p": 4,
+        "c": "#9B59B6"
+      },
+      {
+        "n": "Jambon halal",
+        "p": 9,
+        "c": "#F1948A"
+      },
+      {
+        "n": "Thon",
+        "p": 10,
+        "c": "#7FB3D5"
+      },
+      {
+        "n": "Crevettes",
+        "p": 14,
+        "c": "#F5B041"
+      },
+      {
+        "n": "Roquette",
+        "p": 6,
+        "c": "#1E8449"
+      },
+      {
+        "n": "Maïs",
+        "p": 4,
+        "c": "#F7DC6F"
+      },
+      {
+        "n": "Jalapeños",
+        "p": 5,
+        "c": "#196F3D"
+      },
+      {
+        "n": "Truffe",
+        "p": 18,
+        "c": "#5D4037"
+      }
+    ]
+  },
+  "offers": {
+    "featured": {
+      "badge": "WEEK-END FAMIGLIA",
+      "line1": "2 PIZZAS GRANDES",
+      "line2": "+ 4 BOISSONS + TIRAMISU",
+      "price": 129,
+      "oldPrice": 176,
+      "desc": "Valable vendredi → dimanche • Sur place, à emporter & livraison.",
+      "code": "FAMIGLIA129",
+      "itemId": "pack-familia"
+    },
+    "cards": [
+      {
+        "style": "yellow",
+        "badge": "ÉTUDIANTS -15%",
+        "title": "Show ta carte, on s'occupe du reste !",
+        "desc": "Universités de Tripoli • Sur place."
+      },
+      {
+        "style": "green",
+        "badge": "MIDI EXPRESS 29 LYD",
+        "title": "Margherita + boisson en 15 min",
+        "desc": "Lun-Jeu • 12h-15h • À emporter."
+      },
+      {
+        "style": "pink",
+        "badge": "FIDÉLITÉ",
+        "title": "8 pizzas = la 9ème OFFERTE",
+        "desc": "Carte tamponnée en caisse & en ligne."
+      }
+    ]
+  },
+  "wheel": [
+    {
+      "label": "-10%",
+      "code": "WHEEL10",
+      "free": null
+    },
+    {
+      "label": "Tiramisu",
+      "code": null,
+      "free": "tiramisu"
+    },
+    {
+      "label": "Livraison",
+      "code": "FREEDEL",
+      "free": null
+    },
+    {
+      "label": "-20%",
+      "code": "WHEEL20",
+      "free": null
+    },
+    {
+      "label": "Boisson",
+      "code": null,
+      "free": "sanpel"
+    },
+    {
+      "label": "-15%",
+      "code": "BENVENUTO",
+      "free": null
+    }
+  ]
+}
