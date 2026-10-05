@@ -18,7 +18,7 @@ node server.js      # ou : npm start
 
 - **Mot de passe admin par défaut : `demo123`** (à changer dans l'onglet *Compte*).
 - Variables d'environnement : `PORT` (défaut `8080`), `ADMIN_PASSWORD` (mot de passe initial, au premier lancement uniquement).
-- Aucune dépendance : Node.js ≥ 16 suffit.
+- Aucune dépendance : Node.js ≥ 18 suffit (fonction `fetch` native). Pour déployer sur **Vercel**, voir la section *Déploiement* ci-dessous.
 
 ## 🛠️ Ce qu'on peut modifier depuis l'admin
 
@@ -74,3 +74,44 @@ Sauvegarder le dossier `data/` = sauvegarder tout le site.
 `index.html` reste consultable en statique (double-clic, GitHub Pages…) : sans API,
 il retombe sur le contenu par défaut embarqué. Dans ce mode, aucune modification
 centralisée n'est possible — il faut le serveur pour l'admin et la synchro.
+
+## ☁️ Déploiement
+
+Le projet fonctionne **sans aucune modification** sur deux types d'hébergement :
+
+### 1. Vercel (serverless) — recommandé pour un déploiement rapide
+
+Sur Vercel il n'y a pas de processus Node persistant ni de système de fichiers
+inscriptible : le backend tourne en fonction serverless (`api/[[...path]].js`,
+déjà en place) et le stockage passe par une base **Redis Upstash** (gratuit).
+
+1. Créer une base Redis gratuite sur [upstash.com](https://upstash.com) (même compte possible) et copier
+   **REST URL** et **REST Token** (format `https://xxxx.upstash.io`).
+2. Importer le repo sur [vercel.com/new](https://vercel.com/new) :
+   - Framework preset : **Other** — pas de build, pas de commande de démarrage.
+3. Dans *Settings → Environment Variables*, ajouter :
+
+   | Variable | Valeur |
+   |---|---|
+   | `UPSTASH_REDIS_REST_URL` | `https://xxxx.upstash.io` |
+   | `UPSTASH_REDIS_REST_TOKEN` | le token Upstash |
+   | `ADMIN_PASSWORD` | votre mot de passe admin (sinon `demo123`) |
+   | `ADMIN_TOKEN_SECRET` | une longue chaîne aléatoire (sinon dérivée du mot de passe) |
+
+4. Déployer. Site public : `/` — panneau admin : **`/admin`**.
+
+Notes :
+- Si les variables Upstash manquent, l'API répond avec un message d'erreur explicite
+  en français (aucune donnée n'est perdue).
+- Les images importées sont **automatiquement redimensionnées dans le navigateur**
+  (max 1280 px, JPEG ~82 %) pour respecter la limite de taille des valeurs Redis
+  (~1 Mo en serverless).
+- Offre gratuite Upstash : les bases sont **suspendues après 7 jours d'inactivité**
+  (suffisant pour une démo active ; les données sont conservées).
+- Les sauvegardes de section font un simple « lire-modifier-écrire » : parfait pour
+  un seul admin à la fois (ce projet), à éviter si plusieurs admins écrivent en même temps.
+
+### 2. Render / Railway / VPS / local (serveur Node classique)
+
+`npm start` (Node ≥ 18) — rien d'autre à configurer, le stockage reste dans les
+fichiers `data/`. Sur Render : *Web Service* → build `npm install` → start `npm start`.

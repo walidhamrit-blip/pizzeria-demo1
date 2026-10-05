@@ -1,0 +1,10 @@
+# Fichiers exclus du déploiement Vercel (inutiles ou sensibles en serverless).
+# Le backend tourne via api/[[...path]].js ; le stockage est chez Upstash Redis.
+server.js
+tailwind.config.cjs
+README.md
+data/content.json
+data/auth.json
+data/orders.json
+data/reservations.json
+data/uploads

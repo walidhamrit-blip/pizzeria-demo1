@@ -343,7 +343,7 @@ body{ font-family:'Nunito',sans-serif; background:#FFF7E9; color:#1E0E0A; }
           <h3>ℹ️ Fonctionnement</h3>
           <ul class="text-sm font-bold text-ink/70 space-y-2 list-disc pl-5">
             <li>Chaque modification enregistrée est <b>immédiatement visible sur tous les appareils</b> : les pages ouvertes se rafraîchissent toutes seules (~20 s).</li>
-            <li>Le contenu est stocké dans <code class="bg-cream px-1.5 py-0.5 rounded border border-ink/20">data/content.json</code>, les images importées dans <code class="bg-cream px-1.5 py-0.5 rounded border border-ink/20">data/uploads/</code>.</li>
+            <li>Stockage : fichiers <code class="bg-cream px-1.5 py-0.5 rounded border border-ink/20">data/</code> en local (Render/Railway…), ou base Redis Upstash si le site est déployé sur Vercel (voir README). Les images sont automatiquement redimensionnées avant l'envoi.</li>
             <li>Les commandes et réservations arrivent en direct depuis le site public.</li>
           </ul>
         </div>
@@ -571,13 +571,49 @@ function bindAll(){
     os.onchange=()=>{C.offers.featured.itemId=os.value;markDirty();};
   }
 }
+/* Redimensionne/compression l'image dans le navigateur (canvas) pour rester
+   sous ~900 Ko — indispensable en hébergement serverless (Vercel + Upstash).
+   Retourne {data,ext} en JPEG, ou null si le fichier est envoyé tel quel. */
+function shrinkImage(file, maxDim = 1280, quality = 0.82) {
+  const type = (file.type || '').toLowerCase();
+  if (!/^image\/(png|jpe?g|webp)$/.test(type)) return Promise.resolve(null); // gif/svg : tel quel
+  if (file.size <= 280 * 1024) return Promise.resolve(null); // déjà léger : tel quel
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      try {
+        const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+        const w = Math.max(1, Math.round(img.naturalWidth * scale));
+        const h = Math.max(1, Math.round(img.naturalHeight * scale));
+        const cv = document.createElement('canvas');
+        cv.width = w; cv.height = h;
+        const ctx = cv.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); // fond blanc (transparences PNG → JPEG)
+        ctx.drawImage(img, 0, 0, w, h);
+        const dataUrl = cv.toDataURL('image/jpeg', quality);
+        const data = dataUrl.split(',')[1];
+        resolve(data && (data.length * 3 / 4) < file.size ? { data, ext: 'jpg' } : null);
+      } catch (e) { resolve(null); }
+      finally { URL.revokeObjectURL(url); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+    img.src = url;
+  });
+}
 async function uploadImage(file,cb){
   try{
-    const fr=new FileReader();
-    const dataUrl=await new Promise((res,rej)=>{fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(file);});
-    const j=await api('/api/upload',{method:'POST',body:JSON.stringify({name:file.name,data:dataUrl.split(',')[1]})});
+    const shrunk = await shrinkImage(file);
+    let data, name;
+    if (shrunk) { data = shrunk.data; name = file.name.replace(/\.(png|jpe?g|webp|gif)$/i, '') + '.jpg'; }
+    else {
+      const fr=new FileReader();
+      const dataUrl=await new Promise((res,rej)=>{fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(file);});
+      data=dataUrl.split(',')[1]; name=file.name;
+    }
+    const j=await api('/api/upload',{method:'POST',body:JSON.stringify({name,data})});
     cb(j.url);
-    toast('Image importée ✓');
+    toast('Image importée ✓' + (shrunk ? ' (redimensionnée)' : ''));
   }catch(e){toast('Import impossible : '+e.message,'err');}
 }
 
