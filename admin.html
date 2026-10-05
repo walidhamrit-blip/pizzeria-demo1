@@ -5,22 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Pizza Demo Tripoli</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍕</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: { fredoka: ['Fredoka','sans-serif'], nunito: ['Nunito','sans-serif'] },
-      colors: { brandRed:'#FF2E4C', brandOrange:'#FF7A00', brandYellow:'#FFC700', brandGreen:'#00B25C',
-        brandPink:'#FF4D8D', brandPurple:'#7C3AED', cream:'#FFF7E9', ink:'#1E0E0A' },
-      boxShadow: { pop:'6px 6px 0 #1E0E0A', pops:'8px 8px 0 #1E0E0A', popsm:'4px 4px 0 #1E0E0A' }
-    }
-  }
-}
-</script>
+<!-- Assets locaux (chemins absolus : la page est servie à /admin) -->
+<link rel="stylesheet" href="/assets/vendor/tailwind.css">
+<link rel="stylesheet" href="/assets/vendor/fonts.css">
+<link rel="stylesheet" href="/assets/vendor/fontawesome/css/all.min.css">
 <style>
 body{ font-family:'Nunito',sans-serif; background:#FFF7E9; color:#1E0E0A; }
 .font-fredoka{ font-family:'Fredoka',sans-serif; }
@@ -661,7 +649,7 @@ function renderMenuList(){
   const w=$('#menuEdit');
   w.innerHTML=(C.menu||[]).map((m,i)=>`
     <div class="flex items-center gap-3 bg-cream border-[2.5px] border-ink rounded-2xl p-2.5">
-      <img src="${escAttr(m.img)}" onerror="this.style.visibility='hidden'" class="w-12 h-12 rounded-xl object-cover border-2 border-ink shrink-0 bg-white">
+      <img src="${escAttr(m.img)}" onerror="this.onerror=null;this.src='/assets/vendor/placeholder.svg'" class="w-12 h-12 rounded-xl object-cover border-2 border-ink shrink-0 bg-white">
       <div class="flex-1 min-w-0">
         <div class="font-black truncate">${esc(m.name)}</div>
         <div class="text-xs font-bold text-ink/50 truncate">${esc(catLabel(m.cat))} • ${m.price} LYD ${m.old?'<s>'+m.old+'</s>':''} • ⭐ ${m.rating??'—'} ${m.badge?'• '+esc(m.badge):''}</div>
@@ -882,7 +870,7 @@ window.galleryUpload=(input,i)=>{
 function renderReviewsList(){
   $('#reviewsEdit').innerHTML=(C.reviews||[]).map((r,i)=>`
     <div class="bg-cream border-[2.5px] border-ink rounded-2xl p-3 flex gap-3">
-      <img src="${escAttr(r.img)}" onerror="this.style.visibility='hidden'" class="w-11 h-11 rounded-full border-2 border-ink object-cover shrink-0 bg-white">
+      <img src="${escAttr(r.img)}" onerror="this.onerror=null;this.src='/assets/vendor/placeholder.svg'" class="w-11 h-11 rounded-full border-2 border-ink object-cover shrink-0 bg-white">
       <div class="flex-1 min-w-0 space-y-2">
         <div class="flex flex-wrap gap-2">
           <input class="a-input !w-44" value="${escAttr(r.n)}" placeholder="Prénom" oninput="rset(${i},'n',this.value)">

@@ -39,6 +39,18 @@ node server.js      # ou : npm start
 - Le site public vérifie la version toutes les 20 s (et au retour sur l'onglet) : si elle a changé, il re-rend la page — les **tous les appareils connectés** voient donc les changements sans rien faire.
 - Les avis, commandes et résérations envoyés par les visiteurs sont écrits côté serveur et visibles immédiatement dans l'admin.
 
+## 🎨 Assets locaux (aucun CDN requis)
+
+Le site **ne dépend d'aucun CDN** : Tailwind (CSS compilé), polices (Fredoka, Nunito, Caveat), Font Awesome et canvas-confetti sont servis localement depuis `assets/vendor/`. Il s'affiche donc correctement même sur un réseau où les CDN sont bloqués ou lents.
+
+Après avoir modifié des classes CSS dans `index.html` / `admin.html`, recompiler le CSS :
+
+```bash
+npx tailwindcss@3.4.17 -c tailwind.config.cjs -o assets/vendor/tailwind.css --minify
+```
+
+Les seules ressources externes restantes sont les photos de contenu (URLs Unsplash/Pravatar, remplaçables par vos propres imports via l'admin), la carte OpenStreetMap et les liens WhatsApp/Itinéraire.
+
 ## 📁 Stockage
 
 | Fichier | Rôle |
@@ -47,6 +59,7 @@ node server.js      # ou : npm start
 | `data/content.json` | Contenu live (créé au premier lancement, sauvegardé à chaque modification) |
 | `data/orders.json` / `data/reservations.json` | Commandes & réservations reçues |
 | `data/uploads/` | Images importées depuis l'admin |
+| `assets/vendor/` | CSS, polices et scripts servis localement |
 
 Sauvegarder le dossier `data/` = sauvegarder tout le site.
 

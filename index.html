@@ -5,27 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pizza Demo — Pizzeria Italienne à Tripoli | Forno a Legna</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍕</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: { fredoka: ['Fredoka','sans-serif'], nunito: ['Nunito','sans-serif'], caveat: ['Caveat','cursive'] },
-      colors: {
-        brandRed:'#FF2E4C', brandOrange:'#FF7A00', brandYellow:'#FFC700', brandGreen:'#00B25C',
-        brandPink:'#FF4D8D', brandPurple:'#7C3AED', cream:'#FFF7E9', ink:'#1E0E0A',
-      },
-      boxShadow: {
-        pop:'6px 6px 0 #1E0E0A', pops:'8px 8px 0 #1E0E0A', popsm:'4px 4px 0 #1E0E0A',
-      }
-    }
-  }
-}
-</script>
+<!-- Assets locaux : le site fonctionne même si les CDN externes sont bloqués -->
+<link rel="stylesheet" href="assets/vendor/tailwind.css">
+<link rel="stylesheet" href="assets/vendor/fonts.css">
+<link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
+<script src="assets/vendor/confetti.browser.js"></script>
 <style>
 *{ -webkit-tap-highlight-color:transparent; }
 html{ scroll-behavior:smooth; }
@@ -220,12 +204,12 @@ body{ font-family:'Nunito',sans-serif; background:#FFF7E9; color:#1E0E0A; overfl
       <div class="absolute w-[105%] max-w-[560px] aspect-square blob grad-btn opacity-15 blur-2xl"></div>
       <div class="absolute w-[88%] max-w-[480px] aspect-square bg-white border-[4px] border-ink blob shadow-pops rotate-3"></div>
       <div class="relative w-[86%] max-w-[460px]">
-        <img id="heroPizza" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=900&q=80" alt="Pizza Demo signature" class="w-full aspect-square object-cover rounded-full border-[5px] border-ink shadow-pops spin-slow">
+        <img id="heroPizza" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=900&q=80" alt="Pizza Demo signature" class="w-full aspect-square object-cover rounded-full border-[5px] border-ink shadow-pops spin-slow" onerror="this.onerror=null;this.src='assets/vendor/placeholder.svg'">
         <div class="absolute inset-0 rounded-full border-[10px] border-white/20 pointer-events-none"></div>
         <div class="absolute -left-4 sm:-left-10 top-8 bg-brandYellow sticker rounded-2xl px-4 py-2 rotate-[-10deg] floaty"><div class="text-[11px] font-black">DÈS</div><div class="font-fredoka font-bold text-2xl leading-none" id="heroPrice">38 LYD</div></div>
         <div class="absolute -right-2 sm:-right-8 top-1/3 bg-white sticker rounded-2xl px-4 py-2 rotate-[8deg] floaty flex items-center gap-2" style="animation-delay:.6s"><span class="w-10 h-10 rounded-full grad-green flex items-center justify-center text-white border-2 border-ink"><i class="fa-solid fa-motorcycle"></i></span><div class="leading-tight"><div class="font-black text-sm">Livraison éclair</div><div class="text-xs font-bold text-ink/60">Hay Al Andalus • Gargaresh</div></div></div>
         <div id="heroCard" class="absolute left-6 -bottom-4 bg-ink text-white rounded-2xl px-5 py-3 rotate-[-4deg] shadow-pop flex items-center gap-3 border-[3px] border-ink">
-          <img id="heroCardImg" src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=200&q=80" class="w-12 h-12 rounded-xl object-cover border-2 border-brandYellow" alt="part">
+          <img id="heroCardImg" src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=200&q=80" class="w-12 h-12 rounded-xl object-cover border-2 border-brandYellow" alt="part" onerror="this.onerror=null;this.src='assets/vendor/placeholder.svg'">
           <div><div class="font-fredoka font-semibold" id="heroCardName">Demo Special Tripoli</div><div class="text-brandYellow font-black text-sm" id="heroCardPrice">68 LYD <span class="line-through text-white/40 ml-1">80</span></div></div>
           <button id="heroCardBtn" class="w-10 h-10 rounded-full grad-btn border-2 border-white flex items-center justify-center hover:scale-110 transition"><i class="fa-solid fa-plus"></i></button>
         </div>
@@ -960,7 +944,7 @@ function tagBadge(t){
 function dishCard(d){
   return `<article class="dish-card bg-cream border-[3px] border-ink rounded-[1.6rem] overflow-hidden shadow-popsm flex flex-col">
     <div class="relative h-48 overflow-hidden border-b-[3px] border-ink">
-      <img src="${d.img}" alt="${d.name}" loading="lazy" onerror="this.src='${U('photo-1513104890138-7c749659a591',600)}'" class="w-full h-full object-cover">
+      <img src="${d.img}" alt="${d.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/vendor/placeholder.svg'" class="w-full h-full object-cover">
       ${d.badge?`<span class="absolute top-3 left-3 bg-brandYellow font-black text-xs px-3 py-1 rounded-full border-2 border-ink rotate-[-4deg] shadow-popsm">${d.badge}</span>`:''}
       <span class="absolute top-3 right-3 bg-white font-black text-xs px-2.5 py-1 rounded-full border-2 border-ink flex items-center gap-1"><i class="fa-solid fa-star text-brandOrange"></i>${d.rating??'—'}</span>
       ${d.old?`<span class="absolute bottom-3 left-3 bg-brandRed text-white font-black text-xs px-3 py-1 rounded-full border-2 border-ink">-${Math.round((1-d.price/d.old)*100)}%</span>`:''}
@@ -1022,7 +1006,7 @@ function refreshTotals(){
   const box=$('cartItems');
   if(!cart.length){box.innerHTML=`<div class="text-center py-12"><div class="text-6xl mb-3">🧺</div><div class="font-fredoka font-semibold text-xl">Panier vide...</div><p class="font-bold text-sm text-ink/50">Une petite Diavola pour te consoler ?</p><button onclick="toggleCart(false);document.getElementById('menu').scrollIntoView({behavior:'smooth'})" class="mt-4 font-fredoka font-semibold bg-brandYellow border-[2.5px] border-ink rounded-full px-6 py-2.5 shadow-popsm">Découvrir le menu</button></div>`;}
   else box.innerHTML=cart.map((c,i)=>`<div class="bg-white border-[2.5px] border-ink rounded-2xl p-3 flex gap-3 items-center pop-in">
-    <img src="${c.img}" onerror="this.src='${U('photo-1513104890138-7c749659a591',300)}'" class="w-16 h-16 rounded-xl object-cover border-2 border-ink shrink-0" alt="">
+    <img src="${c.img}" onerror="this.onerror=null;this.src='assets/vendor/placeholder.svg'" class="w-16 h-16 rounded-xl object-cover border-2 border-ink shrink-0" alt="">
     <div class="flex-1 min-w-0"><div class="font-fredoka font-semibold leading-tight truncate">${c.name}</div><div class="text-xs font-bold text-ink/50 truncate">${c.desc||''}</div>
       <div class="flex items-center gap-2 mt-1.5"><button onclick="chQty(${i},-1)" class="w-7 h-7 rounded-full bg-cream border-2 border-ink font-black hover:bg-brandRed hover:text-white">−</button><span class="font-black text-sm w-5 text-center">${c.qty}</span><button onclick="chQty(${i},1)" class="w-7 h-7 rounded-full bg-cream border-2 border-ink font-black hover:bg-brandGreen hover:text-white">+</button>
       <span class="ml-auto font-fredoka font-bold">${c.price*c.qty} LYD</span></div></div>
@@ -1205,7 +1189,7 @@ function tickCountdown(){
 }
 
 /* ================= GALLERY / REVIEWS ================= */
-function renderGallery(){$('galleryGrid').innerHTML=GALLERY.map(g=>`<div class="g-item ${g.c} relative rounded-3xl overflow-hidden border-[3px] border-white/20 cursor-pointer group" onclick="openLight('${g.img}')"><img src="${g.img}" loading="lazy" onerror="this.src='${U('photo-1513104890138-7c749659a591',600)}'" class="w-full h-full object-cover" alt="${g.t}"><div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4"><span class="text-white font-fredoka font-semibold">${g.t} <i class="fa-solid fa-expand ml-1"></i></span></div></div>`).join('');}
+function renderGallery(){$('galleryGrid').innerHTML=GALLERY.map(g=>`<div class="g-item ${g.c} relative rounded-3xl overflow-hidden border-[3px] border-white/20 cursor-pointer group" onclick="openLight('${g.img}')"><img src="${g.img}" loading="lazy" onerror="this.onerror=null;this.src='assets/vendor/placeholder.svg'" class="w-full h-full object-cover" alt="${g.t}"><div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4"><span class="text-white font-fredoka font-semibold">${g.t} <i class="fa-solid fa-expand ml-1"></i></span></div></div>`).join('');}
 function openLight(src){$('lightImg').src=src;$('lightbox').style.display='flex';}
 function closeLight(){$('lightbox').style.display='none';}
 let revIdx=0, starVal=5;
