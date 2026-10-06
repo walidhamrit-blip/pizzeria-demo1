@@ -17,6 +17,7 @@
  * ============================================================ */
 (function(){
 'use strict';
+window.PD_I18N_V=3;  /* bumped chaque fois que ce fichier change — sert de cache-buster */
 var LS='pd_lang';
 var SRC='en';                    /* source language (identity, no dict) */
 var SUPPORTED={en:1,ar:1};
@@ -391,7 +392,7 @@ function norm(s){return String(s==null?'':s).replace(/[\u2019\u02bc\u02b9']/g,"'
 var IDX={};
 for(var LL in DICT){IDX[LL]={};for(var K in DICT[LL]){IDX[LL][norm(K)]=DICT[LL][K];}}
 
-var lang='en';try{var sv=localStorage.getItem(LS);if(sv&&SUPPORTED[sv])lang=sv;}catch(e){}
+var lang='en';try{var sv=localStorage.getItem(LS);if(sv==='fr'){sv='en';localStorage.setItem(LS,'en');}if(sv&&SUPPORTED[sv])lang=sv;}catch(e){}
 window.pdGetLang=function(){return lang;};
 
 /* Immediate translation of a string (used by the JS for composed
