@@ -43,6 +43,8 @@ Le sélecteur `EN | ع` (barre de navigation + menu mobile) fonctionne ainsi :
 Le site public est en **anglais** (langue source ; le français a été retiré). Le sélecteur
 `EN | ع` reste disponible (dictionnaire EN → AR dans `assets/i18n.js`, RTL automatique,
 persistance `localStorage`).
+Le contenu d'**articles** (noms de plats, badges Signature/Veggie/Premium, catégories, prix,
+libellés de garnitures du Builder) est traduit en arabe via le même dictionnaire.
 
 **6 thèmes** au choix — bouton pastille (icône demi-teinte) dans l'en-tête + 6 pastilles
 dans le menu mobile ; choix mémorisé (`localStorage pd_theme`) et appliqué **avant le

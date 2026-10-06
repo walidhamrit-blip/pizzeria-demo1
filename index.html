@@ -1166,7 +1166,7 @@ function dishCard(d){
       <div class="flex flex-wrap gap-1 mb-1.5">${(d.tags||[]).map(tagBadge).join('')}</div>
       <h3 class="font-fredoka font-semibold text-lg leading-tight">${d.name}</h3>
       <p class="text-[13px] font-bold text-ink/55 mt-1 flex-1">${d.desc}</p>
-      <div class="text-xs font-black text-ink/40 mt-2"><i class="fa-solid fa-bag-shopping mr-1"></i>${d.orders||'—'} ${pdT('orders • Tripoli')}</div>
+      <div class="text-xs font-black text-ink/40 mt-2"><i class="fa-solid fa-bag-shopping mr-1"></i><span>${d.orders||'—'}</span> ${pdT('orders • Tripoli')}</div>
       <div class="flex items-center justify-between mt-3">
         <div><span class="font-fredoka font-bold text-2xl ${d.old?'text-brandRed':''}">${d.price} <span class="text-sm">LYD</span></span>${d.old?`<span class="line-through text-ink/35 font-black text-sm ml-1">${d.old}</span>`:''}</div>
         <button onclick="addToCart('${d.id}',1)" class="font-fredoka font-semibold text-white grad-btn border-[2.5px] border-ink rounded-full px-4 py-2 shadow-popsm hover:scale-105 active:scale-95 transition"><i class="fa-solid fa-plus mr-1"></i>Add</button>
@@ -1281,7 +1281,7 @@ function closeTrack(){$('trackModal').style.display='none';document.body.style.o
 /* ================= BUILDER ================= */
 function renderBuilderOpts(){
   $('sizeOpts').innerHTML=SIZES.map((s,i)=>'<button onclick="setSizeIdx('+i+')" class="opt-card '+(builder.size===s.k?'selected':'')+' bg-white border-[2.5px] border-ink rounded-2xl p-3 text-center font-black text-sm">'+esc(s.n)+'<small class="block font-bold text-ink/50">+'+s.p+' LYD</small></button>').join('');
-  $('doughOpts').innerHTML=DOUGHS.map((d,i)=>'<button onclick="setDoughIdx('+i+')" class="opt-card '+(builder.dough===d.n?'selected':'')+' bg-white border-[2.5px] border-ink rounded-2xl p-3 text-left font-black text-sm">'+esc(d.n)+'<small class="block font-bold text-ink/50">'+esc(d.d||'')+' • +'+d.p+' LYD</small></button>').join('');
+  $('doughOpts').innerHTML=DOUGHS.map((d,i)=>'<button onclick="setDoughIdx('+i+')" class="opt-card '+(builder.dough===d.n?'selected':'')+' bg-white border-[2.5px] border-ink rounded-2xl p-3 text-left font-black text-sm">'+esc(d.n)+'<small class="block font-bold text-ink/50">'+esc(d.d||'')+'<span> • +'+d.p+' LYD</span></small></button>').join('');
   $('sauceOpts').innerHTML=SAUCES.map((s,i)=>'<button onclick="setSauceIdx('+i+')" class="opt-card '+(builder.sauce===s.k?'selected':'')+' bg-white border-[2.5px] border-ink rounded-2xl p-3 text-center font-black text-xs"><span class="w-8 h-8 rounded-full border-2 border-ink block mx-auto mb-1" style="background:'+esc(s.c)+'"></span>'+esc(s.n)+'<small class="block font-bold text-ink/50">+'+s.p+'</small></button>').join('');
   $('cheeseOpts').innerHTML=CHEESES.map((c,i)=>'<button onclick="toggleCheeseIdx('+i+')" class="opt-card '+(builder.cheese.includes(c.n)?'selected':'')+' bg-white border-[2.5px] border-ink rounded-full px-4 py-2 font-black text-[13px]">'+esc(c.n)+' <span class="opacity-70">+'+c.p+'</span></button>').join('');
   $('topOpts').innerHTML=TOPS.map((t,i)=>'<button onclick="toggleTopIdx('+i+')" class="opt-card '+(builder.tops.includes(t.n)?'selected':'')+' bg-white border-[2.5px] border-ink rounded-full px-4 py-2 font-black text-[13px]">'+esc(t.n)+' <span class="opacity-70">+'+t.p+'</span></button>').join('');
@@ -1496,12 +1496,12 @@ document.addEventListener('DOMContentLoaded',async ()=>{
 });
 </script>
 <!-- Sélecteur de langues FR / EN / AR (dictionnaire + traducteur DOM) -->
-<script src="assets/i18n.js?v=3"></script>
+<script src="assets/i18n.js?v=5"></script>
 <script>
 /* Garde-fou anti-cache : si i18n.js est absent ou périmé (version différente),
    on recharge une seule fois pour forcer la revalidation. */
 (function(){
-  var V=3;
+  var V=5;
   try{
     if(window.PD_I18N_V!==V){
       console.warn('[i18n] PD_I18N_V='+(window.PD_I18N_V===undefined?'absent':window.PD_I18N_V)+' (attendu '+V+') — rechargement pour invalider le cache…');

@@ -70,7 +70,7 @@
       "whatsapp": "218912345678",
       "email": "ciao@pizzademo.ly",
       "addressName": "Pizza Demo — Hay Al Andalus",
-      "addressLines": "Rue Sidi Issa, à 200m du front de mer\nTripoli, Libye",
+      "addressLines": "Sidi Issa Street, 200m from the seafront\nTripoli, Libya",
       "mapUrl": "https://www.openstreetmap.org/export/embed.html?bbox=13.05%2C32.82%2C13.30%2C32.94&layer=mapnik&marker=32.8872%2C13.1913",
       "mapsLink": "https://maps.google.com/?q=Hay+Al+Andalus+Tripoli+Libya",
       "instagram": "@pizzademo.tripoli • 48k followers"
@@ -415,10 +415,6 @@
       "fee": 12,
       "time": "25-35 min"
     },
-    "Centre-ville (Medina)": {
-      "fee": 10,
-      "time": "20-30 min"
-    },
     "Dahra / Zawiyat Dahmani": {
       "fee": 10,
       "time": "20-30 min"
@@ -430,6 +426,10 @@
     "Qasr Ben Ghashir": {
       "fee": 22,
       "time": "40-55 min"
+    },
+    "Downtown (Medina)": {
+      "fee": 10,
+      "time": "20-30 min"
     }
   },
   "gallery": [

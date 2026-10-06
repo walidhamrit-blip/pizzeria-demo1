@@ -17,7 +17,7 @@
  * ============================================================ */
 (function(){
 'use strict';
-window.PD_I18N_V=3;  /* bumped chaque fois que ce fichier change — sert de cache-buster */
+window.PD_I18N_V=5;  /* bumped chaque fois que ce fichier change — sert de cache-buster */
 var LS='pd_lang';
 var SRC='en';                    /* source language (identity, no dict) */
 var SUPPORTED={en:1,ar:1};
@@ -25,6 +25,48 @@ var ATTRS=['placeholder','title','aria-label'];
 
 var DICT={
 ar:{
+ "Downtown (Medina)":"وسط المدينة (المدينة القديمة)",
+ "Sidi Issa Street, 200m from the seafront":"شارع سدي عيسى، على بعد 200 م من الواجهة البحرية",
+ "Tripoli, Libya":"طرابلس، ليبيا",
+ "Tiramisu":"تيراميسو",
+ "Forno a legna":"فرن الحطب",
+ "Fatta a mano per te!":"صُنع باليد لك!",
+ "Margherita D.O.P":"مارجريتا (د.أ.ب)",
+ "Diavola Pepperoni":"ديافولا بيبروني حارة",
+ "Napoletana":"بيتزا نابولية",
+ "Capricciosa":"كابريتشوزا",
+ "Quattro Formaggi":"كواترو فورماجّي (أربعة أجبان)",
+ "Demo Special Tripoli":"ديمن سبيشال طرابلس",
+ "Tartufo & Burrata":"تارتوفو وبوراتا (كمأة سوداء)",
+ "Frutti di Mare":"فروتي دي مار (ثمار البحر)",
+ "Arcobaleno Veggie":"أركوبالينو الخضراء (قوس قزح)",
+ "Calzone Ripieno":"كالزوني ريبينو (معبّأ)",
+ "Calzone Diavola XL":"كالزوني ديافولا الكبيرة",
+ "Tiramisu Classico":"تيراميسو كلاسيكو",
+ "Panna Cotta Fruits":"بانا كوتا بالفواكه",
+ "Cannoli Siciliani (x3)":"كانولي صقلية (×3)",
+ "San Pellegrino 50cl":"سان بييلجرينو 50 سم",
+ "Jus d'Avocat Royal":"عصير الأفوكادو الملكي",
+ "Mojito Classique 0%":"موهيتو كلاسيك 0%",
+ "Pack Famiglia Week-end":"باقة العائلة (نهاية الأسبوع)",
+ "VEGGIE":"خضراء",
+ "SPICY 🌶":"حارة 🌶",
+ "SIGNATURE":"مميّزة",
+ "PREMIUM":"فاخرة",
+ "DOLCE":"حلوة",
+ "FRESH":"طازجة",
+ "PACK":"عرض",
+ "Best-seller":"الأكثر مبيعًا",
+ "Chef choice":"اختيار الشيف",
+ "Homemade":"منزلية",
+ "Premium":"فاخرة",
+ "Signature":"مميّزة",
+ "Style Chicago soft":"أسلوب شيكاغو الطري",
+ "Wood-fired, stone-ground, slow-fermented.":"مخبوزة على الحطب، عجين مطحون بالحجر، تخمير بطيء.",
+ "PIZZA NAPOLETANA":"بيتزا نابولية",
+ "BURRATA FRESCA":"بوراتا طازجة",
+ "FORNO A LEGNA":"فرن الحطب",
+ "Fatto con amore, mangiato con gioia!":"صُنع بحب، وأُكل ببهجة!",
 
  "IN THE HEART OF TRIPOLI":"في قلب طرابلس",
 
@@ -91,7 +133,7 @@ ar:{
  "Search a pizza, a dessert... (e.g. burrata, diavola)":"ابحث عن بيتزا أو حلوى... (مثال: بوراتا، ديافولا)",
  "Mamma mia, nothing found!":"ماميا، لم نجد شيئًا!",
  "Try another word or build your own pizza.":"جرّب كلمة أخرى أو اصنع بيتزتك الخاصة.",
- "orders • Tripoli":"طلب • طرابلس",
+ "orders • Tripoli":"طلبات • طرابلس",
  "Add":"أضف",
  "Classics":"كلاسيكيات",
  "Specialties":"مميزاتنا",
