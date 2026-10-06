@@ -103,6 +103,9 @@ déjà en place) et le stockage passe par une base **Redis Upstash** (gratuit).
 Notes :
 - Si les variables Upstash manquent, l'API répond avec un message d'erreur explicite
   en français (aucune donnée n'est perdue).
+- Le contenu d'origine est **embarqué dans la fonction serverless** (`api/seed-data.js`),
+  car les fichiers hors de `api/` ne sont pas déployés avec elle. Après toute modification
+  de `data/seed.json`, régénérer-le avec : `npm run gen-seed`.
 - Les images importées sont **automatiquement redimensionnées dans le navigateur**
   (max 1280 px, JPEG ~82 %) pour respecter la limite de taille des valeurs Redis
   (~1 Mo en serverless).
