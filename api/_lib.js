@@ -106,7 +106,19 @@ function verifyTokenAuth(req) {
   return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected));
 }
 
-function readSeed() { return JSON.parse(fs.readFileSync(SEED_FILE, 'utf8')); }
+/* Contenu d'origine : embarqué dans api/seed-data.js (généré depuis data/seed.json)
+ * pour fonctionner en serverless, où les fichiers hors api/ ne sont pas déployés
+ * avec la fonction Vercel. En local, data/seed.json reste utilisé s'il est présent. */
+let _seedCache = null;
+function readSeed() {
+  if (_seedCache) return _seedCache;
+  try { _seedCache = require('./seed-data'); }
+  catch (e) {
+    try { _seedCache = JSON.parse(fs.readFileSync(SEED_FILE, 'utf8')); }
+    catch (e2) { throw Object.assign(new Error("Contenu d'origine introuvable (seed manquant)"), { code: 500 }); }
+  }
+  return _seedCache;
+}
 function cloneSeed() { return JSON.parse(JSON.stringify(readSeed())); }
 function bumpContent(c) { c.version = (c.version || 0) + 1; c.updatedAt = new Date().toISOString(); return c; }
 
@@ -165,14 +177,27 @@ class UpstashStore {
     this.ready = Promise.resolve();
     this.url = String(url).replace(/\/+$/, '');
     this.token = String(token);
+    if (!/^https?:\/\/[a-z0-9.-]+/i.test(this.url)) {
+      throw Object.assign(new Error('UPSTASH_REDIS_REST_URL invalide (« ' + this.url.slice(0, 60) + ' ») — utilise la valeur qui commence par https:// dans l\'onglet REST de la console Upstash'), { code: 500 });
+    }
+    if (!this.token) throw Object.assign(new Error('UPSTASH_REDIS_REST_TOKEN est vide'), { code: 500 });
   }
   async _cmd(command, ...args) {
-    const r = await fetch(this.url, {
-      method: 'POST',
-      headers: { Authorization: 'Bearer ' + this.token, 'Content-Type': 'application/json' },
-      body: JSON.stringify([command, ...args])
-    });
-    if (!r.ok) { const e = new Error('Erreur stockage Upstash (' + r.status + ')'); e.code = 502; throw e; }
+    let r;
+    try {
+      r = await fetch(this.url, {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + this.token, 'Content-Type': 'application/json' },
+        body: JSON.stringify([command, ...args])
+      });
+    } catch (e) {
+      const err = new Error('Impossible de joindre Upstash — vérifie la variable UPSTASH_REDIS_REST_URL (elle doit ressembler à https://xxxx.upstash.io)');
+      err.code = 502; throw err;
+    }
+    if (!r.ok) {
+      const hint = r.status === 401 || r.status === 403 ? ' — vérifie la variable UPSTASH_REDIS_REST_TOKEN' : '';
+      const e = new Error('Erreur stockage Upstash (' + r.status + ')' + hint); e.code = 502; throw e;
+    }
     const j = await r.json();
     return j.result;
   }

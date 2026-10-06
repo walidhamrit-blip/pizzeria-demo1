@@ -5,7 +5,8 @@
   "description": "Pizzeria Demo — site vitrine + panneau d'administration (contenu modifiable en temps réel sur tous les appareils)",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "gen-seed": "node -e \"const fs=require('fs');fs.writeFileSync('api/seed-data.js','/* Généré depuis data/seed.json — ne pas modifier à la main.\\n * Regénérer après toute modification du seed : npm run gen-seed */\\nmodule.exports = '+JSON.stringify(JSON.parse(fs.readFileSync('data/seed.json','utf8')),null,1)+';\\n');console.log('api/seed-data.js régénéré')\""
   },
   "engines": {
     "node": ">=18"
