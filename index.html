@@ -10,6 +10,11 @@
 <link rel="stylesheet" href="assets/vendor/fonts.css">
 <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
 <script src="assets/vendor/confetti.browser.js"></script>
+<script>
+/* Applique tôt la langue choisie (localStorage) pour éviter tout flash
+   de mise en page RTL quand la préférence enregistrée est l'arabe. */
+(function(){try{var l=localStorage.getItem('pd_lang');if(l==='ar'){document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');}else if(l==='en'){document.documentElement.setAttribute('lang','en');}}catch(e){}})();
+</script>
 <style>
 *{ -webkit-tap-highlight-color:transparent; }
 html{ scroll-behavior:smooth; }
@@ -96,6 +101,26 @@ body{ font-family:'Nunito',sans-serif; background:#FFF7E9; color:#1E0E0A; overfl
 .opt-card.selected{ background:#1E0E0A; color:#fff; transform:rotate(-1deg) scale(1.02); box-shadow:6px 6px 0 #FF2E4C; border-color:#1E0E0A; }
 .opt-card.selected small{ color:#FFC700!important; }
 @media(max-width:768px){ .wavy-divider{height:36px} }
+/* ---------- Sélecteur de langues ---------- */
+.lang-seg{ display:inline-flex; align-items:center; gap:2px; border:2.5px solid #1E0E0A; background:#fff; border-radius:999px; padding:2px; box-shadow:3px 3px 0 #1E0E0A; }
+.lang-btn{ appearance:none; border:0; background:transparent; border-radius:999px; padding:.15rem .55rem; font-family:'Fredoka',sans-serif; font-weight:700; font-size:12px; line-height:1.4; color:#1E0E0A99; cursor:pointer; transition:background .2s,color .2s,transform .15s; }
+.lang-btn:hover{ color:#1E0E0A; }
+.lang-btn.lg-on{ background:linear-gradient(135deg,#FF2E4C,#FF7A00,#FFC700); color:#fff; transform:rotate(-2deg) scale(1.05); }
+/* ---------- RTL (arabe) : ajustements des utilitaires physiques ---------- */
+[dir="rtl"] .mr-1{margin-right:0;margin-left:.25rem}
+[dir="rtl"] .mr-2{margin-right:0;margin-left:.5rem}
+[dir="rtl"] .mr-3{margin-right:0;margin-left:.75rem}
+[dir="rtl"] .ml-1{margin-left:0;margin-right:.25rem}
+[dir="rtl"] .ml-2{margin-left:0;margin-right:.5rem}
+[dir="rtl"] .ml-auto{margin-left:0;margin-right:auto}
+[dir="rtl"] .left-3{left:auto;right:.75rem}
+[dir="rtl"] .right-3{right:auto;left:.75rem}
+[dir="rtl"] .top-3.left-3{left:.75rem;right:auto}
+[dir="rtl"] .top-3.right-3{right:.75rem;left:auto}
+[dir="rtl"] #searchInput{padding-left:1rem !important;padding-right:2.75rem}
+[dir="rtl"] .fa-magnifying-glass{left:auto;right:1rem}
+[dir="rtl"] body{ font-family:'Nunito','Segoe UI',Tahoma,'Noto Kufi Arabic','Noto Naskh Arabic',sans-serif; }
+[dir="rtl"] .font-fredoka,[dir="rtl"] .font-caveat{ font-family:'Fredoka','Caveat','Segoe UI',Tahoma,'Noto Kufi Arabic','Noto Naskh Arabic',sans-serif; }
 </style>
 </head>
 <body class="antialiased">
@@ -140,6 +165,11 @@ body{ font-family:'Nunito',sans-serif; background:#FFF7E9; color:#1E0E0A; overfl
       <a href="#contact" class="navlink px-4 py-2 rounded-full hover:bg-ink hover:text-brandYellow transition">Contact</a>
     </div>
     <div class="flex items-center gap-2">
+      <div class="lang-seg hidden sm:flex" title="Langue / Language / اللغة" aria-label="Choix de la langue">
+        <button type="button" class="lang-btn" data-lang="fr" onclick="pdApplyLang('fr')">FR</button>
+        <button type="button" class="lang-btn" data-lang="en" onclick="pdApplyLang('en')">EN</button>
+        <button type="button" class="lang-btn" data-lang="ar" onclick="pdApplyLang('ar')">ع</button>
+      </div>
       <button onclick="openReservation()" class="hidden md:inline-flex font-fredoka font-semibold bg-white border-[3px] border-ink rounded-full px-5 py-2 shadow-popsm hover:-translate-y-0.5 hover:shadow-pop transition"><i class="fa-regular fa-calendar-check mr-2 text-brandRed"></i>Réserver</button>
       <button onclick="toggleCart(true)" class="relative font-fredoka font-semibold text-white grad-btn border-[3px] border-ink rounded-full px-5 py-2 shadow-popsm hover:-translate-y-0.5 transition">
         <i class="fa-solid fa-basket-shopping mr-2"></i><span class="hidden sm:inline">Commander</span>
@@ -158,6 +188,14 @@ body{ font-family:'Nunito',sans-serif; background:#FFF7E9; color:#1E0E0A; overfl
       <a href="#avis" class="mlink px-4 py-3 rounded-xl bg-cream border-2 border-ink">Avis</a>
       <a href="#reservation" class="mlink px-4 py-3 rounded-xl grad-btn text-white border-2 border-ink">Réserver</a>
       <a href="#contact" class="mlink px-4 py-3 rounded-xl grad-green text-white border-2 border-ink">Contact</a>
+      <div class="col-span-2 flex items-center justify-center gap-3 pt-1">
+        <span class="text-xs font-black opacity-60"><i class="fa-solid fa-globe mr-1"></i>Langue</span>
+        <div class="lang-seg">
+          <button type="button" class="lang-btn" data-lang="fr" onclick="pdApplyLang('fr')">FR</button>
+          <button type="button" class="lang-btn" data-lang="en" onclick="pdApplyLang('en')">EN</button>
+          <button type="button" class="lang-btn" data-lang="ar" onclick="pdApplyLang('ar')">ع</button>
+        </div>
+      </div>
     </div>
   </div>
 </header>
@@ -575,6 +613,9 @@ body{ font-family:'Nunito',sans-serif; background:#FFF7E9; color:#1E0E0A; overfl
 
 <script>
 /* ================= DATA ================= */
+/* Repli si assets/i18n.js n'est pas chargé (mode statique sans dossier assets) :
+   i18n.js, chargé à la fin du <body>, réécrira ces deux fonctions. */
+if(!window.pdT){window.pdT=function(s){return s};window.pdApplyLang=function(){};}
 const U=(id,w=800)=>`https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
 /* Contenu par défaut (mode statique sans serveur). Avec le serveur, le contenu
    live vient de /api/content et se met à jour tout seul sur tous les appareils. */
@@ -865,7 +906,7 @@ function applySettings(s){
   const fc=$('footContact');
   if(fc)fc.innerHTML='<div><i class="fa-solid fa-location-dot mr-2 text-brandRed"></i>'+esc(ct.addressName)+'</div><div><i class="fa-solid fa-phone mr-2 text-brandGreen"></i>'+esc(ct.phone)+'</div><div><i class="fa-solid fa-envelope mr-2 text-brandYellow"></i>'+esc(ct.email)+'</div>';
   setText('footCopy',s.copyright);setText('footPay',s.payments);setText('nlText',s.newsletterText);
-  setText('freeDelNote','(offerte dès '+(s.freeDeliveryFrom??80)+' LYD)');
+  setText('freeDelNote',pdT('(offerte dès X LYD)').replace('X',String(s.freeDeliveryFrom??80)));
 }
 function applyOffers(o){
   o=o||{};const f=o.featured||{};
@@ -874,7 +915,7 @@ function applyOffers(o){
   if(el)el.innerHTML=esc(f.line1)+'<br>'+esc(f.line2)+'<br><span class="text-brandYellow">'+esc(f.price)+' LYD</span> <span class="line-through text-white/40 text-2xl">'+esc(f.oldPrice)+' LYD</span>';
   setText('offDesc',f.desc);
   const cb=$('offCodeBtn');
-  if(cb){cb.innerHTML='<i class="fa-regular fa-copy mr-2"></i>Code: '+esc(f.code||'');if(f.code){const code=f.code;cb.onclick=()=>copyCode(code);}}
+  if(cb){cb.innerHTML='<i class="fa-regular fa-copy mr-2"></i>'+pdT('Code: ')+esc(f.code||'');if(f.code){const code=f.code;cb.onclick=()=>copyCode(code);}}
   const bb=$('offBuyBtn');
   if(bb){if(f.itemId){bb.style.display='';const iid=f.itemId;bb.onclick=()=>addToCart(iid,1);}else bb.style.display='none';}
   const gc=$('offersCards');
@@ -953,7 +994,7 @@ function dishCard(d){
       <div class="flex flex-wrap gap-1 mb-1.5">${(d.tags||[]).map(tagBadge).join('')}</div>
       <h3 class="font-fredoka font-semibold text-lg leading-tight">${d.name}</h3>
       <p class="text-[13px] font-bold text-ink/55 mt-1 flex-1">${d.desc}</p>
-      <div class="text-xs font-black text-ink/40 mt-2"><i class="fa-solid fa-bag-shopping mr-1"></i>${d.orders||'—'} commandes • Tripoli</div>
+      <div class="text-xs font-black text-ink/40 mt-2"><i class="fa-solid fa-bag-shopping mr-1"></i>${d.orders||'—'} ${pdT('commandes • Tripoli')}</div>
       <div class="flex items-center justify-between mt-3">
         <div><span class="font-fredoka font-bold text-2xl ${d.old?'text-brandRed':''}">${d.price} <span class="text-sm">LYD</span></span>${d.old?`<span class="line-through text-ink/35 font-black text-sm ml-1">${d.old}</span>`:''}</div>
         <button onclick="addToCart('${d.id}',1)" class="font-fredoka font-semibold text-white grad-btn border-[2.5px] border-ink rounded-full px-4 py-2 shadow-popsm hover:scale-105 active:scale-95 transition"><i class="fa-solid fa-plus mr-1"></i>Ajouter</button>
@@ -963,7 +1004,7 @@ function dishCard(d){
 function renderMenu(){
   const q=($('searchInput').value||'').toLowerCase().trim();
   const sort=$('sortSelect').value;
-  let list=MENU.filter(d=>(activeCat==='all'||d.cat===activeCat)&&(!vegOnly||(d.tags||[]).includes('veg')||(d.tags||[]).includes('drink'))&&(!q||(d.name+' '+d.desc).toLowerCase().includes(q)));
+  let list=MENU.filter(d=>(activeCat==='all'||d.cat===activeCat)&&(!vegOnly||(d.tags||[]).includes('veg')||(d.tags||[]).includes('drink'))&&(!q||((d.name+' '+d.desc).toLowerCase()+' '+(pdT(d.name)+' '+pdT(d.desc)).toLowerCase()).includes(q)));
   if(sort==='asc') list=[...list].sort((a,b)=>a.price-b.price);
   if(sort==='desc') list=[...list].sort((a,b)=>b.price-a.price);
   if(sort==='pop') list=[...list].sort((a,b)=>b.rating-a.rating);
@@ -991,7 +1032,7 @@ function addToCart(id,qty=1,custom=null){
   }
   refreshTotals(); boom(false);
   const dname=custom?custom.name:findDish(id).name;
-  toast(`<b>${dname}</b> ajouté au panier !`,'ok');
+  toast(`<b>${dname}</b> ${pdT('ajouté au panier !')}`,'ok');
   const badge=$('cartCount'); badge.classList.remove('pop-in'); void badge.offsetWidth; badge.classList.add('pop-in');
 }
 function chQty(idx,delta){cart[idx].qty+=delta; if(cart[idx].qty<=0) cart.splice(idx,1); refreshTotals();}
@@ -1002,7 +1043,7 @@ function discountAmt(){if(!promo) return 0; const st=cartSubtotal(); if(promo.ty
 function refreshTotals(){
   const count=cart.reduce((s,c)=>s+c.qty,0);
   $('cartCount').textContent=count;
-  $('cartSub').textContent=`${count} article${count>1?'s':''} • Livraison Tripoli`;
+  $('cartSub').textContent=pdT(count>1?'X articles • Livraison Tripoli':'X article • Livraison Tripoli').replace('X',String(count));
   const box=$('cartItems');
   if(!cart.length){box.innerHTML=`<div class="text-center py-12"><div class="text-6xl mb-3">🧺</div><div class="font-fredoka font-semibold text-xl">Panier vide...</div><p class="font-bold text-sm text-ink/50">Une petite Diavola pour te consoler ?</p><button onclick="toggleCart(false);document.getElementById('menu').scrollIntoView({behavior:'smooth'})" class="mt-4 font-fredoka font-semibold bg-brandYellow border-[2.5px] border-ink rounded-full px-6 py-2.5 shadow-popsm">Découvrir le menu</button></div>`;}
   else box.innerHTML=cart.map((c,i)=>`<div class="bg-white border-[2.5px] border-ink rounded-2xl p-3 flex gap-3 items-center pop-in">
@@ -1014,7 +1055,7 @@ function refreshTotals(){
   const st=cartSubtotal(), disc=discountAmt(), del=deliveryFee(), tot=Math.max(0,st-disc+del);
   $('ctSub').textContent=st+' LYD'; $('ctDisc').textContent='-'+disc+' LYD';
   $('ctDiscLbl').textContent=promo?`(${promo.code})`:'';
-  $('ctDel').textContent=st===0?'—':(del===0?'GRATUITE 🎉':del+' LYD');
+  $('ctDel').textContent=st===0?'—':(del===0?pdT('GRATUITE 🎉'):del+' LYD');
   $('ctDel').className=del===0&&st>0?'text-brandGreen font-black':'';
   $('ctTotal').textContent=tot+' LYD'; $('ctBtnTotal').textContent=tot+' LYD';
   $('coSub').textContent=st+' LYD'; $('coDisc').textContent='-'+disc+' LYD';
@@ -1029,7 +1070,7 @@ function toggleCart(open){
 function applyPromo(){
   const code=($('promoInput').value||'').trim().toUpperCase();
   if(!code) return;
-  if(PROMOS[code]){promo={code,...PROMOS[code]};$('promoMsg').textContent='✓ '+PROMOS[code].msg;$('promoMsg').className='text-xs font-black mt-1 px-1 text-brandGreen';toast(`Code <b>${code}</b> activé !`,'pink');boom(false);}
+  if(PROMOS[code]){promo={code,...PROMOS[code]};$('promoMsg').textContent='✓ '+PROMOS[code].msg;$('promoMsg').className='text-xs font-black mt-1 px-1 text-brandGreen';toast(`Code <b>${code}</b> ${pdT('activé !')}`,'pink');boom(false);}
   else{$('promoMsg').textContent='✕ Code invalide. Essaie DEMO10';$('promoMsg').className='text-xs font-black mt-1 px-1 text-brandRed';}
   refreshTotals();
 }
@@ -1055,7 +1096,7 @@ function placeOrder(){
   const num='PD-'+Math.floor(1000+Math.random()*9000);
   $('orderNum').textContent=num;
   const mins=ZONES[zone]?ZONES[zone].time:'30-40 min';
-  $('trackEta').textContent='Arrivée estimée: '+mins+' • '+zone;
+  $('trackEta').textContent=pdT('Arrivée estimée: ')+mins+' • '+zone;
   closeCheckout(); $('trackModal').style.display='flex'; document.body.style.overflow='hidden';
   boom(true);
   document.querySelectorAll('#trackSteps .track-step').forEach(s=>s.classList.remove('active'));
@@ -1144,10 +1185,10 @@ function randomPizza(){
 }
 function addBuilderToCart(){
   const {total}=builderPrice();
-  const name=($('builderName').value.trim()||'Pizza Création Demo').slice(0,34);
+  const name=($('builderName').value.trim()||pdT('Pizza Création Demo')).slice(0,34);
   const szN=(SIZES.find(s=>s.k===builder.size)||{}).n||'';
   const scN=(SAUCES.find(s=>s.k===builder.sauce)||{}).n||'';
-  const desc=szN+' • '+builder.dough+' • '+scN+' • '+[...builder.cheese,...builder.tops].join(', ');
+  const desc=pdT(szN)+' • '+pdT(builder.dough)+' • '+pdT(scN)+' • '+[...builder.cheese,...builder.tops].map(x=>pdT(x)).join(', ');
   addToCart(null,1,{name:'🍕 '+name,price:total,key:name+desc+Date.now(),desc});
   $('builderName').value='';
 }
@@ -1173,9 +1214,9 @@ function spinWheel(){
   setTimeout(()=>{
     spinning=false;$('spinBtn').style.opacity='1';localStorage.setItem('demo_spin','1');
     const p=PRIZES[idx]||{};
-    if(p.code){$('promoInput').value=p.code;applyPromo();$('wheelResult').textContent='🎉 GAGNÉ : '+(p.label||p.code)+' — code '+p.code+' appliqué !';}
-    else if(p.free){addToCart(p.free,1);$('wheelResult').textContent='🎉 GAGNÉ : '+(p.label||'cadeau')+' OFFERT ajouté au panier !';}
-    else{$('wheelResult').textContent='🎉 GAGNÉ : '+(p.label||'bravo')+' !';}
+    if(p.code){$('promoInput').value=p.code;applyPromo();$('wheelResult').textContent='🎉 '+pdT('GAGNÉ : ')+pdT(p.label||p.code)+pdT(' — code ')+p.code+pdT(' appliqué !');}
+    else if(p.free){addToCart(p.free,1);$('wheelResult').textContent='🎉 '+pdT('GAGNÉ : ')+pdT(p.label||'cadeau')+pdT(' OFFERT ajouté au panier !');}
+    else{$('wheelResult').textContent='🎉 '+pdT('GAGNÉ : ')+pdT(p.label||'bravo')+' !';}
     boom(true);
   },4400);
 }
@@ -1196,8 +1237,8 @@ let revIdx=0, starVal=5;
 function renderReviews(){
   $('reviewInner').innerHTML=REVIEWS.map(r=>`<div class="min-w-full p-7 sm:p-9">
     <div class="flex items-center gap-1 text-brandOrange text-lg">${'<i class="fa-solid fa-star"></i>'.repeat(r.s)}${'<i class="fa-regular fa-star"></i>'.repeat(5-r.s)}</div>
-    <p class="font-fredoka text-xl sm:text-2xl leading-snug mt-3">“${r.t}”</p>
-    <div class="flex items-center gap-3 mt-5"><img src="${r.img}" class="w-12 h-12 rounded-full border-[2.5px] border-ink object-cover" alt=""><div><div class="font-black">${r.n}</div><div class="text-xs font-bold text-ink/50">${r.z} • ${r.d} • <span class="text-brandGreen">✓ Achat vérifié</span></div></div></div></div>`).join('');
+    <p class="font-fredoka text-xl sm:text-2xl leading-snug mt-3">“${pdT(r.t)}”</p>
+    <div class="flex items-center gap-3 mt-5"><img src="${r.img}" class="w-12 h-12 rounded-full border-[2.5px] border-ink object-cover" alt=""><div><div class="font-black">${r.n}</div><div class="text-xs font-bold text-ink/50">${r.z} • ${pdT(r.d)||'—'} • <span class="text-brandGreen">${pdT('✓ Achat vérifié')}</span></div></div></div></div>`).join('');
   $('reviewDots').innerHTML=REVIEWS.map((_,i)=>`<button onclick="goReview(${i})" class="h-2.5 rounded-full transition-all ${i===revIdx?'w-8 grad-btn':'w-2.5 bg-ink/20'}"></button>`).join('');
   $('reviewInner').style.transform=`translateX(-${revIdx*100}%)`;
 }
@@ -1221,7 +1262,7 @@ function renderTables(){
   $('tablesMap').innerHTML=Array.from({length:12},(_,i)=>{const n=i+1;const isB=busy.has(n);
     return `<button ${isB?'disabled':''} onclick="selTableF(${n},this)" class="table-seat ${isB?'bg-ink/15 text-ink/30 border-2 border-ink/20':'bg-brandGreen text-white border-2 border-ink'} rounded-2xl py-3 font-fredoka font-semibold text-sm">T${n}<span class="block text-[10px] font-nunito font-bold opacity-70">${n%3===0?'4 pers':n%2?'2 pers':'6 pers'}</span></button>`;}).join('');
 }
-function selTableF(n,btn){selTable=n;document.querySelectorAll('.table-seat').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');toast(`Table T${n} sélectionnée`,'info');}
+function selTableF(n,btn){selTable=n;document.querySelectorAll('.table-seat').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');toast(`${pdT('Table T')}${n} ${pdT('sélectionnée')}`,'info');}
 function openReservation(){document.getElementById('reservation').scrollIntoView({behavior:'smooth'});}
 function submitReservation(){
   const n=$('resName').value.trim(), p=$('resPhone').value.trim(), d=$('resDate').value, t=$('resTime').value, g=$('resGuests').value;
@@ -1282,5 +1323,7 @@ document.addEventListener('DOMContentLoaded',async ()=>{
   startPolling(); // met à jour la page tout seul quand l'admin modifie le site
 });
 </script>
+<!-- Sélecteur de langues FR / EN / AR (dictionnaire + traducteur DOM) -->
+<script src="assets/i18n.js"></script>
 </body>
 </html>

@@ -20,6 +20,22 @@ node server.js      # ou : npm start
 - Variables d'environnement : `PORT` (défaut `8080`), `ADMIN_PASSWORD` (mot de passe initial, au premier lancement uniquement).
 - Aucune dépendance : Node.js ≥ 18 suffit (fonction `fetch` native). Pour déployer sur **Vercel**, voir la section *Déploiement* ci-dessous.
 
+## 🌍 Sélecteur de langues (FR / EN / AR)
+
+Le site public dispose d'un sélecteur de langues (barre de navigation, et menu mobile sur téléphone) :
+
+- **FR** (source), **EN**, **AR** — le choix est mémorisé (`localStorage`) et appliqué à chaque visite.
+- L'arabe bascule la page en **RTL** (`dir=rtl`) avec des ajustements CSS dédiés.
+- Fonctionnement (fichier `assets/i18n.js`, zéro dépendance) : un dictionnaire traduit FR → EN/AR
+  chaque nœud texte du DOM, les `placeholder`/`title`, le `<title>` de l'onglet et les messages
+  composés par le JS ; un `MutationObserver` retraduit automatiquement tout ce qui est rendu
+  ensuite (panier, menu, refresh auto depuis l'admin).
+- Le **contenu éditable** (menu, promos…) est traduit pour les valeurs par défaut du seed ;
+  si vous renommez un plat ou modifiez un texte dans l'admin, la nouvelle valeur s'affiche
+  telle quelle (langue source) tant qu'elle n'est pas ajoutée au dictionnaire
+  (`DICT.en` / `DICT.ar` dans `assets/i18n.js`, clés = texte français exact).
+- Le panneau d'administration reste en français.
+
 ## 🛠️ Ce qu'on peut modifier depuis l'admin
 
 - **Général** : nom, slogan, bandeau promotionnel, section d'accueil (titres, sous-titre, image, prix, plat vedette…), chiffres clés, bandeau de confiance, coordonnées, carte, horaires, seuil de livraison gratuite, pied de page.
