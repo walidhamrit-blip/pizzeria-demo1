@@ -38,16 +38,39 @@ Le sélecteur `EN | ع` (barre de navigation + menu mobile) fonctionne ainsi :
 - Une chaîne inconnue du dictionnaire s'affiche telle quelle (langue source).
 - Le panneau d'administration (`/admin`) reste **entièrement en français** (outil exploitant).
 
-## 🎨 Design minimaliste
+## 🎨 Design luxe & 6 thèmes (dont 2 sombres)
 
-Palette volontairement sobre : papier `#FAF9F6`, encre `#17140F`, **un seul accent**
-terracotta `#A6522F` + tons sable/olive/pierre. Bordures fines 1 px, ombres discrètes,
-animations neutres (rotations/ballottements désactivés), et **photos de fond
-contextualisées** (Unsplash, servis avec voile sombre + texte blanc) : pizza au premier
-plan du hero, salle du restaurant derrière le Builder, plan de table derrière la
-réservation, four à bois sur le bandeau « Slow dough » et la carte promo — via les classes `.hero-min` / `.off-photo` / `.band-min` /
-`#createur` / `#reservation` / `.site-footer`. Les polices Fredoka/Nunito/Caveat ne sont
-plus utilisées (stack système + serif italique pour les accents).
+Le site public est en **anglais** (langue source ; le français a été retiré). Le sélecteur
+`EN | ع` reste disponible (dictionnaire EN → AR dans `assets/i18n.js`, RTL automatique,
+persistance `localStorage`).
+
+**6 thèmes** au choix — bouton pastille (icône demi-teinte) dans l'en-tête + 6 pastilles
+dans le menu mobile ; choix mémorisé (`localStorage pd_theme`) et appliqué **avant le
+premier rendu** (aucun flash) :
+
+| Thème | Type | Palette |
+|---|---|---|
+| **Ivory** (défaut) | clair | ivoire chaud + bronze |
+| **Porcelain** | clair | porcelaine froide + ardoise |
+| **Sand** | clair | sable + bronze |
+| **Sage** | clair | vert sauge + vert profond |
+| **Night** | **sombre** | noir chaud + or |
+| **Forest** | **sombre** | vert nuit + champagne |
+
+Implémentation : chaque thème = un jeu de variables CSS sur `<html data-theme="…">`
+(papier, carte, encre, accent, or, bordures, voile de la section réservation…) ; les
+utilitaires Tailwind (`bg-ink`, `text-ink`, `bg-cream`, `bg-white`, couleurs de marque,
+variantes en transparence via `color-mix`) sont **re-mappés vers ces variables** dans le
+bloc `<style>` du site, donc tout le site (modales, panier, builder, admin public…) suit
+le thème. Pour ajouter un thème : bloquer `[data-theme="…"]` dans `index.html`, l'ajouter
+dans `PD_THEMES` (JS) + une pastille dans le panneau.
+
+Finitions « luxe » : **police serif d'affichage** (Didot/Bodoni/Georgia selon la machine)
+pour les titres, filet doré sous le titre du hero, boutons pilles bordés d'or, bordures
+1 px, ombres douces, sections photo avec voilages (hero pizza, salle du Builder, table
+derrière la réservation, four à bois sur le bandeau et la carte promo). Le hero reste
+cinématographique (sombre) dans tous les thèmes ; la section réservation adapte son
+voile (clair/sombre) selon le thème.
 
 ## 🛠️ Ce qu'on peut modifier depuis l'admin
 

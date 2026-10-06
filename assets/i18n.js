@@ -25,6 +25,16 @@ var ATTRS=['placeholder','title','aria-label'];
 var DICT={
 ar:{
 
+ "IN THE HEART OF TRIPOLI":"في قلب طرابلس",
+
+ "Theme":"المظهر",
+ "Ivory":"عاجي",
+ "Porcelain":"بورسلين",
+ "Sand":"رملي",
+ "Sage":"أخضر مريمي",
+ "Night":"ليلي",
+ "Forest":"غابة",
+
  "Veggie mode on — only vegetable pizzas":"وضع الخضار مفعّل — بيتزا خضراء فقط",
  "Veggie mode off":"وضع الخضار متوقف",
  "Your cart is empty — add a pizza first!":"سلتك فارغة — أضف بيتزا أولاً!",

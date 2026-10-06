@@ -13,46 +13,94 @@
 <script>
 /* Applique tôt la langue choisie (localStorage) pour éviter tout flash
    de mise en page RTL quand la préférence enregistrée est l'arabe. */
-(function(){try{var l=localStorage.getItem('pd_lang');if(l==='ar'){document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');}else if(l==='en'){document.documentElement.setAttribute('lang','en');}}catch(e){}})();
+(function(){try{var de=document.documentElement;var l=localStorage.getItem('pd_lang');if(l==='ar'){de.setAttribute('dir','rtl');de.setAttribute('lang','ar');}else{de.setAttribute('lang','en');}var t=localStorage.getItem('pd_theme');if(t&&/^(ivoire|porcelaine|sable|sage|nuit|foret)$/.test(t)){de.setAttribute('data-theme',t);}}catch(e){}})();
 </script>
 <style>
-/* ============ Minimal design system ============ */
-:root{ --paper:#FAF9F6; --card:#fff; --ink:#17140F; --muted:#6B6357; --line:#E7E2D8; --line2:#D9D3C7; --accent:#A6522F; --gold:#B08A3E; --olive:#55664F; --sand:#EDE7DA; }
+/* ============ Design system — luxury, 6 themes (2 dark) ============
+   Themes are CSS-variable sets on <html data-theme="…"> :
+   ivoire (default) · porcelaine · sable · sauge  → light
+   nuit · foret                                        → dark        */
+:root, [data-theme="ivoire"]{
+  --paper:#F6F1E7; --card:#FFFDF8; --ink:#211A11; --muted:#6E6557;
+  --line:#E6DECC; --line2:#D8CFB9; --accent:#9C7433; --gold:#B08A3E;
+  --olive:#5C6B54; --sand:#F2ECDD; --deep:#171208; --on-deep:#F6F1E7;
+  --edge:rgba(33,26,17,.85); --res-veil:rgba(246,241,231,.95);
+  --shadow-soft:0 1px 2px rgba(23,18,8,.07),0 10px 30px rgba(23,18,8,.08);
+}
+[data-theme="porcelaine"]{
+  --paper:#F1F3F2; --card:#FCFDFC; --ink:#1B2026; --muted:#5F6A73;
+  --line:#DEE2E0; --line2:#CBD1CE; --accent:#54677B; --gold:#8C7A4F;
+  --olive:#5E6D60; --sand:#E9EBE8; --deep:#12171C; --on-deep:#F1F3F2;
+  --edge:rgba(27,32,38,.85); --res-veil:rgba(241,243,242,.95);
+  --shadow-soft:0 1px 2px rgba(18,23,28,.07),0 10px 30px rgba(18,23,28,.08);
+}
+[data-theme="sable"]{
+  --paper:#EDE5D6; --card:#FAF5EA; --ink:#282115; --muted:#776C59;
+  --line:#E0D6C0; --line2:#CEC3A9; --accent:#8A6A38; --gold:#A5854A;
+  --olive:#6A6F52; --sand:#F0E8D5; --deep:#1E180E; --on-deep:#EDE5D6;
+  --edge:rgba(40,33,21,.85); --res-veil:rgba(237,229,214,.95);
+  --shadow-soft:0 1px 2px rgba(30,24,14,.07),0 10px 30px rgba(30,24,14,.09);
+}
+[data-theme="sauge"]{
+  --paper:#ECEFE7; --card:#FAFBF5; --ink:#212820; --muted:#65705F;
+  --line:#DBDFD1; --line2:#C7CDBA; --accent:#3E5B41; --gold:#8A7A45;
+  --olive:#4E6147; --sand:#E6EADC; --deep:#161C12; --on-deep:#ECEFE7;
+  --edge:rgba(33,40,32,.85); --res-veil:rgba(236,239,231,.95);
+  --shadow-soft:0 1px 2px rgba(22,28,18,.07),0 10px 30px rgba(22,28,18,.09);
+}
+[data-theme="nuit"]{
+  --paper:#131108; --card:#1C1912; --ink:#EFE9DB; --muted:#A49B88;
+  --line:#2C281E; --line2:#3C362A; --accent:#C9A05A; --gold:#C9A05A;
+  --olive:#87957A; --sand:#262218; --deep:#0B0906; --on-deep:#F0EADC;
+  --edge:#4A4335; --res-veil:rgba(14,12,8,.93);
+  --shadow-soft:0 1px 2px rgba(0,0,0,.4),0 12px 34px rgba(0,0,0,.45);
+}
+[data-theme="foret"]{
+  --paper:#0F1510; --card:#16201A; --ink:#E7EBE1; --muted:#93A08F;
+  --line:#253029; --line2:#344238; --accent:#CBB98A; --gold:#CBB98A;
+  --olive:#7C937A; --sand:#1E2A21; --deep:#0A0F0B; --on-deep:#E9EDE4;
+  --edge:#465448; --res-veil:rgba(10,15,11,.93);
+  --shadow-soft:0 1px 2px rgba(0,0,0,.4),0 12px 34px rgba(0,0,0,.45);
+}
 *{ -webkit-tap-highlight-color:transparent; }
 html{ scroll-behavior:smooth; }
-body{ font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Kufi Arabic','Noto Naskh Arabic',sans-serif; background:var(--paper); color:var(--ink); overflow-x:hidden; -webkit-font-smoothing:antialiased; letter-spacing:.01em; }
+/* --- luxury typography: serif display, sans body --- */
+:root{ --serif:'Didot','Bodoni MT','Playfair Display','Cormorant Garamond',Georgia,'Times New Roman',serif; }
+body{ font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Kufi Arabic','Noto Naskh Arabic',sans-serif; background:var(--paper); color:var(--ink); overflow-x:hidden; -webkit-font-smoothing:antialiased; letter-spacing:.012em; transition:background .35s,color .35s; }
+h1,h2,h3{ font-family:var(--serif); font-weight:600; letter-spacing:.01em; line-height:1.14; }
+h3{ font-weight:650; }
 .font-fredoka{ font-family:inherit; }
-.font-caveat{ font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Noto Naskh Arabic',serif; font-style:italic; font-weight:500; }
-/* accents — flat, single accent color */
+.font-caveat{ font-family:var(--serif); font-style:italic; font-weight:500; }
+.gold-hr{ height:1px; border:0; background:linear-gradient(90deg,transparent,var(--gold),transparent); opacity:.55; margin:1.15rem 0; }
+/* --- accents (theme-driven) --- */
 .grad-text{ background:none; color:var(--accent); -webkit-text-fill-color:var(--accent); }
-.grad-btn{ background:var(--ink); }
+.grad-btn{ background:var(--deep); }
 .grad-green{ background:var(--olive); }
-.grad-purple{ background:var(--ink); }
-.grad-dark{ background:#100D0A; }
-.off-photo{ background:linear-gradient(rgba(16,13,10,.88),rgba(16,13,10,.93)),url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=55') center/cover no-repeat; }
-/* surfaces — hairline borders, no hard shadows */
+.grad-purple{ background:var(--deep); }
+.grad-dark{ background:var(--deep); }
+.off-photo{ background:linear-gradient(rgba(12,10,6,.86),rgba(12,10,6,.92)),url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=55') center/cover no-repeat; }
 .sticker,.sticker-sm{ border:1px solid var(--line); box-shadow:none; background:var(--card); }
-/* hero */
+/* --- hero (cinematic in every theme) --- */
 .hero-min{ position:relative; background:#100D0A; color:#fff; }
-.hero-bg{ position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1800&q=75') center/cover no-repeat; opacity:.4; }
-.hero-veil{ position:absolute; inset:0; background:linear-gradient(180deg,rgba(16,13,10,.32) 0%,rgba(16,13,10,.72) 62%,rgba(16,13,10,.92) 100%); }
+.hero-bg{ position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1800&q=75') center/cover no-repeat; opacity:.42; }
+.hero-veil{ position:absolute; inset:0; background:linear-gradient(180deg,rgba(12,10,6,.34) 0%,rgba(12,10,6,.72) 62%,rgba(12,10,6,.93) 100%); }
 .hero-inner{ position:relative; z-index:2; }
 @media(min-width:1024px){ .hero-bg{ background-attachment:fixed; } }
-.btn-primary{ display:inline-flex; align-items:center; font-weight:600; font-size:.95rem; background:var(--paper); color:var(--ink); border:1px solid var(--paper); border-radius:999px; padding:.75rem 1.9rem; transition:opacity .2s; cursor:pointer; }
-.btn-primary:hover{ opacity:.88; }
-.btn-ghost{ display:inline-flex; align-items:center; font-weight:600; font-size:.95rem; background:transparent; color:#fff; border:1px solid rgba(255,255,255,.35); border-radius:999px; padding:.75rem 1.9rem; transition:background .2s; cursor:pointer; }
-.btn-ghost:hover{ background:rgba(255,255,255,.08); }
-/* contextual photo sections */
-#createur{ background:linear-gradient(rgba(16,13,10,.94),rgba(16,13,10,.97)),url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1600&q=55') center/cover no-repeat; }
-#reservation{ background:linear-gradient(rgba(250,249,246,.95),rgba(250,249,246,.97)),url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=55') center/cover no-repeat; }
+.btn-primary{ display:inline-flex; align-items:center; font-weight:600; font-size:.8rem; letter-spacing:.14em; text-transform:uppercase; background:var(--deep); color:var(--on-deep); border:1px solid var(--gold); border-radius:999px; padding:.8rem 2rem; transition:transform .2s,box-shadow .2s,border-color .2s; cursor:pointer; }
+.btn-primary:hover{ transform:translateY(-1px); border-color:var(--on-deep); box-shadow:0 10px 26px rgba(0,0,0,.3); }
+.btn-ghost{ display:inline-flex; align-items:center; font-weight:600; font-size:.8rem; letter-spacing:.14em; text-transform:uppercase; background:transparent; color:#fff; border:1px solid rgba(255,255,255,.35); border-radius:999px; padding:.8rem 2rem; transition:background .2s,border-color .2s; cursor:pointer; }
+.btn-ghost:hover{ background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.6); }
+/* --- contextual photo sections (theme-aware veil for the light one) --- */
+#createur{ background:linear-gradient(rgba(12,10,6,.94),rgba(12,10,6,.97)),url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1600&q=55') center/cover no-repeat; }
+#reservation{ background:linear-gradient(var(--res-veil),var(--res-veil)),url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=55') center/cover no-repeat; }
 @media(min-width:1024px){ #reservation{ background-attachment:fixed,fixed; } }
-.band-min{ color:#fff; background:linear-gradient(rgba(16,13,10,.62),rgba(16,13,10,.62)),url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1800&q=65') center/cover; }
+.band-min{ color:#fff; background:linear-gradient(rgba(12,10,6,.62),rgba(12,10,6,.62)),url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1800&q=65') center/cover; }
 @media(min-width:1024px){ .band-min{ background-attachment:fixed,fixed; } }
-.band-min h3{ font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif; font-style:italic; font-weight:500; font-size:clamp(1.5rem,3.4vw,2.4rem); line-height:1.4; }
-/* neutralize the playful rotations / lifts */
+.band-min h3{ font-family:var(--serif); font-style:italic; font-weight:500; font-size:clamp(1.5rem,3.4vw,2.4rem); line-height:1.4; }
+/* neutralize playful rotations / lifts */
 [class*="rotate-"]{ --tw-rotate:0deg!important; }
 [class*="hover:-translate-"]:hover,[class*="hover:translate-"]:hover{ --tw-translate-x:0px!important; --tw-translate-y:0px!important; }
-/* animations — reduced, calm */
+/* animations — calm */
 @keyframes marquee{ 0%{transform:translateX(0)}100%{transform:translateX(-50%)} }
 .marquee-track{ display:flex; width:max-content; animation:marquee 42s linear infinite; }
 .marquee-track:hover{ animation-play-state:paused; }
@@ -62,57 +110,117 @@ body{ font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helve
 .reveal{ opacity:0; transform:translateY(14px); transition:opacity .7s ease,transform .7s ease; }
 .reveal.visible{ opacity:1; transform:none; }
 /* nav */
-#navbar{ transition:background .3s,box-shadow .3s; }
-#navbar.scrolled{ background:rgba(250,249,246,.92); backdrop-filter:blur(10px); box-shadow:0 1px 0 rgba(23,20,15,.1); }
+#navbar{ transition:background .3s,box-shadow .3s,border-color .3s; border-bottom:1px solid transparent; }
+#navbar.scrolled{ background:color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter:blur(10px); border-bottom-color:var(--line); }
 /* cursor fx removed */
 #cursor,#cursorRing{ display:none!important; }
 /* preloader */
 #preloader{ position:fixed; inset:0; z-index:10000; background:var(--paper); display:flex; align-items:center; justify-content:center; flex-direction:column; transition:opacity .5s,visibility .5s; }
+#preloader .font-semibold{ font-family:var(--serif); }
 #preloader.hide{ opacity:0; visibility:hidden; }
 /* toast */
 .toast{ animation:popIn .3s ease-out both; border-radius:12px; }
 /* cards */
-.dish-card{ background:var(--card); transition:transform .3s ease,box-shadow .3s ease; }
-.dish-card:hover{ transform:translateY(-3px); box-shadow:0 10px 26px rgba(23,20,15,.07); }
+.dish-card{ background:var(--card); transition:transform .3s ease,box-shadow .3s ease,border-color .3s; }
+.dish-card:hover{ transform:translateY(-3px); box-shadow:var(--shadow-soft); border-color:var(--gold)!important; }
 .blob{ border-radius:50%; }
 /* builder */
 #pizzaVisual{ transition:transform .4s; }
 .pizza-crust{ background:radial-gradient(circle, #E9D7AC 0 58%, #C9AF7E 58% 66%, #9C8350 66% 71%, transparent 72%); }
-.pizza-sauce-tomate{ background:radial-gradient(circle, #A6522F 0 56%, transparent 57%); }
+.pizza-sauce-tomate{ background:radial-gradient(circle, var(--accent) 0 56%, transparent 57%); }
 .pizza-sauce-blanche{ background:radial-gradient(circle, #F0E9D8 0 56%, transparent 57%); }
-.pizza-sauce-pesto{ background:radial-gradient(circle, #55664F 0 56%, transparent 57%); }
+.pizza-sauce-pesto{ background:radial-gradient(circle, var(--olive) 0 56%, transparent 57%); }
 .pizza-sauce-bbq{ background:radial-gradient(circle, #4E4238 0 56%, transparent 57%); }
 .cheese-layer{ background:radial-gradient(circle, #EFE3B4 0 52%, #D9C87E 52% 55%, transparent 56%); mix-blend-mode:multiply; opacity:.85; }
 .topping-dot{ position:absolute; border:1px solid rgba(23,20,15,.35); box-shadow:none; }
 /* wheel */
 #wheel{ transition:transform 4.2s cubic-bezier(.12,.8,.12,1); }
-.wheel-needle{ position:absolute; top:-13px; left:50%; transform:translateX(-50%); z-index:10; width:0; height:0; border-left:8px solid transparent; border-right:8px solid transparent; border-top:12px solid var(--ink); }
+.wheel-needle{ position:absolute; top:-13px; left:50%; transform:translateX(-50%); z-index:10; width:0; height:0; border-left:8px solid transparent; border-right:8px solid transparent; border-top:12px solid var(--edge); }
 /* scrollbar */
-::-webkit-scrollbar{ width:10px; } ::-webkit-scrollbar-track{ background:#F2EFE8; } ::-webkit-scrollbar-thumb{ background:#C9C1B2; border-radius:99px; border:2px solid #F2EFE8; }
+::-webkit-scrollbar{ width:10px; } ::-webkit-scrollbar-track{ background:var(--paper); } ::-webkit-scrollbar-thumb{ background:var(--line2); border-radius:99px; border:2px solid var(--paper); }
 /* gallery */
 .g-item img{ transition:transform .5s ease; } .g-item:hover img{ transform:scale(1.04); }
-/* table seats */
-.table-seat{ transition:all .2s; cursor:pointer; } .table-seat.selected{ background:var(--ink)!important; color:var(--sand)!important; transform:none; }
+/* tables */
+.table-seat{ transition:all .2s; cursor:pointer; } .table-seat.selected{ background:var(--deep)!important; color:var(--on-deep)!important; transform:none; }
 /* inputs */
-.f-input{ border:1px solid var(--line2); border-radius:10px; padding:.7rem .9rem; background:#fff; font-weight:600; width:100%; outline:none; transition:border-color .2s,box-shadow .2s; font-size:.95rem; }
-.f-input:focus{ border-color:var(--ink); box-shadow:0 0 0 3px rgba(23,20,15,.06); }
+.f-input{ border:1px solid var(--line2); border-radius:10px; padding:.7rem .9rem; background:var(--card); color:var(--ink); font-weight:600; width:100%; outline:none; transition:border-color .2s,box-shadow .2s; font-size:.95rem; }
+.f-input:focus{ border-color:var(--gold); box-shadow:0 0 0 3px color-mix(in srgb, var(--gold) 18%, transparent); }
 /* chips & options */
-.chip-active{ background:var(--ink)!important; color:var(--paper)!important; transform:none!important; }
-.opt-card.selected{ background:var(--ink); color:#fff; transform:none!important; box-shadow:none; border-color:var(--ink); }
-.opt-card.selected small{ color:var(--sand)!important; }
+.chip-active{ background:var(--deep)!important; color:var(--on-deep)!important; transform:none!important; }
+.opt-card.selected{ background:var(--deep); color:var(--on-deep); transform:none!important; box-shadow:none; border-color:var(--edge); }
+.opt-card.selected small{ color:color-mix(in srgb, var(--on-deep) 70%, transparent)!important; }
 /* tracking timeline */
-.track-step{ transition:all .4s; } .track-step.active .dot{ background:var(--olive); border-color:var(--ink); transform:none; } .track-step.active .lbl{ color:var(--ink); font-weight:900; }
-/* pattern — barely-there texture instead of dots on cream */
-.dot-pattern{ background-image:none; background-color:#fff; }
+.track-step{ transition:all .4s; } .track-step.active .dot{ background:var(--olive); border-color:var(--edge); transform:none; } .track-step.active .lbl{ color:var(--ink); font-weight:900; }
+/* patterns */
+.dot-pattern{ background-image:none; background-color:var(--card); }
 .zigzag{ background:none; height:1px; }
 .wavy-divider{ display:block; width:100%; height:60px; margin-bottom:-1px; }
 .no-scrollbar::-webkit-scrollbar{ display:none; } .no-scrollbar{ scrollbar-width:none; }
 /* ---------- Language selector ---------- */
-.lang-seg{ display:inline-flex; align-items:center; gap:2px; border:1px solid var(--line2); background:#fff; border-radius:999px; padding:2px; }
+.lang-seg{ display:inline-flex; align-items:center; gap:2px; border:1px solid var(--line2); background:var(--card); border-radius:999px; padding:2px; }
 .lang-btn{ appearance:none; border:0; background:transparent; border-radius:999px; padding:.15rem .6rem; font-weight:600; font-size:11px; line-height:1.5; letter-spacing:.08em; color:var(--muted); cursor:pointer; transition:background .2s,color .2s; }
 .lang-btn:hover{ color:var(--ink); }
-.lang-btn.lg-on{ background:var(--ink); color:var(--paper); }
+.lang-btn.lg-on{ background:var(--deep); color:var(--on-deep); }
+/* ---------- Theme picker ---------- */
+.theme-btn{ position:relative; }
+.theme-swatch{ width:20px; height:20px; border-radius:50%; border:1px solid var(--line2); background:linear-gradient(135deg,var(--paper) 49.5%,var(--accent) 50.5%); display:block; transition:transform .2s; }
+button:hover .theme-swatch{ transform:rotate(90deg); }
+.theme-panel{ position:absolute; top:calc(100% + 10px); right:0; z-index:60; width:196px; background:var(--card); border:1px solid var(--line2); border-radius:14px; box-shadow:0 18px 44px rgba(8,6,2,.2); padding:.4rem; display:none; }
+[dir="rtl"] .theme-panel{ right:auto; left:0; }
+.theme-panel.open{ display:block; }
+.theme-row{ display:flex; align-items:center; gap:.6rem; width:100%; padding:.45rem .55rem; border:0; background:transparent; border-radius:10px; cursor:pointer; font-size:13px; font-weight:700; color:var(--ink); text-align:left; }
+[dir="rtl"] .theme-row{ text-align:right; }
+.theme-row:hover{ background:color-mix(in srgb, var(--ink) 7%, transparent); }
+.theme-row .th-swatch{ width:18px; height:18px; border-radius:50%; border:1px solid var(--line2); flex:none; }
+.theme-row .fa-check{ margin-left:auto; font-size:11px; color:var(--gold); display:none; }
+[dir="rtl"] .theme-row .fa-check{ margin-left:0; margin-right:auto; }
+.theme-row.th-on .fa-check{ display:inline-block; }
+.theme-dot{ width:22px; height:22px; border-radius:50%; border:1px solid var(--line2); cursor:pointer; padding:0; flex:none; }
+.theme-dot.th-on{ outline:2px solid var(--gold); outline-offset:2px; }
 @media(max-width:768px){ .wavy-divider{height:24px} }
+/* ---------- Tailwind utilities → theme variables ---------- */
+.bg-ink{background-color:var(--deep)}
+.hover\:bg-ink:hover{background-color:var(--deep)}
+.bg-ink\/10{background-color:color-mix(in srgb,var(--deep) 10%,transparent)}
+.bg-ink\/15{background-color:color-mix(in srgb,var(--deep) 15%,transparent)}
+.bg-ink\/20{background-color:color-mix(in srgb,var(--deep) 20%,transparent)}
+.bg-ink\/50{background-color:color-mix(in srgb,var(--deep) 50%,transparent)}
+.bg-ink\/60{background-color:color-mix(in srgb,var(--deep) 60%,transparent)}
+.bg-ink\/70{background-color:color-mix(in srgb,var(--deep) 70%,transparent)}
+.bg-ink\/80{background-color:color-mix(in srgb,var(--deep) 80%,transparent)}
+.bg-ink\/90{background-color:color-mix(in srgb,var(--deep) 90%,transparent)}
+.text-ink{color:var(--ink)}
+.text-ink\/30{color:color-mix(in srgb,var(--ink) 30%,transparent)}
+.text-ink\/35{color:color-mix(in srgb,var(--ink) 35%,transparent)}
+.text-ink\/40{color:color-mix(in srgb,var(--ink) 40%,transparent)}
+.text-ink\/50{color:color-mix(in srgb,var(--ink) 50%,transparent)}
+.text-ink\/55{color:color-mix(in srgb,var(--ink) 55%,transparent)}
+.text-ink\/60{color:color-mix(in srgb,var(--ink) 60%,transparent)}
+.text-ink\/70{color:color-mix(in srgb,var(--ink) 70%,transparent)}
+.border-ink{border-color:var(--edge)}
+.border-ink\/10{border-color:color-mix(in srgb,var(--ink) 10%,transparent)}
+.border-ink\/20{border-color:color-mix(in srgb,var(--ink) 20%,transparent)}
+.bg-cream{background-color:var(--paper)}
+.bg-cream\/95{background-color:color-mix(in srgb,var(--paper) 95%,transparent)}
+.bg-white{background-color:var(--card)}
+.text-brandYellow{color:var(--gold)}
+.hover\:text-brandYellow:hover{color:var(--gold)}
+.text-brandRed{color:var(--accent)}
+.hover\:text-brandRed:hover{color:var(--accent)}
+.text-brandGreen{color:var(--olive)}
+.text-brandOrange{color:var(--gold)}
+.text-brandPink{color:var(--muted)}
+.text-brandPurple{color:var(--muted)}
+.bg-brandYellow{background-color:var(--gold)}
+.hover\:bg-brandYellow:hover{background-color:var(--gold)}
+.bg-brandGreen{background-color:var(--olive)}
+.hover\:bg-brandGreen:hover{background-color:var(--olive)}
+.bg-brandRed{background-color:var(--accent)}
+.hover\:bg-brandRed:hover{background-color:var(--accent)}
+.bg-brandPink{background-color:var(--muted)}
+.hover\:bg-brandPink:hover{background-color:var(--muted)}
+.bg-brandOrange{background-color:var(--gold)}
+.bg-brandYellow\/20{background-color:color-mix(in srgb,var(--gold) 20%,transparent)}
 /* ---------- RTL (arabic) ---------- */
 [dir="rtl"] .mr-1{margin-right:0;margin-left:.25rem}
 [dir="rtl"] .mr-2{margin-right:0;margin-left:.5rem}
@@ -154,7 +262,7 @@ body{ font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helve
 <header id="navbar" class="sticky top-0 z-[100]">
   <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
     <a href="#accueil" class="flex items-center gap-3 group">
-      <div class="w-10 h-10 rounded-xl bg-ink flex items-center justify-center text-[11px] font-bold tracking-[.15em] text-[#FAF9F6]">PD</div>
+      <div class="w-10 h-10 rounded-xl bg-ink flex items-center justify-center text-[11px] font-bold tracking-[.2em]" style="color:var(--gold)">PD</div>
       <div class="leading-none">
         <div class="font-fredoka font-bold text-2xl tracking-tight"><span class="brand-1">PIZZA</span> <span class="grad-text brand-2">DEMO</span></div>
         <div class="text-[11px] font-black tracking-[.22em] text-brandRed" id="navTagline">TRIPOLI • ITALIANA</div>
@@ -170,6 +278,20 @@ body{ font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helve
       <a href="#contact" class="navlink px-4 py-2 rounded-full hover:bg-ink hover:text-brandYellow transition">Contact</a>
     </div>
     <div class="flex items-center gap-2">
+      <div class="theme-btn hidden sm:block">
+        <button type="button" onclick="toggleThemePanel(event)" aria-label="Theme" title="Theme" class="w-9 h-9 rounded-full border flex items-center justify-center transition" style="border-color:var(--line2);background:var(--card)">
+          <span class="theme-swatch"></span>
+        </button>
+        <div id="themePanel" class="theme-panel">
+          <div class="px-2 pt-1.5 pb-1 text-[10px] font-black uppercase tracking-[.22em]" style="color:var(--muted)">Theme</div>
+          <button type="button" class="theme-row" data-theme="ivoire" onclick="pickTheme('ivoire')"><span class="th-swatch" style="background:linear-gradient(135deg,#F6F1E7 49.5%,#9C7433 50.5%)"></span>Ivory<i class="fa-solid fa-check"></i></button>
+          <button type="button" class="theme-row" data-theme="porcelaine" onclick="pickTheme('porcelaine')"><span class="th-swatch" style="background:linear-gradient(135deg,#F1F3F2 49.5%,#54677B 50.5%)"></span>Porcelain<i class="fa-solid fa-check"></i></button>
+          <button type="button" class="theme-row" data-theme="sable" onclick="pickTheme('sable')"><span class="th-swatch" style="background:linear-gradient(135deg,#EDE5D6 49.5%,#8A6A38 50.5%)"></span>Sand<i class="fa-solid fa-check"></i></button>
+          <button type="button" class="theme-row" data-theme="sage" onclick="pickTheme('sage')"><span class="th-swatch" style="background:linear-gradient(135deg,#ECEFE7 49.5%,#3E5B41 50.5%)"></span>Sage<i class="fa-solid fa-check"></i></button>
+          <button type="button" class="theme-row" data-theme="nuit" onclick="pickTheme('nuit')"><span class="th-swatch" style="background:linear-gradient(135deg,#131108 49.5%,#C9A05A 50.5%)"></span>Night<i class="fa-solid fa-check"></i></button>
+          <button type="button" class="theme-row" data-theme="foret" onclick="pickTheme('foret')"><span class="th-swatch" style="background:linear-gradient(135deg,#0F1510 49.5%,#CBB98A 50.5%)"></span>Forest<i class="fa-solid fa-check"></i></button>
+        </div>
+      </div>
       <div class="lang-seg hidden sm:flex" title="Language / اللغة" aria-label="Language">
         <button type="button" class="lang-btn" data-lang="en" onclick="pdApplyLang('en')">EN</button>
         <button type="button" class="lang-btn" data-lang="ar" onclick="pdApplyLang('ar')">ع</button>
@@ -199,6 +321,15 @@ body{ font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helve
           <button type="button" class="lang-btn" data-lang="ar" onclick="pdApplyLang('ar')">ع</button>
         </div>
       </div>
+      <div class="col-span-2 flex items-center justify-center gap-2 pt-2">
+        <span class="text-xs font-black opacity-60 mr-1"><i class="fa-solid fa-palette mr-1"></i>Theme</span>
+        <button type="button" class="theme-dot" data-theme="ivoire" onclick="pickTheme('ivoire')" aria-label="Ivory" style="background:linear-gradient(135deg,#F6F1E7 49.5%,#9C7433 50.5%)"></button>
+        <button type="button" class="theme-dot" data-theme="porcelaine" onclick="pickTheme('porcelaine')" aria-label="Porcelain" style="background:linear-gradient(135deg,#F1F3F2 49.5%,#54677B 50.5%)"></button>
+        <button type="button" class="theme-dot" data-theme="sable" onclick="pickTheme('sable')" aria-label="Sand" style="background:linear-gradient(135deg,#EDE5D6 49.5%,#8A6A38 50.5%)"></button>
+        <button type="button" class="theme-dot" data-theme="sage" onclick="pickTheme('sage')" aria-label="Sage" style="background:linear-gradient(135deg,#ECEFE7 49.5%,#3E5B41 50.5%)"></button>
+        <button type="button" class="theme-dot" data-theme="nuit" onclick="pickTheme('nuit')" aria-label="Night" style="background:linear-gradient(135deg,#131108 49.5%,#C9A05A 50.5%)"></button>
+        <button type="button" class="theme-dot" data-theme="foret" onclick="pickTheme('foret')" aria-label="Forest" style="background:linear-gradient(135deg,#0F1510 49.5%,#CBB98A 50.5%)"></button>
+      </div>
     </div>
   </div>
 </header>
@@ -212,7 +343,7 @@ body{ font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helve
   <div class="hero-inner max-w-7xl mx-auto px-4 sm:px-6 grid lg:grid-cols-[1.2fr_.8fr] gap-10 lg:gap-16 items-center pt-24 pb-16 lg:py-28">
     <div class="reveal visible">
       <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-semibold uppercase tracking-[.26em] text-white/55">
-        <span class="w-1.5 h-1.5 rounded-full bg-white/60 inline-block"></span>
+        <span class="w-1.5 h-1.5 rounded-full inline-block" style="background:var(--gold)"></span>
         <span id="heroPill">FORNO A LEGNA</span>
         <span class="text-white/25">/</span>
         <span id="heroBadgeTxt">Authentic since 2012 • Tripoli</span>
@@ -220,7 +351,8 @@ body{ font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helve
       <h1 id="heroTitle" class="font-fredoka font-semibold leading-[1.04] mt-5 text-[11.5vw] sm:text-6xl xl:text-[4.6rem] tracking-tight text-white">
         THE REAL<br><span class="grad-text">ITALIAN PIZZA</span><br>IN THE HEART OF TRIPOLI
       </h1>
-      <p id="heroSub" class="mt-5 text-[15px] sm:text-base font-medium text-white/65 max-w-lg leading-relaxed">48h fermented dough, San Marzano tomatoes, fior di latte & a 450°C wood oven. Delivered hot in 25 minutes anywhere in Tripoli.</p>
+      <div class="gold-hr" style="width:7rem;margin-top:1.2rem;margin-bottom:0"></div>
+      <p id="heroSub" class="mt-4 text-[15px] sm:text-base font-medium text-white/65 max-w-lg leading-relaxed">48h fermented dough, San Marzano tomatoes, fior di latte & a 450°C wood oven. Delivered hot in 25 minutes anywhere in Tripoli.</p>
       <div class="flex flex-wrap gap-3 mt-8">
         <button onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})" class="btn-primary"><i class="fa-solid fa-utensils mr-2"></i><span id="heroCta1">View the Menu</span></button>
         <button onclick="document.getElementById('createur').scrollIntoView({behavior:'smooth'})" class="btn-ghost"><i class="fa-solid fa-wand-magic-sparkles mr-2"></i><span id="heroCta2">Build My Pizza</span></button>
@@ -518,7 +650,7 @@ body{ font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helve
 <footer class="bg-ink text-white pt-14 pb-8 border-t-[4px] border-ink relative overflow-hidden">
   <div class="absolute inset-0 opacity-10" style="background-image:radial-gradient(#BDB59D 1.5px,transparent 2px);background-size:24px 24px"></div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 relative grid md:grid-cols-4 gap-8">
-    <div><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl border border-white/25 flex items-center justify-center text-[11px] font-bold tracking-[.15em] text-white">PD</div><div class="font-fredoka font-bold text-2xl"><span class="brand-1">PIZZA</span> <span class="text-brandYellow brand-2">DEMO</span></div></div>
+    <div><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl border border-white/25 flex items-center justify-center text-[11px] font-bold tracking-[.2em]" style="color:var(--gold)">PD</div><div class="font-fredoka font-bold text-2xl"><span class="brand-1">PIZZA</span> <span class="text-brandYellow brand-2">DEMO</span></div></div>
       <p id="footAbout" class="text-white/60 font-bold text-sm mt-3">Tripoli's favorite Italian pizzeria since 2012. Forno a legna, amore e gioia — in every slice.</p>
       <div class="flex gap-2 mt-4"><a href="#" class="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center hover:bg-brandPink transition"><i class="fa-brands fa-instagram"></i></a><a href="#" class="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center hover:bg-blue-500 transition"><i class="fa-brands fa-facebook-f"></i></a><a href="#" class="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center hover:bg-black transition"><i class="fa-brands fa-tiktok"></i></a><a href="#" class="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center hover:bg-brandGreen transition"><i class="fa-brands fa-whatsapp"></i></a></div></div>
     <div><div class="font-fredoka font-semibold text-brandYellow mb-3">QUICK LINKS</div><div class="grid gap-2 font-bold text-sm text-white/70"><a href="#menu" class="hover:text-brandYellow">Full menu</a><a href="#createur" class="hover:text-brandYellow">Pizza builder</a><a href="#offres" class="hover:text-brandYellow">Deals & Wheel</a><a href="#reservation" class="hover:text-brandYellow">Book a table</a><a href="#avis" class="hover:text-brandYellow">Customer reviews</a></div></div>
@@ -617,6 +749,45 @@ body{ font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helve
 /* Repli si assets/i18n.js n'est pas chargé (mode statique sans dossier assets) :
    i18n.js, chargé à la fin du <body>, réécrira ces deux fonctions. */
 if(!window.pdT){window.pdT=function(s){return s};window.pdApplyLang=function(){};}
+/* ================= THEMES (6, dont 2 sombres) =================
+   Applique <html data-theme> + persiste (localStorage pd_theme).
+   Les variables CSS du bloc <style> font tout le reste. */
+var PD_THEMES=['ivoire','porcelaine','sable','sage','nuit','foret'];
+function pdCurTheme(){var de=document.documentElement;var v=de.getAttribute('data-theme');if(v)return v;try{return localStorage.getItem('pd_theme')||'ivoire'}catch(e){return 'ivoire'}}
+function pdApplyTheme(t){
+  if(PD_THEMES.indexOf(t)<0)return;
+  document.documentElement.setAttribute('data-theme',t);
+  try{localStorage.setItem('pd_theme',t)}catch(e){}
+  pdUpdateThemeUI();
+}
+function pdUpdateThemeUI(){
+  var t=pdCurTheme();
+  document.querySelectorAll('.theme-row,.theme-dot').forEach(function(el){
+    el.classList.toggle('th-on',el.getAttribute('data-theme')===t);
+  });
+}
+function pickTheme(t){
+  pdApplyTheme(t);
+  var p=document.getElementById('themePanel');
+  if(p)p.classList.remove('open');
+}
+function toggleThemePanel(ev){
+  if(ev)ev.stopPropagation();
+  var p=document.getElementById('themePanel');
+  if(!p)return;
+  p.classList.toggle('open');
+}
+document.addEventListener('click',function(ev){
+  var p=document.getElementById('themePanel');
+  if(!p)return;
+  if(p.contains(ev.target))return;
+  if(ev.target.closest&&ev.target.closest('.theme-btn'))return;
+  p.classList.remove('open');
+});
+document.addEventListener('keydown',function(ev){
+  if(ev.key==='Escape'){var p=document.getElementById('themePanel');if(p)p.classList.remove('open');}
+});
+pdUpdateThemeUI();
 const U=(id,w=800)=>`https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
 /* Contenu par défaut (mode statique sans serveur). Avec le serveur, le contenu
    live vient de /api/content et se met à jour tout seul sur tous les appareils. */

@@ -35,10 +35,13 @@ const MIME = {
 
 const PAGE_404 = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>404 — Pizza Demo</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍕</text></svg>"></head>
-<body style="font-family:ui-sans-serif,system-ui,sans-serif;background:#FAF9F6;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0">
-<div style="text-align:center;border:1px solid #E7E2D9;border-radius:14px;background:#fff;padding:48px 64px;box-shadow:0 1px 2px rgba(23,20,15,.06)">
-<h1 style="margin:.2em 0;font-weight:650;letter-spacing:-.01em">404 — Page not found</h1>
-<p style="color:#8A8378">This page is out of the oven.</p><a href="/" style="color:#A6522F;font-weight:600;text-decoration:none;border-bottom:1px solid currentColor">← Back to the pizzeria</a></div></body></html>`;
+<body style="font-family:ui-sans-serif,system-ui,sans-serif;background:#F6F1E7;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0">
+<div style="text-align:center;border:1px solid #D8CFB9;border-radius:14px;background:#FFFDF8;padding:56px 72px;box-shadow:0 1px 2px rgba(23,18,8,.06),0 10px 30px rgba(23,18,8,.08)">
+<h1 style="margin:.2em 0;font-family:'Didot','Bodoni MT',Georgia,serif;font-weight:600;font-size:2.2rem;color:#211A11;letter-spacing:.01em">404</h1>
+<div style="height:1px;width:5rem;margin:0 auto 1.4rem;background:linear-gradient(90deg,transparent,#B08A3E,transparent)"></div>
+<p style="color:#6E6557;font-size:.95rem">This page is out of the oven.</p>
+<a href="/" style="display:inline-block;margin-top:1.6rem;color:#211A11;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;text-decoration:none;border:1px solid #B08A3E;border-radius:999px;padding:.7rem 1.8rem">Back to the pizzeria</a>
+</div></body></html>`;
 
 /* ---------------- fichiers statiques ---------------- */
 async function serveStatic(req, res, pathname) {
