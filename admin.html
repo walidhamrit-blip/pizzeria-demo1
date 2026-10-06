@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Pizza Demo Tripoli</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍕</text></svg>">
+<!-- Assets locaux (chemins absolus : la page est servie à /admin) -->
+<link rel="stylesheet" href="/assets/vendor/tailwind.css">
+<link rel="stylesheet" href="/assets/vendor/fonts.css">
+<link rel="stylesheet" href="/assets/vendor/fontawesome/css/all.min.css">
+<style>
+body{ font-family:'Nunito',sans-serif; background:#FFF7E9; color:#1E0E0A; }
+.font-fredoka{ font-family:'Fredoka',sans-serif; }
+.mesh-hero{
+  background:
+    radial-gradient(circle at 15% 20%, #FFE259 0 180px, transparent 181px),
+    radial-gradient(circle at 85% 15%, #FF4D8D55 0 220px, transparent 221px),
+    radial-gradient(circle at 80% 85%, #00B25C33 0 240px, transparent 241px),
+    radial-gradient(circle at 10% 90%, #7C3AED33 0 200px, transparent 201px),
+    linear-gradient(180deg, #FFF7E9 0%, #FFF0D1 60%, #FFF7E9 100%);
+}
+.sticker{ border:3px solid #1E0E0A; box-shadow:5px 5px 0 #1E0E0A; }
+.a-input{ border:2.5px solid #1E0E0A; border-radius:14px; padding:.6rem .85rem; background:#fff; font-weight:700; width:100%; outline:none; font-size:14px; transition:.15s; }
+.a-input:focus{ box-shadow:4px 4px 0 #FF2E4C; transform:translate(-1px,-1px); }
+.a-label{ display:block; font-size:10.5px; font-weight:900; letter-spacing:.07em; color:#1E0E0A99; margin-bottom:.3rem; text-transform:uppercase; }
+.acard{ background:#fff; border:3px solid #1E0E0A; border-radius:1.4rem; box-shadow:5px 5px 0 #1E0E0A; padding:1.25rem; }
+.acard>h3{ font-family:Fredoka,sans-serif; font-weight:600; font-size:1.15rem; margin-bottom:1rem; display:flex; align-items:center; gap:.5rem; }
+.a-btn-grad{ font-family:Fredoka,sans-serif; font-weight:600; color:#fff; background:linear-gradient(135deg,#FF2E4C,#FF7A00 55%,#FFB800); border:3px solid #1E0E0A; border-radius:999px; padding:.6rem 1.4rem; box-shadow:4px 4px 0 #1E0E0A; transition:.15s; }
+.a-btn-grad:hover{ transform:translateY(-2px); }
+.a-btn-white{ display:inline-flex; align-items:center; gap:.4rem; font-weight:800; font-size:14px; background:#FFF7E9; border:2.5px solid #1E0E0A; border-radius:999px; padding:.55rem 1.1rem; box-shadow:3px 3px 0 #1E0E0A; transition:.15s; }
+.a-btn-white:hover{ background:#FFC700; }
+.a-btn-dark{ font-weight:800; font-size:14px; color:#FFC700; background:#1E0E0A; border:2.5px solid #1E0E0A; border-radius:999px; padding:.55rem 1.1rem; box-shadow:3px 3px 0 #FF2E4C; transition:.15s; }
+.a-btn-dark:hover{ transform:translateY(-2px); }
+.a-icon-btn{ width:2.3rem; height:2.3rem; border:2px solid #1E0E0A; border-radius:.7rem; background:#FFF7E9; font-weight:900; display:inline-flex; align-items:center; justify-content:center; font-size:13px; transition:.15s; flex-shrink:0; }
+.a-icon-btn:hover{ background:#FFC700; transform:translateY(-1px); }
+.a-color{ width:2.8rem; height:2.35rem; border:2.5px solid #1E0E0A; border-radius:10px; background:#fff; padding:2px; cursor:pointer; flex-shrink:0; }
+.navbtn{ display:flex; align-items:center; gap:.6rem; padding:.6rem .9rem; border-radius:12px; font-weight:800; font-size:14px; color:#fff/80; color:rgba(255,255,255,.75); white-space:nowrap; transition:.15s; }
+.navbtn:hover{ background:rgba(255,255,255,.12); color:#fff; }
+.navbtn.nav-active{ background:#FFC700; color:#1E0E0A; box-shadow:3px 3px 0 rgba(0,0,0,.35); }
+.atable{ width:100%; }
+.atable th{ font-size:10.5px; font-weight:900; text-transform:uppercase; letter-spacing:.06em; color:#1E0E0A88; text-align:left; padding:.25rem .3rem; }
+.toast{ animation:popIn .35s cubic-bezier(.34,1.56,.64,1) both; }
+@keyframes popIn{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+::-webkit-scrollbar{ width:11px; } ::-webkit-scrollbar-track{ background:#FFF0D1; } ::-webkit-scrollbar-thumb{ background:linear-gradient(#FF2E4C,#FF7A00); border-radius:99px; border:2px solid #FFF0D1; }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- ============ CONNEXION ============ -->
+<div id="loginView" class="min-h-screen flex items-center justify-center p-4 mesh-hero">
+  <div class="bg-white sticker rounded-[2rem] p-8 w-full max-w-md" style="animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both">
+    <div class="text-center">
+      <div class="w-16 h-16 mx-auto rounded-2xl grad-btn border-[3px] border-ink shadow-pop flex items-center justify-center text-3xl -rotate-6">🍕</div>
+      <h1 class="font-fredoka font-bold text-3xl mt-4">PANNEAU <span class="grad-text" style="background:linear-gradient(92deg,#FF2E4C,#FF7A00,#00B25C);-webkit-background-clip:text;background-clip:text;color:transparent;">ADMIN</span></h1>
+      <p class="font-bold text-ink/50 text-sm mt-1">Pizza Demo — Tripoli</p>
+    </div>
+    <label class="a-label mt-6">Mot de passe</label>
+    <input id="loginPw" type="password" class="a-input" placeholder="••••••••" autocomplete="current-password">
+    <div id="loginErr" class="hidden mt-2 text-sm font-black text-brandRed"></div>
+    <button id="loginBtn" onclick="doLogin()" class="mt-4 w-full a-btn-grad !py-3 text-lg">Se connecter</button>
+    <p class="text-xs font-bold text-ink/40 text-center mt-4">Démo : mot de passe par défaut <b>demo123</b><br>(à changer dans l'onglet <b>Compte</b>)</p>
+    <a href="/" class="block text-center text-sm font-black text-brandRed mt-3 hover:underline">← Retour au site</a>
+  </div>
+</div>
+
+<!-- ============ APPLICATION ============ -->
+<div id="appView" class="hidden min-h-screen flex flex-col lg:flex-row bg-cream">
+  <!-- Barre latérale -->
+  <aside class="lg:w-60 shrink-0 bg-ink text-white p-3 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible sticky top-0 z-40 border-b-4 lg:border-b-0 lg:border-r-4 border-ink lg:h-screen lg:sticky">
+    <div class="flex items-center gap-3 px-2 py-2 shrink-0">
+      <div class="w-10 h-10 rounded-xl grad-btn border-2 border-white/20 flex items-center justify-center text-xl -rotate-6">🍕</div>
+      <div class="leading-none hidden sm:block">
+        <div class="font-fredoka font-bold"><span class="brand-1">PIZZA</span> <span class="text-brandYellow brand-2">DEMO</span></div>
+        <div class="text-[10px] font-black tracking-[.2em] text-white/50 mt-1">ADMIN</div>
+      </div>
+    </div>
+    <nav id="adminNav" class="flex lg:flex-col gap-1 min-w-0 lg:flex-1"></nav>
+    <div class="lg:pt-4 border-t border-white/10 flex lg:flex-col gap-2 shrink-0">
+      <a href="/" target="_blank" class="navbtn"><i class="fa-solid fa-arrow-up-right-from-square"></i><span class="hidden sm:inline">Voir le site</span></a>
+      <button onclick="doLogout()" class="navbtn !text-brandRed"><i class="fa-solid fa-right-from-bracket"></i><span class="hidden sm:inline">Déconnexion</span></button>
+    </div>
+  </aside>
+
+  <!-- Contenu -->
+  <main class="flex-1 min-w-0">
+    <div class="sticky top-[60px] lg:top-0 z-30 bg-cream/95 backdrop-blur border-b-[3px] border-ink px-4 sm:px-8 py-3 flex flex-wrap items-center gap-3">
+      <div class="min-w-0">
+        <h1 id="tabTitle" class="font-fredoka font-bold text-2xl leading-none">Général</h1>
+        <p id="tabHint" class="text-xs font-bold text-ink/50 mt-1"></p>
+      </div>
+      <div class="ml-auto flex items-center gap-2">
+        <span id="dirtyPill" class="hidden text-xs font-black px-3 py-1.5 rounded-full bg-brandYellow border-2 border-ink">● Non enregistré</span>
+        <span id="savedPill" class="text-xs font-black px-3 py-1.5 rounded-full grad-green text-white border-2 border-ink">✓ Enregistré</span>
+        <button onclick="reloadContent()" class="a-btn-white" title="Recharger le contenu du serveur"><i class="fa-solid fa-rotate-right"></i></button>
+        <button id="saveBtn" onclick="saveTab()" class="a-btn-grad"><i class="fa-solid fa-floppy-disk mr-2"></i>Enregistrer</button>
+      </div>
+    </div>
+
+    <div class="p-4 sm:p-8 max-w-5xl mx-auto pb-24">
+
+      <!-- ===== GÉNÉRAL ===== -->
+      <section id="tab-general" class="atab hidden space-y-6">
+        <div class="acard">
+          <h3>🏷️ Identité</h3>
+          <div class="grid sm:grid-cols-3 gap-4">
+            <div><label class="a-label">Nom — partie 1</label><input class="a-input" data-bind="settings.brand1"></div>
+            <div><label class="a-label">Nom — partie 2 (colorée)</label><input class="a-input" data-bind="settings.brand2"></div>
+            <div><label class="a-label">Slogan (navbar)</label><input class="a-input" data-bind="settings.tagline"></div>
+          </div>
+        </div>
+
+        <div class="acard">
+          <h3>📣 Bandeau haut</h3>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label class="a-label">Message promotionnel (desktop)</label><input class="a-input" data-bind="settings.topbar.promo"></div>
+            <div><label class="a-label">Message court (mobile)</label><input class="a-input" data-bind="settings.topbar.promoShort"></div>
+            <div><label class="a-label">Téléphone</label><input class="a-input" data-bind="settings.topbar.phone"></div>
+            <div><label class="a-label">Adresse</label><input class="a-input" data-bind="settings.topbar.address"></div>
+          </div>
+        </div>
+
+        <div class="acard">
+          <h3>🍕 Section d'accueil (hero)</h3>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label class="a-label">Badge vert</label><input class="a-input" data-bind="settings.hero.pill"></div>
+            <div><label class="a-label">Texte à côté du badge</label><input class="a-input" data-bind="settings.hero.badge"></div>
+            <div><label class="a-label">Titre — ligne 1</label><input class="a-input" data-bind="settings.hero.line1"></div>
+            <div><label class="a-label">Titre — ligne 2 (dégradé)</label><input class="a-input" data-bind="settings.hero.line2"></div>
+            <div><label class="a-label">Titre — ligne 3 (début)</label><input class="a-input" data-bind="settings.hero.line3a"></div>
+            <div><label class="a-label">Titre — ligne 3 (mot souligné)</label><input class="a-input" data-bind="settings.hero.line3b"></div>
+            <div class="sm:col-span-2"><label class="a-label">Sous-titre</label><textarea rows="3" class="a-input resize-none" data-bind="settings.hero.subtitle"></textarea></div>
+            <div><label class="a-label">Bouton 1</label><input class="a-input" data-bind="settings.hero.cta1"></div>
+            <div><label class="a-label">Bouton 2</label><input class="a-input" data-bind="settings.hero.cta2"></div>
+            <div><label class="a-label">Prix affiché sur l'étiquette</label><input type="number" min="0" step="any" class="a-input" data-bind="settings.hero.priceFrom"></div>
+            <div><label class="a-label">Petit sticker (ex: 100% Halal!)</label><input class="a-input" data-bind="settings.hero.sticker"></div>
+            <div><label class="a-label">Note (ex: 4.9/5)</label><input class="a-input" data-bind="settings.hero.rating"></div>
+            <div><label class="a-label">Texte sous la note</label><input class="a-input" data-bind="settings.hero.ratingText"></div>
+            <div><label class="a-label">Statut d'ouverture</label><input class="a-input" data-bind="settings.hero.openLine"></div>
+            <div><label class="a-label">Plat mis en avant (carte noire)</label><select id="heroFeatured" class="a-input"></select></div>
+            <div class="sm:col-span-2 img-field flex items-center gap-3">
+              <img data-preview="settings.hero.image" class="w-20 h-20 rounded-xl object-cover border-2 border-ink bg-white shrink-0">
+              <div class="flex-1 min-w-0"><label class="a-label">Grande image ronde (URL)</label><input class="a-input" data-bind="settings.hero.image" placeholder="https://..."></div>
+              <label class="a-btn-white cursor-pointer shrink-0" title="Importer une image"><i class="fa-solid fa-upload"></i><input type="file" accept="image/*" class="hidden" data-upload="settings.hero.image"></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="acard">
+          <h3>📊 Chiffres clés (accueil)</h3>
+          <div id="statsEdit" class="space-y-2"></div>
+          <button onclick="addStat()" class="a-btn-white mt-3"><i class="fa-solid fa-plus mr-1"></i>Ajouter un chiffre</button>
+        </div>
+
+        <div class="acard">
+          <h3>🤝 Bandeau de confiance</h3>
+          <div id="trustEdit" class="space-y-2"></div>
+          <button onclick="addTrust()" class="a-btn-white mt-3"><i class="fa-solid fa-plus mr-1"></i>Ajouter un élément</button>
+        </div>
+
+        <div class="acard">
+          <h3>📍 Contact & carte</h3>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label class="a-label">Téléphone (affiché)</label><input class="a-input" data-bind="settings.contact.phone"></div>
+            <div><label class="a-label">Téléphone (format international, ex: +218912345678)</label><input class="a-input" data-bind="settings.contact.phoneHref"></div>
+            <div><label class="a-label">WhatsApp (chiffres seulement, ex: 218912345678)</label><input class="a-input" data-bind="settings.contact.whatsapp"></div>
+            <div><label class="a-label">Email</label><input class="a-input" data-bind="settings.contact.email"></div>
+            <div><label class="a-label">Nom du lieu</label><input class="a-input" data-bind="settings.contact.addressName"></div>
+            <div><label class="a-label">Instagram (texte galerie)</label><input class="a-input" data-bind="settings.contact.instagram"></div>
+            <div class="sm:col-span-2"><label class="a-label">Adresse (2 lignes max)</label><textarea rows="2" class="a-input resize-none" data-bind="settings.contact.addressLines"></textarea></div>
+            <div class="sm:col-span-2"><label class="a-label">Lien Google Maps (bouton Itinéraire)</label><input class="a-input" data-bind="settings.contact.mapsLink"></div>
+            <div class="sm:col-span-2"><label class="a-label">URL de la carte intégrée (OpenStreetMap embed)</label><input class="a-input" data-bind="settings.contact.mapUrl"></div>
+          </div>
+        </div>
+
+        <div class="acard">
+          <h3>🕒 Horaires</h3>
+          <div id="hoursEdit" class="space-y-2"></div>
+          <button onclick="addHour()" class="a-btn-white mt-3"><i class="fa-solid fa-plus mr-1"></i>Ajouter une ligne</button>
+        </div>
+
+        <div class="acard">
+          <h3>🛵 Livraison</h3>
+          <div class="max-w-xs"><label class="a-label">Livraison gratuite à partir de (LYD)</label><input type="number" min="0" step="any" class="a-input" data-bind="settings.freeDeliveryFrom"></div>
+        </div>
+
+        <div class="acard">
+          <h3>🦶 Pied de page</h3>
+          <div class="grid gap-4">
+            <div><label class="a-label">Texte de présentation</label><textarea rows="3" class="a-input resize-none" data-bind="settings.footerAbout"></textarea></div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div><label class="a-label">Copyright</label><input class="a-input" data-bind="settings.copyright"></div>
+              <div><label class="a-label">Moyens de paiement</label><input class="a-input" data-bind="settings.payments"></div>
+            </div>
+            <div><label class="a-label">Texte newsletter</label><input class="a-input" data-bind="settings.newsletterText"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== MENU ===== -->
+      <section id="tab-menu" class="atab hidden space-y-6">
+        <div class="acard">
+          <h3>🗂️ Catégories du menu</h3>
+          <div id="catsEdit" class="flex flex-wrap gap-2"></div>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <input id="newCatId" class="a-input !w-44" placeholder="id (ex: sandwiches)">
+            <input id="newCatLabel" class="a-input !w-56" placeholder="Libellé (ex: Sandwichs)">
+            <button onclick="addCat()" class="a-btn-dark">+ Ajouter</button>
+          </div>
+        </div>
+        <div class="acard">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <h3 class="!mb-0">🍕 Plats <span id="menuCount" class="text-sm font-black text-ink/40"></span></h3>
+            <button onclick="openMenuModal()" class="a-btn-grad"><i class="fa-solid fa-plus mr-2"></i>Nouveau plat</button>
+          </div>
+          <div id="menuEdit" class="space-y-2"></div>
+        </div>
+      </section>
+
+      <!-- ===== CRÉATEUR ===== -->
+      <section id="tab-builder" class="atab hidden space-y-6">
+        <div class="acard">
+          <h3>🧑‍🍳 Prix de base du créateur</h3>
+          <div class="max-w-xs"><label class="a-label">Prix de départ (LYD)</label><input type="number" min="0" step="any" class="a-input" data-bind="builder.basePrice"></div>
+        </div>
+        <div class="acard"><h3>📏 Tailles</h3><div id="sizesEdit"></div><button onclick="badd('sizesEdit')" class="a-btn-white mt-3"><i class="fa-solid fa-plus mr-1"></i>Ajouter</button></div>
+        <div class="acard"><h3>🥖 Pâtes</h3><div id="doughsEdit"></div><button onclick="badd('doughsEdit')" class="a-btn-white mt-3"><i class="fa-solid fa-plus mr-1"></i>Ajouter</button></div>
+        <div class="acard"><h3>🍅 Sauces</h3><div id="saucesEdit"></div><button onclick="badd('saucesEdit')" class="a-btn-white mt-3"><i class="fa-solid fa-plus mr-1"></i>Ajouter</button></div>
+        <div class="acard"><h3>🧀 Fromages</h3><div id="cheesesEdit"></div><button onclick="badd('cheesesEdit')" class="a-btn-white mt-3"><i class="fa-solid fa-plus mr-1"></i>Ajouter</button></div>
+        <div class="acard"><h3>🥓 Garnitures</h3><div id="topsEdit"></div><button onclick="badd('topsEdit')" class="a-btn-white mt-3"><i class="fa-solid fa-plus mr-1"></i>Ajouter</button></div>
+      </section>
+
+      <!-- ===== OFFRES & PROMOS ===== -->
+      <section id="tab-offers" class="atab hidden space-y-6">
+        <div class="acard">
+          <h3>⭐ Offre vedette (grande carte)</h3>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label class="a-label">Badge</label><input class="a-input" data-bind="offers.featured.badge"></div>
+            <div><label class="a-label">Code promo associé</label><input class="a-input" data-bind="offers.featured.code"></div>
+            <div><label class="a-label">Titre — ligne 1</label><input class="a-input" data-bind="offers.featured.line1"></div>
+            <div><label class="a-label">Titre — ligne 2</label><input class="a-input" data-bind="offers.featured.line2"></div>
+            <div><label class="a-label">Prix promo (LYD)</label><input type="number" min="0" step="any" class="a-input" data-bind="offers.featured.price"></div>
+            <div><label class="a-label">Prix barré (LYD)</label><input type="number" min="0" step="any" class="a-input" data-bind="offers.featured.oldPrice"></div>
+            <div class="sm:col-span-2"><label class="a-label">Description</label><input class="a-input" data-bind="offers.featured.desc"></div>
+            <div><label class="a-label">Plat ajouté par le bouton « J'en profite »</label><select id="offerItemSelect" class="a-input"></select></div>
+          </div>
+        </div>
+        <div class="acard">
+          <h3>🎟️ Cartes promo (3 encadrés)</h3>
+          <div id="cardsEdit" class="space-y-3"></div>
+          <button onclick="addCard()" class="a-btn-white mt-3"><i class="fa-solid fa-plus mr-1"></i>Ajouter une carte</button>
+        </div>
+        <div class="acard">
+          <h3>💡 Codes promo (panier)</h3>
+          <div id="promosEdit" class="space-y-2"></div>
+          <div class="flex gap-2 mt-3">
+            <input id="newPromoCode" class="a-input !w-52 uppercase" placeholder="NOUVEAUCODE">
+            <button onclick="addPromo()" class="a-btn-dark">+ Ajouter</button>
+          </div>
+        </div>
+        <div class="acard">
+          <h3>🎡 Roue de la fortune</h3>
+          <div id="wheelEdit" class="space-y-2"></div>
+          <button onclick="addWheelPrize()" class="a-btn-white mt-3"><i class="fa-solid fa-plus mr-1"></i>Ajouter un lot</button>
+        </div>
+      </section>
+
+      <!-- ===== GALERIE ===== -->
+      <section id="tab-gallery" class="atab hidden space-y-6">
+        <div class="acard">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <h3 class="!mb-0">📸 Photos <span id="galleryCount" class="text-sm font-black text-ink/40"></span></h3>
+            <button onclick="addGalleryItem()" class="a-btn-grad"><i class="fa-solid fa-plus mr-2"></i>Ajouter</button>
+          </div>
+          <div id="galleryEdit" class="grid sm:grid-cols-2 gap-4"></div>
+        </div>
+      </section>
+
+      <!-- ===== AVIS ===== -->
+      <section id="tab-reviews" class="atab hidden space-y-6">
+        <div class="acard">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <h3 class="!mb-0">⭐ Avis clients <span id="reviewsCount" class="text-sm font-black text-ink/40"></span></h3>
+            <button onclick="addReview()" class="a-btn-grad"><i class="fa-solid fa-plus mr-2"></i>Ajouter un avis</button>
+          </div>
+          <p class="text-xs font-bold text-ink/40 -mt-2 mb-4">Les avis publiés par les visiteurs du site apparaissent ici automatiquement.</p>
+          <div id="reviewsEdit" class="space-y-3"></div>
+        </div>
+      </section>
+
+      <!-- ===== ZONES ===== -->
+      <section id="tab-zones" class="atab hidden space-y-6">
+        <div class="acard">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <h3 class="!mb-0">🛵 Quartiers livrés</h3>
+            <button onclick="addZone()" class="a-btn-grad"><i class="fa-solid fa-plus mr-2"></i>Ajouter</button>
+          </div>
+          <div id="zonesEdit" class="space-y-2"></div>
+          <p class="text-xs font-bold text-ink/40 mt-4">Astuce : le seuil « livraison offerte dès X LYD » se règle dans l'onglet Général.</p>
+        </div>
+      </section>
+
+      <!-- ===== COMMANDES ===== -->
+      <section id="tab-orders" class="atab hidden space-y-6">
+        <div class="acard">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <h3 class="!mb-0">🧾 Commandes <span id="ordersCount" class="text-sm font-black text-ink/40"></span></h3>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-ink/40">Actualisation auto</span>
+              <button onclick="loadOrders()" class="a-btn-white"><i class="fa-solid fa-rotate-right"></i></button>
+            </div>
+          </div>
+          <div id="ordersEdit" class="space-y-3"></div>
+        </div>
+      </section>
+
+      <!-- ===== RÉSERVATIONS ===== -->
+      <section id="tab-reservations" class="atab hidden space-y-6">
+        <div class="acard">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <h3 class="!mb-0">📅 Réservations <span id="resasCount" class="text-sm font-black text-ink/40"></span></h3>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-ink/40">Actualisation auto</span>
+              <button onclick="loadReservations()" class="a-btn-white"><i class="fa-solid fa-rotate-right"></i></button>
+            </div>
+          </div>
+          <div id="resasEdit" class="space-y-3"></div>
+        </div>
+      </section>
+
+      <!-- ===== COMPTE ===== -->
+      <section id="tab-account" class="atab hidden space-y-6">
+        <div class="acard">
+          <h3>🔑 Changer le mot de passe</h3>
+          <div class="grid sm:grid-cols-3 gap-4 max-w-2xl">
+            <div><label class="a-label">Mot de passe actuel</label><input id="pwCur" type="password" class="a-input" autocomplete="current-password"></div>
+            <div><label class="a-label">Nouveau</label><input id="pwNew" type="password" class="a-input" autocomplete="new-password"></div>
+            <div><label class="a-label">Confirmer</label><input id="pwNew2" type="password" class="a-input" autocomplete="new-password"></div>
+          </div>
+          <button onclick="changePassword()" class="a-btn-grad mt-4"><i class="fa-solid fa-key mr-2"></i>Modifier</button>
+        </div>
+        <div class="acard">
+          <h3>ℹ️ Fonctionnement</h3>
+          <ul class="text-sm font-bold text-ink/70 space-y-2 list-disc pl-5">
+            <li>Chaque modification enregistrée est <b>immédiatement visible sur tous les appareils</b> : les pages ouvertes se rafraîchissent toutes seules (~20 s).</li>
+            <li>Stockage : fichiers <code class="bg-cream px-1.5 py-0.5 rounded border border-ink/20">data/</code> en local (Render/Railway…), ou base Redis Upstash si le site est déployé sur Vercel (voir README). Les images sont automatiquement redimensionnées avant l'envoi.</li>
+            <li>Les commandes et réservations arrivent en direct depuis le site public.</li>
+          </ul>
+        </div>
+        <div class="acard" style="border-color:#FF2E4C">
+          <h3 style="color:#FF2E4C">⚠️ Zone dangereuse</h3>
+          <p class="text-sm font-bold text-ink/60 mb-4">Remplace <b>tout</b> le contenu du site par le contenu d'origine (<code>data/seed.json</code>). Les commandes et réservations sont conservées.</p>
+          <button onclick="resetContent()" class="a-btn-white !bg-brandRed !text-white"><i class="fa-solid fa-rotate-left mr-2"></i>Réinitialiser le contenu</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- ============ MODALE ============ -->
+<div id="modal" class="fixed inset-0 z-[500] hidden items-center justify-center p-4">
+  <div class="absolute inset-0 bg-ink/70 backdrop-blur-sm" onclick="closeModal()"></div>
+  <div class="relative bg-white border-4 border-ink rounded-[2rem] shadow-pops w-full max-w-2xl max-h-[90vh] overflow-y-auto" style="animation:popIn .35s cubic-bezier(.34,1.56,.64,1) both">
+    <div class="grad-btn text-white p-5 border-b-[3px] border-ink sticky top-0 z-10 flex items-center justify-between">
+      <div class="font-fredoka font-semibold text-xl" id="modalTitle">Modifier</div>
+      <button onclick="closeModal()" class="w-10 h-10 bg-ink rounded-full border-2 border-white/30 flex items-center justify-center hover:rotate-90 transition"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="p-6" id="modalBody"></div>
+  </div>
+</div>
+
+<div id="atoasts" class="fixed bottom-5 left-5 z-[600] space-y-2 max-w-[340px]"></div>
+
+<script>
+/* ================= BASE ================= */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let TOKEN=localStorage.getItem('pd_admin_token')||'';
+let C=null, dirty=false, tab='general', autoTimer=null;
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+const escAttr=esc;
+function toast(msg,type='ok'){
+  const cls={ok:'grad-green',err:'bg-brandRed',info:'grad-btn'}[type]||'grad-green';
+  const el=document.createElement('div');
+  el.className='toast '+cls+' text-white border-[2.5px] border-ink rounded-2xl px-4 py-3 shadow-pop font-extrabold text-sm';
+  el.textContent=msg;
+  $('#atoasts').appendChild(el);
+  setTimeout(()=>{el.style.transition='all .4s';el.style.opacity='0';el.style.transform='translateY(12px)';setTimeout(()=>el.remove(),400)},2800);
+}
+async function api(path,opts={}){
+  const headers={...(opts.headers||{})};
+  if(opts.body)headers['Content-Type']='application/json';
+  if(TOKEN)headers['Authorization']='Bearer '+TOKEN;
+  const r=await fetch(path,{...opts,headers});
+  if(r.status===401){showLogin();throw new Error('Session expirée — reconnecte-toi');}
+  if(!r.ok){
+    let msg='Erreur '+r.status;
+    try{const j=await r.json();msg=j.error||msg;}catch(e){}
+    throw new Error(msg);
+  }
+  const ct=r.headers.get('content-type')||'';
+  return ct.includes('json')?r.json():r.text();
+}
+function getPath(o,p){return p.split('.').reduce((a,k)=>(a==null?undefined:a[k]),o);}
+function setPath(o,p,v){const ks=p.split('.');const last=ks.pop();const t=ks.reduce((a,k)=>a[k],o);t[last]=v;}
+
+/* ================= CONNEXION ================= */
+function showLogin(){
+  $('#appView').classList.add('hidden');
+  $('#loginView').style.display='flex';
+  clearInterval(autoTimer);
+}
+async function doLogin(){
+  const pw=$('#loginPw').value; if(!pw)return;
+  $('#loginBtn').disabled=true; $('#loginErr').classList.add('hidden');
+  try{
+    const j=await api('/api/login',{method:'POST',body:JSON.stringify({password:pw})});
+    TOKEN=j.token; localStorage.setItem('pd_admin_token',TOKEN);
+    $('#loginPw').value='';
+    await enterApp();
+    toast('Benvenuto, chef ! 👋');
+  }catch(e){
+    $('#loginErr').textContent=e.message; $('#loginErr').classList.remove('hidden');
+  }finally{ $('#loginBtn').disabled=false; }
+}
+async function doLogout(){
+  try{await api('/api/logout',{method:'POST'});}catch(e){}
+  TOKEN=''; localStorage.removeItem('pd_admin_token');
+  showLogin();
+}
+async function enterApp(){
+  C=await api('/api/content');
+  $('#loginView').style.display='none';
+  $('#appView').classList.remove('hidden');
+  renderAll();
+  showTab(tab);
+  clearInterval(autoTimer);
+  autoTimer=setInterval(syncCheck,25000);
+}
+
+/* ================= ONGLETS ================= */
+const TABS={
+  general:{title:'Général',hint:'Identité, bandeau, accueil, contact, horaires, pied de page.',save:['settings']},
+  menu:{title:'Menu',hint:'Ajoute, modifie, réordonne ou supprime les plats et catégories.',save:['categories','menu']},
+  builder:{title:'Créateur de pizza',hint:'Tailles, pâtes, sauces, fromages, garnitures et prix de base.',save:['builder']},
+  offers:{title:'Offres & Promos',hint:'Offre vedette, cartes promo, codes promo et roue de la fortune.',save:['offers','promos','wheel']},
+  gallery:{title:'Galerie',hint:'Photos de la galerie — URL ou import depuis ton appareil.',save:['gallery']},
+  reviews:{title:'Avis',hint:'Modère, modifie ou supprime les avis clients.',save:['reviews']},
+  zones:{title:'Zones & Livraison',hint:'Quartiers livrés, frais et délais estimés.',save:['zones']},
+  orders:{title:'Commandes',hint:'Commandes passées sur le site, en temps réel.',save:null},
+  reservations:{title:'Réservations',hint:'Demandes de table, en temps réel.',save:null},
+  account:{title:'Compte',hint:'Mot de passe, réinitialisation du contenu, session.',save:null},
+};
+const NAV=[
+  ['general','fa-house','Général'],['menu','fa-pizza-slice','Menu'],['builder','fa-wand-magic-sparkles','Créateur'],
+  ['offers','fa-gift','Offres'],['gallery','fa-camera','Galerie'],['reviews','fa-star','Avis'],['zones','fa-motorcycle','Zones'],
+  ['orders','fa-receipt','Commandes'],['reservations','fa-calendar-check','Réservations'],['account','fa-lock','Compte']
+];
+function buildNav(){
+  $('#adminNav').innerHTML=NAV.map(([id,icon,label])=>
+    `<button data-tab="${id}" onclick="showTab('${id}')" class="navbtn"><i class="fa-solid ${icon} w-4 text-center"></i><span class="hidden sm:inline">${label}</span><span id="badge-${id}" class="hidden ml-auto text-[10px] font-black bg-brandRed text-white rounded-full px-2 py-0.5"></span></button>`
+  ).join('');
+}
+function showTab(name){
+  tab=name;
+  $$('.atab').forEach(s=>s.classList.add('hidden'));
+  const sec=$('#tab-'+name); if(sec)sec.classList.remove('hidden');
+  $$('#adminNav .navbtn').forEach(b=>b.classList.toggle('nav-active',b.dataset.tab===name));
+  const t=TABS[name];
+  $('#tabTitle').textContent=t.title;
+  $('#tabHint').textContent=t.hint;
+  $('#saveBtn').style.display=t.save?'':'none';
+  clearInterval(autoTimer); autoTimer=setInterval(syncCheck,25000);
+  if(name==='orders'){loadOrders();autoTimer=setInterval(loadOrders,10000);}
+  if(name==='reservations'){loadReservations();autoTimer=setInterval(loadReservations,10000);}
+  updateStatus();
+  window.scrollTo({top:0});
+}
+
+/* ================= SAUVEGARDE ================= */
+function markDirty(){dirty=true;updateStatus();}
+function updateStatus(){
+  $('#dirtyPill').classList.toggle('hidden',!dirty);
+  $('#savedPill').classList.toggle('hidden',dirty);
+}
+function beforeSave(tabName){
+  if(tabName==='zones'){
+    C.zones=Object.fromEntries(zoneRows.filter(z=>String(z.name||'').trim()).map(z=>[String(z.name).trim(),{fee:Number(z.fee)||0,time:z.time||''}]));
+  }
+}
+async function saveTab(){
+  const keys=TABS[tab].save; if(!keys)return;
+  if(tab==='menu'&&!C.menu.length){}
+  const btn=$('#saveBtn'); btn.disabled=true;
+  try{
+    beforeSave(tab);
+    for(const k of keys){
+      await api('/api/section/'+k,{method:'PUT',body:JSON.stringify(C[k])});
+    }
+    const v=await api('/api/version');
+    C.version=v.version; dirty=false; updateStatus();
+    toast('Enregistré ✓ visible sur tous les appareils');
+  }catch(e){ toast(e.message,'err'); }
+  finally{ btn.disabled=false; }
+}
+async function reloadContent(){
+  if(dirty&&!confirm('Recharger va annuler tes modifications non enregistrées. Continuer ?'))return;
+  try{
+    C=await api('/api/content'); dirty=false; renderAll(); showTab(tab);
+    toast('Contenu rechargé');
+  }catch(e){toast(e.message,'err');}
+}
+async function syncCheck(){
+  if(dirty||!C||!$('#modal').classList.contains('hidden'))return;
+  try{
+    const v=await api('/api/version');
+    if(v.version>(C.version||0)){
+      C=await api('/api/content'); renderAll(); showTab(tab);
+      toast('Contenu mis à jour (modifié ailleurs)','info');
+    }
+  }catch(e){}
+}
+addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();saveTab();}});
+
+/* ================= BINDING GÉNÉRIQUE ================= */
+function bindAll(){
+  $$('#appView [data-bind]').forEach(inp=>{
+    const p=inp.dataset.bind;
+    const v=getPath(C,p);
+    if(inp.type==='number')inp.value=(v==null?0:v);
+    else inp.value=v==null?'':v;
+    inp.oninput=()=>{
+      setPath(C,p,inp.type==='number'?Number(inp.value):inp.value);
+      markDirty();
+    };
+  });
+  $$('#appView [data-preview]').forEach(img=>{
+    const v=getPath(C,img.dataset.preview);
+    img.src=v||'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><text y="72" font-size="72">🍕</text></svg>');
+  });
+  $$('#appView [data-upload]').forEach(inp=>{
+    inp.onchange=()=>{
+      const f=inp.files&&inp.files[0]; if(!f)return;
+      const path=inp.dataset.upload;
+      uploadImage(f,url=>{
+        setPath(C,path,url);
+        const wrap=inp.closest('.img-field')||document;
+        const urlInput=wrap.querySelector('[data-bind="'+path+'"]');
+        if(urlInput)urlInput.value=url;
+        const pv=wrap.querySelector('[data-preview="'+path+'"]');
+        if(pv)pv.src=url;
+        markDirty();
+      });
+      inp.value='';
+    };
+  });
+  /* selects dynamiques */
+  const menuOpts=(sel)=>C.menu.map(m=>`<option value="${esc(m.id)}">${esc(m.name)}</option>`).join('');
+  const hf=$('#heroFeatured');
+  if(hf){
+    hf.innerHTML=menuOpts();
+    hf.value=(C.settings.hero&&C.settings.hero.featuredItem)||'';
+    hf.onchange=()=>{C.settings.hero.featuredItem=hf.value;markDirty();};
+  }
+  const os=$('#offerItemSelect');
+  if(os){
+    os.innerHTML='<option value="">— Aucun —</option>'+menuOpts();
+    os.value=(C.offers.featured&&C.offers.featured.itemId)||'';
+    os.onchange=()=>{C.offers.featured.itemId=os.value;markDirty();};
+  }
+}
+/* Redimensionne/compression l'image dans le navigateur (canvas) pour rester
+   sous ~900 Ko — indispensable en hébergement serverless (Vercel + Upstash).
+   Retourne {data,ext} en JPEG, ou null si le fichier est envoyé tel quel. */
+function shrinkImage(file, maxDim = 1280, quality = 0.82) {
+  const type = (file.type || '').toLowerCase();
+  if (!/^image\/(png|jpe?g|webp)$/.test(type)) return Promise.resolve(null); // gif/svg : tel quel
+  if (file.size <= 280 * 1024) return Promise.resolve(null); // déjà léger : tel quel
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      try {
+        const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+        const w = Math.max(1, Math.round(img.naturalWidth * scale));
+        const h = Math.max(1, Math.round(img.naturalHeight * scale));
+        const cv = document.createElement('canvas');
+        cv.width = w; cv.height = h;
+        const ctx = cv.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); // fond blanc (transparences PNG → JPEG)
+        ctx.drawImage(img, 0, 0, w, h);
+        const dataUrl = cv.toDataURL('image/jpeg', quality);
+        const data = dataUrl.split(',')[1];
+        resolve(data && (data.length * 3 / 4) < file.size ? { data, ext: 'jpg' } : null);
+      } catch (e) { resolve(null); }
+      finally { URL.revokeObjectURL(url); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+    img.src = url;
+  });
+}
+async function uploadImage(file,cb){
+  try{
+    const shrunk = await shrinkImage(file);
+    let data, name;
+    if (shrunk) { data = shrunk.data; name = file.name.replace(/\.(png|jpe?g|webp|gif)$/i, '') + '.jpg'; }
+    else {
+      const fr=new FileReader();
+      const dataUrl=await new Promise((res,rej)=>{fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(file);});
+      data=dataUrl.split(',')[1]; name=file.name;
+    }
+    const j=await api('/api/upload',{method:'POST',body:JSON.stringify({name,data})});
+    cb(j.url);
+    toast('Image importée ✓' + (shrunk ? ' (redimensionnée)' : ''));
+  }catch(e){toast('Import impossible : '+e.message,'err');}
+}
+
+/* ================= LISTES : GÉNÉRAL ================= */
+const COLORS=['brandRed','brandOrange','brandGreen','brandYellow','brandPink','brandPurple'];
+function delBtn(fn){return `<button onclick="${fn}" class="a-icon-btn !bg-brandRed !text-white" title="Supprimer"><i class="fa-solid fa-trash-can"></i></button>`;}
+function renderStats(){
+  const w=$('#statsEdit');
+  w.innerHTML=(C.settings.stats||[]).map((s,i)=>`
+    <div class="flex flex-wrap items-center gap-2">
+      <input class="a-input !w-28" value="${escAttr(s.value)}" placeholder="48h" oninput="sset('stats',${i},'value',this.value)">
+      <input class="a-input !flex-1 !min-w-[140px]" value="${escAttr(s.label)}" placeholder="FERMENTATION" oninput="sset('stats',${i},'label',this.value)">
+      <select class="a-input !w-40" onchange="sset('stats',${i},'color',this.value)">${COLORS.map(c=>`<option value="${c}" ${s.color===c?'selected':''}>${c}</option>`).join('')}</select>
+      ${delBtn(`sdel('stats',${i})`)}
+    </div>`).join('');
+}
+function renderTrust(){
+  const w=$('#trustEdit');
+  w.innerHTML=(C.settings.trust||[]).map((t,i)=>`
+    <div class="flex flex-wrap items-center gap-2">
+      <input class="a-input !w-52" value="${escAttr(t.icon)}" placeholder="fa-wheat-awn (FontAwesome)" oninput="sset('trust',${i},'icon',this.value)">
+      <input class="a-input !flex-1 !min-w-[160px]" value="${escAttr(t.text)}" placeholder="Texte" oninput="sset('trust',${i},'text',this.value)">
+      ${delBtn(`sdel('trust',${i})`)}
+    </div>`).join('');
+}
+function renderHours(){
+  const w=$('#hoursEdit');
+  w.innerHTML=(C.settings.hours||[]).map((h,i)=>`
+    <div class="flex flex-wrap items-center gap-2">
+      <input class="a-input !w-44" value="${escAttr(h.days)}" placeholder="Lun — Jeu" oninput="sset('hours',${i},'days',this.value)">
+      <input class="a-input !flex-1 !min-w-[140px]" value="${escAttr(h.time)}" placeholder="11:30 – 00:00" oninput="sset('hours',${i},'time',this.value)">
+      ${delBtn(`sdel('hours',${i})`)}
+    </div>`).join('');
+}
+window.sset=(list,i,k,v)=>{C.settings[list][i][k]=v;markDirty();};
+window.sdel=(list,i)=>{C.settings[list].splice(i,1);renderStats();renderTrust();renderHours();markDirty();};
+window.addStat=()=>{C.settings.stats=C.settings.stats||[];C.settings.stats.push({value:'',label:'',color:'brandRed'});renderStats();markDirty();};
+window.addTrust=()=>{C.settings.trust=C.settings.trust||[];C.settings.trust.push({icon:'fa-star',text:''});renderTrust();markDirty();};
+window.addHour=()=>{C.settings.hours=C.settings.hours||[];C.settings.hours.push({days:'',time:''});renderHours();markDirty();};
+
+/* ================= CATÉGORIES ================= */
+function renderCats(){
+  const w=$('#catsEdit');
+  w.innerHTML=(C.categories||[]).map((c,i)=>`
+    <span class="inline-flex items-center gap-2 bg-cream border-2 border-ink rounded-full pl-4 pr-2 py-1.5 font-black text-sm">
+      ${esc(c.label)} <span class="text-ink/30 text-xs">${esc(c.id)}</span>
+      <button onclick="delCat(${i})" class="w-6 h-6 rounded-full bg-brandRed text-white border-2 border-ink flex items-center justify-center text-xs"><i class="fa-solid fa-xmark"></i></button>
+    </span>`).join('');
+}
+window.addCat=()=>{
+  const id=($('#newCatId').value||'').trim().toLowerCase().replace(/[^a-z0-9-]+/g,'-');
+  const label=($('#newCatLabel').value||'').trim();
+  if(!id||!label){toast('Id et libellé requis','err');return;}
+  if(C.categories.some(c=>c.id===id)){toast('Cette id existe déjà','err');return;}
+  C.categories.push({id,label});
+  $('#newCatId').value='';$('#newCatLabel').value='';
+  renderCats();markDirty();
+};
+window.delCat=(i)=>{
+  const c=C.categories[i];
+  if(C.menu.some(m=>m.cat===c.id)&&!confirm(`Des plats utilisent la catégorie « ${c.label} ». La supprimer quand même ?`))return;
+  C.categories.splice(i,1);renderCats();markDirty();
+};
+
+/* ================= MENU ================= */
+const TAGS={veg:'Veggie',spicy:'Spicy 🌶',signature:'Signature',premium:'Premium',sweet:'Dolce',drink:'Boisson',pack:'Pack'};
+const catLabel=id=>((C.categories||[]).find(c=>c.id===id)||{}).label||id||'—';
+function renderMenuList(){
+  const w=$('#menuEdit');
+  w.innerHTML=(C.menu||[]).map((m,i)=>`
+    <div class="flex items-center gap-3 bg-cream border-[2.5px] border-ink rounded-2xl p-2.5">
+      <img src="${escAttr(m.img)}" onerror="this.onerror=null;this.src='/assets/vendor/placeholder.svg'" class="w-12 h-12 rounded-xl object-cover border-2 border-ink shrink-0 bg-white">
+      <div class="flex-1 min-w-0">
+        <div class="font-black truncate">${esc(m.name)}</div>
+        <div class="text-xs font-bold text-ink/50 truncate">${esc(catLabel(m.cat))} • ${m.price} LYD ${m.old?'<s>'+m.old+'</s>':''} • ⭐ ${m.rating??'—'} ${m.badge?'• '+esc(m.badge):''}</div>
+      </div>
+      <div class="flex gap-1 shrink-0">
+        <button onclick="moveMenuItem(${i},-1)" class="a-icon-btn" title="Monter"><i class="fa-solid fa-arrow-up"></i></button>
+        <button onclick="moveMenuItem(${i},1)" class="a-icon-btn" title="Descendre"><i class="fa-solid fa-arrow-down"></i></button>
+        <button onclick="dupMenuItem(${i})" class="a-icon-btn" title="Dupliquer"><i class="fa-regular fa-clone"></i></button>
+        <button onclick="openMenuModal(${i})" class="a-icon-btn !bg-brandYellow" title="Modifier"><i class="fa-solid fa-pen"></i></button>
+        <button onclick="delMenuItem(${i})" class="a-icon-btn !bg-brandRed !text-white" title="Supprimer"><i class="fa-solid fa-trash-can"></i></button>
+      </div>
+    </div>`).join('');
+  $('#menuCount').textContent='('+(C.menu||[]).length+')';
+}
+function slugId(name){
+  const base=(name||'plat').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'plat';
+  let id=base,i=2;
+  while(C.menu.some(m=>m.id===id))id=base+'-'+(i++);
+  return id;
+}
+window.moveMenuItem=(i,d)=>{
+  const j=i+d; if(j<0||j>=C.menu.length)return;
+  [C.menu[i],C.menu[j]]=[C.menu[j],C.menu[i]];
+  renderMenuList();markDirty();
+};
+window.dupMenuItem=(i)=>{
+  const c=JSON.parse(JSON.stringify(C.menu[i]));
+  c.id=slugId(c.name);c.name=c.name+' (copie)';
+  C.menu.splice(i+1,0,c);renderMenuList();markDirty();
+};
+window.delMenuItem=(i)=>{
+  if(!confirm('Supprimer « '+C.menu[i].name+' » ?'))return;
+  C.menu.splice(i,1);renderMenuList();markDirty();
+};
+window.openMenuModal=(i)=>{
+  const isNew=(i===undefined);
+  const it=isNew?{id:'',name:'',cat:(C.categories[0]||{}).id||'',price:0,old:null,rating:4.8,orders:'',desc:'',img:'',tags:[],badge:''}:JSON.parse(JSON.stringify(C.menu[i]));
+  $('#modalTitle').textContent=isNew?'Nouveau plat':'Modifier — '+it.name;
+  $('#modalBody').innerHTML=`
+    <div class="flex items-center gap-3 mb-4">
+      <img id="m-img-pv" class="w-20 h-20 rounded-xl object-cover border-2 border-ink bg-white shrink-0" src="${escAttr(it.img||'data:image/svg+xml,'+encodeURIComponent('<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 80 80\"><text y=\"72\" font-size=\"72\">🍕</text></svg>'))}">
+      <div class="flex-1 min-w-0"><label class="a-label">Image (URL)</label><input id="m-img" class="a-input" value="${escAttr(it.img)}" placeholder="https://..."></div>
+      <label class="a-btn-white cursor-pointer shrink-0 self-end" title="Importer"><i class="fa-solid fa-upload"></i><input type="file" accept="image/*" class="hidden" id="m-img-up"></label>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-3">
+      <div class="sm:col-span-2"><label class="a-label">Nom *</label><input id="m-name" class="a-input" value="${escAttr(it.name)}"></div>
+      <div><label class="a-label">Catégorie</label><select id="m-cat" class="a-input">${(C.categories||[]).map(c=>`<option value="${esc(c.id)}" ${c.id===it.cat?'selected':''}>${esc(c.label)}</option>`).join('')}</select></div>
+      <div><label class="a-label">Badge (ex: Best-seller)</label><input id="m-badge" class="a-input" value="${escAttr(it.badge||'')}"></div>
+      <div><label class="a-label">Prix (LYD) *</label><input id="m-price" type="number" min="0" step="any" class="a-input" value="${it.price??0}"></div>
+      <div><label class="a-label">Ancien prix (barré)</label><input id="m-old" type="number" min="0" step="any" class="a-input" value="${it.old??''}"></div>
+      <div><label class="a-label">Note (0 à 5)</label><input id="m-rating" type="number" min="0" max="5" step="0.1" class="a-input" value="${it.rating??4.8}"></div>
+      <div><label class="a-label">Commandes affichées (ex: 2.1k)</label><input id="m-orders" class="a-input" value="${escAttr(String(it.orders??''))}"></div>
+      <div class="sm:col-span-2"><label class="a-label">Description</label><textarea id="m-desc" rows="2" class="a-input resize-none">${esc(it.desc||'')}</textarea></div>
+      <div class="sm:col-span-2"><label class="a-label">Étiquettes</label>
+        <div class="flex flex-wrap gap-2 mt-1">${Object.entries(TAGS).map(([k,l])=>`<label class="flex items-center gap-2 font-black text-sm bg-cream border-2 border-ink rounded-full px-3 py-1.5 cursor-pointer"><input type="checkbox" class="m-tag" value="${k}" ${(it.tags||[]).includes(k)?'checked':''}> ${l}</label>`).join('')}</div>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button onclick="closeModal()" class="a-btn-white flex-1 !justify-center">Annuler</button>
+      <button onclick="saveMenuItem(${isNew?'null':i})" class="a-btn-grad flex-1">Enregistrer</button>
+    </div>`;
+  $('#m-img').oninput=()=>{$('#m-img-pv').src=$('#m-img').value||'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><text y="72" font-size="72">🍕</text></svg>');};
+  $('#m-img-up').onchange=e=>{
+    const f=e.target.files[0]; if(!f)return;
+    uploadImage(f,url=>{$('#m-img').value=url;$('#m-img-pv').src=url;});
+    e.target.value='';
+  };
+  $('#modal').classList.remove('hidden');$('#modal').classList.add('flex');
+};
+window.saveMenuItem=(i)=>{
+  const name=$('#m-name').value.trim();
+  const price=Number($('#m-price').value);
+  if(!name){toast('Le nom est obligatoire','err');return;}
+  if(!(price>=0)){toast('Prix invalide','err');return;}
+  const old=$('#m-old').value;
+  const tags=$$('.m-tag:checked').map(c=>c.value);
+  const it={
+    id:(i===null||i===undefined||!C.menu[i])?slugId(name):C.menu[i].id,
+    name,cat:$('#m-cat').value,price,
+    old:old===''?null:Number(old),
+    rating:Math.max(0,Math.min(5,Number($('#m-rating').value)||0)),
+    orders:$('#m-orders').value.trim(),
+    desc:$('#m-desc').value.trim(),
+    img:$('#m-img').value.trim(),
+    tags,badge:$('#m-badge').value.trim()||null
+  };
+  if(i===null||i===undefined)C.menu.push(it);
+  else C.menu[i]=it;
+  closeModal();renderMenuList();markDirty();
+  toast(isEmpty(i)?'Plat ajouté ✓':'Plat modifié ✓');
+};
+function isEmpty(i){return i===null||i===undefined;}
+window.closeModal=()=>{$('#modal').classList.add('hidden');$('#modal').classList.remove('flex');};
+
+/* ================= CRÉATEUR (listes) ================= */
+const BUILDER_LISTS={
+  sizesEdit:{label:'tailles',fields:[{k:'k',t:'text',w:'!w-16',ph:'S'},{k:'n',t:'text',w:'!flex-1 !min-w-[130px]',ph:'Nom'},{k:'p',t:'num',w:'!w-24',ph:'0'}],add:()=>C.builder.sizes.push({k:'',n:'',p:0})},
+  doughsEdit:{label:'pâtes',fields:[{k:'n',t:'text',w:'!flex-1 !min-w-[140px]',ph:'Nom'},{k:'p',t:'num',w:'!w-24',ph:'0'},{k:'d',t:'text',w:'!w-44',ph:'Description'}],add:()=>C.builder.doughs.push({n:'',p:0,d:''})},
+  saucesEdit:{label:'sauces',fields:[{k:'k',t:'text',w:'!w-24',ph:'clé'},{k:'n',t:'text',w:'!flex-1 !min-w-[130px]',ph:'Nom'},{k:'p',t:'num',w:'!w-20',ph:'0'},{k:'c',t:'color'}],add:()=>C.builder.sauces.push({k:'',n:'',p:0,c:'#E63A2E'})},
+  cheesesEdit:{label:'fromages',fields:[{k:'n',t:'text',w:'!flex-1 !min-w-[140px]',ph:'Nom'},{k:'p',t:'num',w:'!w-24',ph:'0'}],add:()=>C.builder.cheeses.push({n:'',p:0})},
+  topsEdit:{label:'garnitures',fields:[{k:'n',t:'text',w:'!flex-1 !min-w-[140px]',ph:'Nom'},{k:'p',t:'num',w:'!w-20',ph:'0'},{k:'c',t:'color'}],add:()=>C.builder.toppings.push({n:'',p:0,c:'#cccccc'})},
+};
+window.bset=(id,i,k,v)=>{BUILDER_LISTS[id].get()[i][k]=v;markDirty();};
+Object.keys(BUILDER_LISTS).forEach(id=>{
+  BUILDER_LISTS[id].get=()=>({
+    sizesEdit:C.builder.sizes,doughsEdit:C.builder.doughs,saucesEdit:C.builder.sauces,cheesesEdit:C.builder.cheeses,topsEdit:C.builder.toppings
+  })[id];
+});
+window.bdel=(id,i)=>{BUILDER_LISTS[id].get().splice(i,1);renderBuilderTab();markDirty();};
+window.badd=(id)=>{BUILDER_LISTS[id].add();renderBuilderTab();markDirty();};
+function renderBuilderTab(){
+  Object.entries(BUILDER_LISTS).forEach(([id,cfg])=>{
+    const arr=cfg.get(); const w=$('#'+id);
+    const html=arr.map((item,i)=>`
+      <div class="flex flex-wrap items-center gap-2">
+        ${cfg.fields.map(f=>{
+          if(f.t==='num')return `<input type="number" step="any" min="0" class="a-input ${f.w}" value="${item[f.k]??0}" placeholder="${f.ph}" oninput="bset('${id}',${i},'${f.k}',Number(this.value))">`;
+          if(f.t==='color')return `<input type="color" class="a-color" value="${item[f.k]||'#cccccc'}" oninput="bset('${id}',${i},'${f.k}',this.value)">`;
+          return `<input type="text" class="a-input ${f.w}" value="${escAttr(item[f.k]??'')}" placeholder="${f.ph}" oninput="bset('${id}',${i},'${f.k}',this.value)">`;
+        }).join('')}
+        ${delBtn(`bdel('${id}',${i})`)}
+      </div>`).join('');
+    w.innerHTML=html||'<p class="text-sm font-bold text-ink/40">Aucun élément — ajoutes-en !</p>';
+  });
+}
+
+/* ================= OFFRES / PROMOS / ROUE ================= */
+function renderCardsEdit(){
+  const conf={yellow:'Jaune',green:'Vert',pink:'Rose'};
+  $('#cardsEdit').innerHTML=(C.offers.cards||[]).map((c,i)=>`
+    <div class="bg-cream border-[2.5px] border-ink rounded-2xl p-3 space-y-2">
+      <div class="flex flex-wrap gap-2">
+        <select class="a-input !w-32" onchange="cset('cards',${i},'style',this.value)">${Object.entries(conf).map(([k,l])=>`<option value="${k}" ${c.style===k?'selected':''}>${l}</option>`).join('')}</select>
+        <input class="a-input !w-48" value="${escAttr(c.badge)}" placeholder="Badge (ex: -15%)" oninput="cset('cards',${i},'badge',this.value)">
+        ${delBtn(`cdel('cards',${i})`)}
+      </div>
+      <input class="a-input" value="${escAttr(c.title)}" placeholder="Titre" oninput="cset('cards',${i},'title',this.value)">
+      <input class="a-input" value="${escAttr(c.desc)}" placeholder="Description" oninput="cset('cards',${i},'desc',this.value)">
+    </div>`).join('');
+}
+window.cset=(list,i,k,v)=>{C.offers[list][i][k]=v;markDirty();};
+window.cdel=(list,i)=>{C.offers[list].splice(i,1);renderCardsEdit();markDirty();};
+window.addCard=()=>{C.offers.cards=C.offers.cards||[];C.offers.cards.push({style:'yellow',badge:'',title:'',desc:''});renderCardsEdit();markDirty();};
+
+function renderPromosEdit(){
+  $('#promosEdit').innerHTML=Object.entries(C.promos||{}).map(([code,p])=>`
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="a-input !w-40 !bg-ink !text-brandYellow text-center">${esc(code)}</span>
+      <select class="a-input !w-28" onchange="psetType('${esc(code)}',this.value)">
+        <option value="pct" ${p.type==='pct'?'selected':''}>%</option>
+        <option value="flat" ${p.type==='flat'?'selected':''}>LYD</option>
+      </select>
+      <input type="number" step="any" min="0" class="a-input !w-24" value="${p.val??0}" oninput="pset('${esc(code)}','val',Number(this.value))">
+      <input class="a-input !flex-1 !min-w-[160px]" value="${escAttr(p.msg||'')}" placeholder="Message affiché" oninput="pset('${esc(code)}','msg',this.value)">
+      ${delBtn(`pdel('${esc(code)}')`)}
+    </div>`).join('')||'<p class="text-sm font-bold text-ink/40">Aucun code promo.</p>';
+}
+window.pset=(code,k,v)=>{C.promos[code][k]=v;markDirty();};
+window.psetType=(code,t)=>{C.promos[code].type=t;markDirty();};
+window.pdel=(code)=>{if(!confirm('Supprimer le code '+code+' ?'))return;delete C.promos[code];renderPromosEdit();markDirty();};
+window.addPromo=()=>{
+  const code=($('#newPromoCode').value||'').trim().toUpperCase().replace(/[^A-Z0-9_]+/g,'');
+  if(!code){toast('Code invalide','err');return;}
+  if(C.promos[code]){toast('Ce code existe déjà','err');return;}
+  C.promos[code]={type:'pct',val:10,msg:''};
+  $('#newPromoCode').value='';
+  renderPromosEdit();markDirty();
+};
+
+function renderWheelEdit(){
+  const menuOpts='<option value="">— aucun —</option>'+C.menu.map(m=>`<option value="${esc(m.id)}">${esc(m.name)}</option>`).join('');
+  $('#wheelEdit').innerHTML=(C.wheel||[]).map((p,i)=>`
+    <div class="flex flex-wrap items-center gap-2">
+      <input class="a-input !w-36" value="${escAttr(p.label)}" placeholder="Lot (ex: -10%)" oninput="wset(${i},'label',this.value)">
+      <input class="a-input !w-40 uppercase" value="${escAttr(p.code||'')}" placeholder="Code promo (option)" oninput="wset(${i},'code',this.value||null)">
+      <select class="a-input !flex-1 !min-w-[150px]" onchange="wset(${i},'free',this.value||null)">
+        ${menuOpts.replace(`value="${esc(p.free||'')}"`,`value="${esc(p.free||'')}" selected="selected"`)}
+      </select>
+      ${delBtn(`wdel(${i})`)}
+    </div>`).join('');
+  $('#wheelEdit').insertAdjacentHTML('beforeend','<p class="text-xs font-bold text-ink/40 mt-1">Lot = code promo OU article offert (ajouté au panier).</p>');
+}
+window.wset=(i,k,v)=>{C.wheel[i][k]=v;markDirty();};
+window.wdel=(i)=>{C.wheel.splice(i,1);renderWheelEdit();markDirty();};
+window.addWheelPrize=()=>{C.wheel=C.wheel||[];C.wheel.push({label:'',code:null,free:null});renderWheelEdit();markDirty();};
+
+/* ================= GALERIE ================= */
+const SPANS=[['','Normal'],['col-span-2','Large'],['row-span-2','Haut'],['col-span-2 row-span-2','Grand']];
+function renderGalleryList(){
+  $('#galleryEdit').innerHTML=(C.gallery||[]).map((g,i)=>`
+    <div class="bg-cream border-[2.5px] border-ink rounded-2xl p-3 space-y-2">
+      <img src="${escAttr(g.img)}" onerror="this.src='data:image/svg+xml,'+encodeURIComponent('<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 80 80&quot;><text y=&quot;72&quot; font-size=&quot;72&quot;>🍕</text></svg>')" class="w-full h-32 object-cover rounded-xl border-2 border-ink bg-white">
+      <input class="a-input" value="${escAttr(g.t)}" placeholder="Titre" oninput="gset(${i},'t',this.value)">
+      <div class="flex gap-2">
+        <input class="a-input !text-xs" value="${escAttr(g.img)}" placeholder="URL de l'image" oninput="gset(${i},'img',this.value);this.closest('div').parentElement.querySelector('img').src=this.value">
+        <label class="a-btn-white cursor-pointer shrink-0" title="Importer"><i class="fa-solid fa-upload"></i><input type="file" accept="image/*" class="hidden" onchange="galleryUpload(this,${i})"></label>
+      </div>
+      <div class="flex gap-2">
+        <select class="a-input !w-32" onchange="gset(${i},'c',this.value)">${SPANS.map(([v,l])=>`<option value="${v}" ${g.c===v?'selected':''}>${l}</option>`).join('')}</select>
+        <button onclick="moveGallery(${i},-1)" class="a-icon-btn"><i class="fa-solid fa-arrow-up"></i></button>
+        <button onclick="moveGallery(${i},1)" class="a-icon-btn"><i class="fa-solid fa-arrow-down"></i></button>
+        <button onclick="delGallery(${i})" class="a-icon-btn !bg-brandRed !text-white flex-1"><i class="fa-solid fa-trash-can"></i></button>
+      </div>
+    </div>`).join('');
+  $('#galleryCount').textContent='('+(C.gallery||[]).length+')';
+}
+window.gset=(i,k,v)=>{C.gallery[i][k]=v;markDirty();};
+window.moveGallery=(i,d)=>{const j=i+d;if(j<0||j>=C.gallery.length)return;[C.gallery[i],C.gallery[j]]=[C.gallery[j],C.gallery[i]];renderGalleryList();markDirty();};
+window.delGallery=(i)=>{if(!confirm('Supprimer cette photo ?'))return;C.gallery.splice(i,1);renderGalleryList();markDirty();};
+window.addGalleryItem=()=>{C.gallery.push({img:'',t:'',c:''});renderGalleryList();markDirty();};
+window.galleryUpload=(input,i)=>{
+  const f=input.files[0]; if(!f)return;
+  uploadImage(f,url=>{C.gallery[i].img=url;renderGalleryList();markDirty();});
+  input.value='';
+};
+
+/* ================= AVIS ================= */
+function renderReviewsList(){
+  $('#reviewsEdit').innerHTML=(C.reviews||[]).map((r,i)=>`
+    <div class="bg-cream border-[2.5px] border-ink rounded-2xl p-3 flex gap-3">
+      <img src="${escAttr(r.img)}" onerror="this.onerror=null;this.src='/assets/vendor/placeholder.svg'" class="w-11 h-11 rounded-full border-2 border-ink object-cover shrink-0 bg-white">
+      <div class="flex-1 min-w-0 space-y-2">
+        <div class="flex flex-wrap gap-2">
+          <input class="a-input !w-44" value="${escAttr(r.n)}" placeholder="Prénom" oninput="rset(${i},'n',this.value)">
+          <input class="a-input !w-36" value="${escAttr(r.z)}" placeholder="Quartier" oninput="rset(${i},'z',this.value)">
+          <select class="a-input !w-20" onchange="rset(${i},'s',Number(this.value))">${[1,2,3,4,5].map(n=>`<option value="${n}" ${r.s===n?'selected':''}>${'⭐'.repeat(1)} ${n}</option>`).join('')}</select>
+          <input class="a-input !w-32" value="${escAttr(r.d)}" placeholder="Date" oninput="rset(${i},'d',this.value)">
+          ${delBtn(`rdel(${i})`)}
+        </div>
+        <textarea rows="2" class="a-input resize-none" placeholder="Avis" oninput="rset(${i},'t',this.value)">${esc(r.t)}</textarea>
+      </div>
+    </div>`).join('');
+  $('#reviewsCount').textContent='('+(C.reviews||[]).length+')';
+}
+window.rset=(i,k,v)=>{C.reviews[i][k]=v;markDirty();};
+window.rdel=(i)=>{if(!confirm('Supprimer cet avis ?'))return;C.reviews.splice(i,1);renderReviewsList();markDirty();};
+window.addReview=()=>{C.reviews.unshift({n:'',z:'Tripoli',s:5,t:'',img:'https://i.pravatar.cc/100?u='+Date.now(),d:'À l\u2019instant'});renderReviewsList();markDirty();};
+
+/* ================= ZONES ================= */
+let zoneRows=[];
+function renderZonesList(){
+  zoneRows=Object.entries(C.zones||{}).map(([name,v])=>({name,fee:v.fee,time:v.time}));
+  paintZones();
+}
+function paintZones(){
+  $('#zonesEdit').innerHTML=zoneRows.map((z,i)=>`
+    <div class="flex flex-wrap items-center gap-2">
+      <input class="a-input !flex-1 !min-w-[180px]" value="${escAttr(z.name)}" placeholder="Quartier" oninput="zset(${i},'name',this.value)">
+      <input type="number" min="0" step="any" class="a-input !w-24" value="${z.fee??0}" title="Frais (LYD)" oninput="zset(${i},'fee',Number(this.value))">
+      <input class="a-input !w-32" value="${escAttr(z.time)}" placeholder="20-30 min" oninput="zset(${i},'time',this.value)">
+      ${delBtn(`zdel(${i})`)}
+    </div>`).join('');
+}
+window.zset=(i,k,v)=>{zoneRows[i][k]=v;markDirty();};
+window.zdel=(i)=>{zoneRows.splice(i,1);paintZones();markDirty();};
+window.addZone=()=>{zoneRows.push({name:'',fee:10,time:'20-30 min'});paintZones();markDirty();};
+
+/* ================= COMMANDES ================= */
+const ORDER_STATUS=['nouvelle','en préparation','en livraison','livrée'];
+const STATUS_BADGE={'nouvelle':'bg-brandRed text-white','en préparation':'bg-brandOrange text-white','en livraison':'bg-blue-500 text-white','livrée':'grad-green text-white','confirmée':'grad-green text-white','annulée':'bg-ink/50 text-white'};
+function fmtDate(iso){try{return new Date(iso).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}catch(e){return iso||'';}}
+async function loadOrders(){
+  let list=[];
+  try{list=await api('/api/orders');}catch(e){return;}
+  renderOrders(list);
+  const nb=list.filter(o=>o.status==='nouvelle').length;
+  const badge=$('#badge-orders');
+  if(badge){badge.textContent=nb;badge.classList.toggle('hidden',!nb);}
+}
+function renderOrders(list){
+  $('#ordersCount').textContent='('+list.length+')';
+  $('#ordersEdit').innerHTML=list.map(o=>`
+    <div class="bg-cream border-[2.5px] border-ink rounded-2xl p-3">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="font-black bg-ink text-brandYellow rounded-full px-3 py-1 text-xs">${esc(o.id)}</span>
+        <span class="text-xs font-bold text-ink/50">${fmtDate(o.at)}</span>
+        <span class="font-black text-sm">${esc(o.name)}</span>
+        <a href="tel:${esc(o.phone)}" class="text-xs font-black text-brandRed">${esc(o.phone)}</a>
+        <span class="ml-auto font-fredoka font-bold text-lg text-brandRed">${o.total} LYD</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 mt-2">
+        <span class="text-xs font-black bg-white border-2 border-ink rounded-full px-2.5 py-1">${esc(o.zone||'—')}</span>
+        <span class="text-xs font-black ${STATUS_BADGE[o.status]||'bg-ink/10'} rounded-full px-2.5 py-1 border-2 border-ink">${esc(o.status)}</span>
+        <select class="a-input !w-40 !py-1.5 text-xs" onchange="setOrderStatus('${esc(o.id)}',this.value)">
+          ${ORDER_STATUS.map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+        <button onclick="delOrder('${esc(o.id)}')" class="a-icon-btn !bg-brandRed !text-white" title="Supprimer"><i class="fa-solid fa-trash-can"></i></button>
+      </div>
+      <details class="mt-2">
+        <summary class="text-xs font-black text-ink/50 cursor-pointer">${(o.items||[]).length} article(s) — détails</summary>
+        <div class="text-sm font-bold mt-2 space-y-1">
+          ${(o.items||[]).map(it=>`<div class="flex justify-between"><span>${it.qty}× ${esc(it.name)}</span><span>${it.qty*it.price} LYD</span></div>`).join('')}
+          <div class="flex justify-between text-ink/50"><span>Sous-total</span><span>${o.subtotal} LYD</span></div>
+          <div class="flex justify-between text-ink/50"><span>Remise</span><span>-${o.discount||0} LYD</span></div>
+          <div class="flex justify-between text-ink/50"><span>Livraison</span><span>${o.delivery||0} LYD</span></div>
+          <div class="pt-1 border-t border-ink/10">${esc(o.addr||'')}</div>
+          ${o.note?`<div class="text-ink/60">📝 ${esc(o.note)}</div>`:''}
+          <div class="text-ink/60">Paiement : ${esc(o.pay||'—')}</div>
+        </div>
+      </details>
+    </div>`).join('')||'<p class="text-sm font-bold text-ink/40">Aucune commande pour l\u2019instant.</p>';
+}
+window.setOrderStatus=async(id,status)=>{
+  try{await api('/api/order-status',{method:'POST',body:JSON.stringify({id,status})});loadOrders();}
+  catch(e){toast(e.message,'err');}
+};
+window.delOrder=async(id)=>{
+  if(!confirm('Supprimer la commande '+id+' ?'))return;
+  try{await api('/api/order-delete',{method:'POST',body:JSON.stringify({id})});loadOrders();}
+  catch(e){toast(e.message,'err');}
+};
+
+/* ================= RÉSERVATIONS ================= */
+const RESA_STATUS=['nouvelle','confirmée','annulée'];
+async function loadReservations(){
+  let list=[];
+  try{list=await api('/api/reservations');}catch(e){return;}
+  renderReservations(list);
+  const nb=list.filter(r=>r.status==='nouvelle').length;
+  const badge=$('#badge-reservations');
+  if(badge){badge.textContent=nb;badge.classList.toggle('hidden',!nb);}
+}
+function renderReservations(list){
+  $('#resasCount').textContent='('+list.length+')';
+  $('#resasEdit').innerHTML=list.map(r=>`
+    <div class="bg-cream border-[2.5px] border-ink rounded-2xl p-3">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="font-black bg-ink text-brandYellow rounded-full px-3 py-1 text-xs">${esc(r.id)}</span>
+        <span class="text-xs font-bold text-ink/50">${fmtDate(r.at)}</span>
+        <span class="font-black text-sm">${esc(r.name)}</span>
+        <a href="tel:${esc(r.phone)}" class="text-xs font-black text-brandRed">${esc(r.phone)}</a>
+        <span class="ml-auto font-black text-sm">📅 ${esc(r.date||'—')} à ${esc(r.time||'—')}</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 mt-2">
+        <span class="text-xs font-black bg-white border-2 border-ink rounded-full px-2.5 py-1">${esc(r.guests||'—')}</span>
+        <span class="text-xs font-black bg-white border-2 border-ink rounded-full px-2.5 py-1">${esc(r.zone||'—')}</span>
+        ${r.table?`<span class="text-xs font-black bg-white border-2 border-ink rounded-full px-2.5 py-1">Table ${esc(r.table)}</span>`:''}
+        <span class="text-xs font-black ${STATUS_BADGE[r.status]||'bg-ink/10'} rounded-full px-2.5 py-1 border-2 border-ink">${esc(r.status)}</span>
+        <select class="a-input !w-36 !py-1.5 text-xs" onchange="setResaStatus('${esc(r.id)}',this.value)">
+          ${RESA_STATUS.map(s=>`<option value="${s}" ${r.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+        <button onclick="delResa('${esc(r.id)}')" class="a-icon-btn !bg-brandRed !text-white" title="Supprimer"><i class="fa-solid fa-trash-can"></i></button>
+      </div>
+      ${r.note?`<div class="text-sm font-bold text-ink/60 mt-2">📝 ${esc(r.note)}</div>`:''}
+    </div>`).join('')||'<p class="text-sm font-bold text-ink/40">Aucune réservation pour l\u2019instant.</p>';
+}
+window.setResaStatus=async(id,status)=>{
+  try{await api('/api/reservation-status',{method:'POST',body:JSON.stringify({id,status})});loadReservations();}
+  catch(e){toast(e.message,'err');}
+};
+window.delResa=async(id)=>{
+  if(!confirm('Supprimer la réservation '+id+' ?'))return;
+  try{await api('/api/reservation-delete',{method:'POST',body:JSON.stringify({id})});loadReservations();}
+  catch(e){toast(e.message,'err');}
+};
+
+/* ================= COMPTE ================= */
+window.changePassword=async()=>{
+  const cur=$('#pwCur').value,nw=$('#pwNew').value,nw2=$('#pwNew2').value;
+  if(nw.length<4){toast('Nouveau mot de passe : 4 caractères minimum','err');return;}
+  if(nw!==nw2){toast('Les deux mots de passe ne correspondent pas','err');return;}
+  try{
+    await api('/api/password',{method:'POST',body:JSON.stringify({current:cur,next:nw})});
+    $('#pwCur').value='';$('#pwNew').value='';$('#pwNew2').value='';
+    toast('Mot de passe modifié ✓');
+  }catch(e){toast(e.message,'err');}
+};
+window.resetContent=async()=>{
+  if(!confirm('Réinitialiser TOUT le contenu du site (textes, menu, photos, promos…) ?'))return;
+  if(!confirm('Sûr ? Cette action remplace le contenu actuel par le contenu d\u2019origine. Elle est irréversible.'))return;
+  try{
+    await api('/api/reset',{method:'POST'});
+    C=await api('/api/content');dirty=false;renderAll();showTab(tab);
+    toast('Contenu réinitialisé ✓');
+  }catch(e){toast(e.message,'err');}
+};
+
+/* ================= RENDU GLOBAL ================= */
+function renderAll(){
+  bindAll();
+  renderStats();renderTrust();renderHours();
+  renderCats();renderMenuList();
+  renderBuilderTab();
+  renderCardsEdit();renderPromosEdit();renderWheelEdit();
+  renderGalleryList();renderReviewsList();renderZonesList();
+  updateStatus();
+}
+
+/* ================= DÉMARRAGE ================= */
+buildNav();
+$('#loginPw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+$('#loginView').style.display='flex';
+(async function initAdmin(){
+  if(TOKEN){
+    try{
+      await api('/api/orders'); // valide le token
+      await enterApp();
+      return;
+    }catch(e){ if(!e.message.includes('Session expirée'))showLogin(); }
+  }
+  showLogin();
+})();
+</script>
+</body>
+</html>
