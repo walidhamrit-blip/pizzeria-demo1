@@ -8,28 +8,28 @@ module.exports = {
   "brand2": "DEMO",
   "tagline": "TRIPOLI • ITALIANA",
   "topbar": {
-   "promo": "LIVRAISON GRATUITE dès 80 LYD à Tripoli",
-   "promoShort": "Livraison gratuite dès 80 LYD",
+   "promo": "FREE DELIVERY from 80 LYD in Tripoli",
+   "promoShort": "Free delivery from 80 LYD",
    "phone": "+218 91 234 5678",
    "address": "Hay Al Andalus, Tripoli — طرابلس"
   },
   "hero": {
    "pill": "FORNO A LEGNA",
-   "badge": "Authentique depuis 2012 • Tripoli",
-   "line1": "LA VRAIE",
-   "line2": "PIZZA ITALIENNE",
-   "line3a": "AU CŒUR DE",
+   "badge": "Authentic since 2012 • Tripoli",
+   "line1": "THE REAL",
+   "line2": "ITALIAN PIZZA",
+   "line3a": "IN THE HEART OF",
    "line3b": "TRIPOLI",
-   "subtitle": "Pâte fermentée 48h, tomates San Marzano, fior di latte & four à bois à 450°C. Livrée chaude en 25 minutes partout à Tripoli — de Gargaresh à Tajoura.",
-   "cta1": "Voir le Menu",
-   "cta2": "Créer ma Pizza",
+   "subtitle": "48h fermented dough, San Marzano tomatoes, fior di latte & a 450°C wood oven. Delivered hot in 25 minutes anywhere in Tripoli — from Gargaresh to Tajoura.",
+   "cta1": "View the Menu",
+   "cta2": "Build My Pizza",
    "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=900&q=80",
    "priceFrom": 38,
    "featuredItem": "demo-special",
    "sticker": "100% Halal!",
    "rating": "4.9/5",
-   "ratingText": "2 400+ avis vérifiés à Tripoli",
-   "openLine": "OUVERT • jusqu'à 00:00"
+   "ratingText": "2,400+ verified reviews in Tripoli",
+   "openLine": "OPEN • until midnight"
   },
   "stats": [
    {
@@ -39,31 +39,31 @@ module.exports = {
    },
    {
     "value": "450°C",
-    "label": "FOUR À BOIS",
+    "label": "WOOD OVEN",
     "color": "brandOrange"
    },
    {
     "value": "25min",
-    "label": "LIVRAISON",
+    "label": "DELIVERY",
     "color": "brandGreen"
    }
   ],
   "trust": [
    {
     "icon": "fa-wheat-awn",
-    "text": "Farine italienne Caputo"
+    "text": "Italian Caputo flour"
    },
    {
     "icon": "fa-leaf",
-    "text": "Produits frais & Halal"
+    "text": "Fresh & Halal produce"
    },
    {
     "icon": "fa-user-chef",
-    "text": "Chef Napolitain Enzo"
+    "text": "Neapolitan Chef Enzo"
    },
    {
     "icon": "fa-money-bill-wave",
-    "text": "Cash • Carte • Mobile"
+    "text": "Cash • Card • Mobile"
    }
   ],
   "contact": {
@@ -75,36 +75,36 @@ module.exports = {
    "addressLines": "Rue Sidi Issa, à 200m du front de mer\nTripoli, Libye",
    "mapUrl": "https://www.openstreetmap.org/export/embed.html?bbox=13.05%2C32.82%2C13.30%2C32.94&layer=mapnik&marker=32.8872%2C13.1913",
    "mapsLink": "https://maps.google.com/?q=Hay+Al+Andalus+Tripoli+Libya",
-   "instagram": "@pizzademo.tripoli • 48k abonnés"
+   "instagram": "@pizzademo.tripoli • 48k followers"
   },
   "hours": [
    {
-    "days": "Lun — Jeu",
+    "days": "Mon — Thu",
     "time": "11:30 – 00:00"
    },
    {
-    "days": "Vendredi",
+    "days": "Friday",
     "time": "14:00 – 00:00"
    },
    {
-    "days": "Sam — Dim",
+    "days": "Sat — Sun",
     "time": "11:30 – 00:30"
    }
   ],
   "freeDeliveryFrom": 80,
-  "footerAbout": "La pizzeria italienne préférée de Tripoli depuis 2012. Forno a legna, amore e gioia — dans chaque part.",
+  "footerAbout": "Tripoli's favorite Italian pizzeria since 2012. Forno a legna, amore e gioia — in every slice.",
   "copyright": "© 2026 Pizza Demo Tripoli • Fatto con amore in Libia 🇱🇾🇮🇹",
-  "payments": "Paiement: Cash • Carte locale • Sadad • Moamalat",
-  "newsletterText": "-10% sur ta première commande en ligne."
+  "payments": "Payment: Cash • Local card • Sadad • Moamalat",
+  "newsletterText": "-10% on your first online order."
  },
  "categories": [
   {
    "id": "classiques",
-   "label": "Classiques"
+   "label": "Classics"
   },
   {
    "id": "speciales",
-   "label": "Spécialités"
+   "label": "Specialties"
   },
   {
    "id": "calzone",
@@ -112,7 +112,7 @@ module.exports = {
   },
   {
    "id": "dolci",
-   "label": "Desserts & Boissons"
+   "label": "Desserts & Drinks"
   }
  ],
  "menu": [
@@ -124,7 +124,7 @@ module.exports = {
    "old": null,
    "rating": 4.9,
    "orders": "2.1k",
-   "desc": "San Marzano, fior di latte, basilic frais, huile d'olive EVO.",
+   "desc": "San Marzano, fior di latte, fresh basil, EVO olive oil.",
    "img": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=800&q=80",
    "tags": [
     "veg"
@@ -139,7 +139,7 @@ module.exports = {
    "old": 60,
    "rating": 4.8,
    "orders": "1.8k",
-   "desc": "Pepperoni halal épicé, mozzarella, miel piquant, origan.",
+   "desc": "Spicy halal pepperoni, mozzarella, hot honey, oregano.",
    "img": "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80",
    "tags": [
     "spicy"
@@ -154,7 +154,7 @@ module.exports = {
    "old": null,
    "rating": 4.7,
    "orders": "1.2k",
-   "desc": "Anchois de Sicile, câpres, olives Taggiasche, tomate.",
+   "desc": "Sicilian anchovies, capers, Taggiasche olives, tomato.",
    "img": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80",
    "tags": [],
    "badge": null
@@ -167,7 +167,7 @@ module.exports = {
    "old": null,
    "rating": 4.8,
    "orders": "980",
-   "desc": "Jambon halal, champignons, artichauts, olives, œuf.",
+   "desc": "Halal ham, mushrooms, artichokes, olives, egg.",
    "img": "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=800&q=80",
    "tags": [],
    "badge": null
@@ -180,7 +180,7 @@ module.exports = {
    "old": null,
    "rating": 4.9,
    "orders": "1.5k",
-   "desc": "Mozzarella, gorgonzola, parmesan 24 mois, ricotta fumée.",
+   "desc": "Mozzarella, gorgonzola, 24-month parmesan, smoked ricotta.",
    "img": "https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?auto=format&fit=crop&w=800&q=80",
    "tags": [
     "veg"
@@ -195,7 +195,7 @@ module.exports = {
    "old": 80,
    "rating": 5,
    "orders": "3.2k",
-   "desc": "Viande épicée locale, burrata crémeuse, roquette, tomates cerises, sauce Demo secrète.",
+   "desc": "Local spiced meat, creamy burrata, arugula, cherry tomatoes, secret Demo sauce.",
    "img": "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=800&q=80",
    "tags": [
     "signature"
@@ -210,7 +210,7 @@ module.exports = {
    "old": null,
    "rating": 4.9,
    "orders": "640",
-   "desc": "Crème de truffe noire, burrata di Puglia, roquette, parmesan.",
+   "desc": "Black truffle cream, Puglia burrata, arugula, parmesan.",
    "img": "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?auto=format&fit=crop&w=800&q=80",
    "tags": [
     "veg",
@@ -226,7 +226,7 @@ module.exports = {
    "old": null,
    "rating": 4.7,
    "orders": "720",
-   "desc": "Crevettes, calamars, moules de la côte libyenne, ail, persil.",
+   "desc": "Shrimp, squid, mussels from the Libyan coast, garlic, parsley.",
    "img": "https://images.unsplash.com/photo-1590947132387-155cc02f3212?auto=format&fit=crop&w=800&q=80",
    "tags": [],
    "badge": null
@@ -239,7 +239,7 @@ module.exports = {
    "old": null,
    "rating": 4.6,
    "orders": "890",
-   "desc": "Poivrons tricolores, courgettes grillées, champignons, pesto.",
+   "desc": "Tri-color peppers, grilled zucchini, mushrooms, pesto.",
    "img": "https://images.unsplash.com/photo-1565299507177-b0ac66763828?auto=format&fit=crop&w=800&q=80",
    "tags": [
     "veg"
@@ -254,7 +254,7 @@ module.exports = {
    "old": null,
    "rating": 4.8,
    "orders": "760",
-   "desc": "Chausson doré, ricotta, épinards, mozzarella, sauce tomate à part.",
+   "desc": "Golden turnover, ricotta, spinach, mozzarella, tomato sauce on the side.",
    "img": "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80",
    "tags": [],
    "badge": null
@@ -267,7 +267,7 @@ module.exports = {
    "old": null,
    "rating": 4.7,
    "orders": "540",
-   "desc": "Pepperoni, scamorza fumée, oignons caramélisés, sauce BBQ.",
+   "desc": "Pepperoni, smoked scamorza, caramelized onions, BBQ sauce.",
    "img": "https://images.unsplash.com/photo-1585238342024-78d387f4a707?auto=format&fit=crop&w=800&q=80",
    "tags": [
     "spicy"
@@ -282,13 +282,13 @@ module.exports = {
    "old": null,
    "rating": 5,
    "orders": "2.4k",
-   "desc": "Mascarpone, café arabica, cacao amer — recette de Nonna.",
+   "desc": "Mascarpone, arabica coffee, bitter cocoa — Nonna's recipe.",
    "img": "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=800&q=80",
    "tags": [
     "veg",
     "sweet"
    ],
-   "badge": "Fait maison"
+   "badge": "Homemade"
   },
   {
    "id": "panna",
@@ -298,7 +298,7 @@ module.exports = {
    "old": null,
    "rating": 4.8,
    "orders": "910",
-   "desc": "Vanille Bourbon, coulis de fruits rouges, menthe.",
+   "desc": "Bourbon vanilla, red fruit coulis, mint.",
    "img": "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=800&q=80",
    "tags": [
     "veg",
@@ -314,7 +314,7 @@ module.exports = {
    "old": null,
    "rating": 4.7,
    "orders": "680",
-   "desc": "Coques croustillantes, ricotta sucrée, pistaches, chocolat.",
+   "desc": "Crispy shells, sweet ricotta, pistachios, chocolate.",
    "img": "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80",
    "tags": [
     "veg",
@@ -330,7 +330,7 @@ module.exports = {
    "old": null,
    "rating": 4.5,
    "orders": "1.1k",
-   "desc": "Limonade italienne — Limone / Aranciata / Chinotto.",
+   "desc": "Italian lemonade — Limone / Aranciata / Chinotto.",
    "img": "https://images.unsplash.com/photo-1554866585-cd94860890b7?auto=format&fit=crop&w=800&q=80",
    "tags": [
     "drink"
@@ -345,7 +345,7 @@ module.exports = {
    "old": null,
    "rating": 4.9,
    "orders": "1.3k",
-   "desc": "Avocat, lait frais, miel, amandes — le préféré de Tripoli.",
+   "desc": "Avocado, fresh milk, honey, almonds — Tripoli's favorite.",
    "img": "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=800&q=80",
    "tags": [
     "drink",
@@ -361,7 +361,7 @@ module.exports = {
    "old": null,
    "rating": 4.6,
    "orders": "840",
-   "desc": "Menthe fraîche, citron vert, glace pilée, soda.",
+   "desc": "Fresh mint, lime, crushed ice, soda.",
    "img": "https://images.unsplash.com/photo-1581636625402-29b2a704ef13?auto=format&fit=crop&w=800&q=80",
    "tags": [
     "drink"
@@ -376,7 +376,7 @@ module.exports = {
    "old": 176,
    "rating": 5,
    "orders": "980",
-   "desc": "2 grandes pizzas au choix + 4 boissons + tiramisu familial.",
+   "desc": "2 large pizzas of your choice + 4 drinks + family tiramisu.",
    "img": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
    "tags": [
     "pack"
@@ -437,7 +437,7 @@ module.exports = {
  "gallery": [
   {
    "img": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=700&q=80",
-   "t": "Notre four à bois",
+   "t": "Our wood oven",
    "c": "col-span-2 row-span-2"
   },
   {
@@ -447,17 +447,17 @@ module.exports = {
   },
   {
    "img": "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=80",
-   "t": "En cuisine",
+   "t": "In the kitchen",
    "c": ""
   },
   {
    "img": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80",
-   "t": "Part de bonheur",
+   "t": "Slice of happiness",
    "c": ""
   },
   {
    "img": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
-   "t": "La salle Famiglia",
+   "t": "The Famiglia dining room",
    "c": ""
   },
   {
@@ -467,12 +467,12 @@ module.exports = {
   },
   {
    "img": "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=600&q=80",
-   "t": "Dolci maison",
+   "t": "Homemade dolci",
    "c": ""
   },
   {
    "img": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
-   "t": "Terrasse du soir",
+   "t": "Evening terrace",
    "c": ""
   }
  ],
@@ -481,17 +481,17 @@ module.exports = {
    "n": "Ahmed Al-Misrati",
    "z": "Hay Al Andalus",
    "s": 5,
-   "t": "Meilleure pizza de Tripoli, sans débat ! La Demo Special avec la burrata... j'ai cru être à Naples. Livraison en 22 minutes chrono.",
+   "t": "The best pizza in Tripoli, period! The Demo Special with burrata... I thought I was in Naples. Delivered in 22 minutes flat.",
    "img": "https://i.pravatar.cc/100?img=11",
-   "d": "Il y a 2 jours"
+   "d": "2 days ago"
   },
   {
    "n": "Sara Ben Ali",
    "z": "Tajoura",
    "s": 5,
-   "t": "Cadre magnifique, terrasse parfaite en famille. Le créateur de pizza est génial, mes enfants ont adoré composer la leur. Tiramisu incroyable.",
+   "t": "Gorgeous setting, perfect terrace for families. The pizza builder is great — my kids loved making theirs. Incredible tiramisu.",
    "img": "https://i.pravatar.cc/100?img=47",
-   "d": "Il y a 5 jours"
+   "d": "5 days ago"
   },
   {
    "n": "Marco Rossi",
@@ -499,47 +499,47 @@ module.exports = {
    "s": 5,
    "t": "Sono italiano e vi dico: questa è vera pizza napoletana! Impasto perfetto, cornicione alveolato. Complimenti Chef Enzo!",
    "img": "https://i.pravatar.cc/100?img=13",
-   "d": "Il y a 1 semaine"
+   "d": "1 week ago"
   },
   {
    "n": "Youssef El-Gheriani",
    "z": "Souq Al Jomaa",
    "s": 4,
-   "t": "Calzone énorme et bien garni, pâte fine comme j'aime. Service rapide même un vendredi soir. Je recommande le pack famiglia.",
+   "t": "Huge, loaded calzone, thin crust the way I like it. Fast service even on a Friday night. The famiglia pack is recommended.",
    "img": "https://i.pravatar.cc/100?img=59",
-   "d": "Il y a 2 semaines"
+   "d": "2 weeks ago"
   }
  ],
  "promos": {
   "DEMO10": {
    "type": "pct",
    "val": 10,
-   "msg": "-10% appliqués !"
+   "msg": "-10% applied!"
   },
   "FAMIGLIA129": {
    "type": "flat",
    "val": 15,
-   "msg": "Pack Famiglia : -15 LYD !"
+   "msg": "Pack Famiglia: -15 LYD!"
   },
   "BENVENUTO": {
    "type": "pct",
    "val": 15,
-   "msg": "Bienvenue ! -15% offerts"
+   "msg": "Welcome! 15% off"
   },
   "WHEEL20": {
    "type": "pct",
    "val": 20,
-   "msg": "Jackpot roue : -20% !"
+   "msg": "Wheel jackpot: -20%!"
   },
   "WHEEL10": {
    "type": "pct",
    "val": 10,
-   "msg": "Roue : -10% !"
+   "msg": "Wheel: -10%!"
   },
   "FREEDEL": {
    "type": "flat",
    "val": 12,
-   "msg": "Livraison offerte !"
+   "msg": "Free delivery!"
   }
  },
  "builder": {
@@ -547,17 +547,17 @@ module.exports = {
   "sizes": [
    {
     "k": "S",
-    "n": "Petite 26cm",
+    "n": "Small 26cm",
     "p": 0
    },
    {
     "k": "M",
-    "n": "Moyenne 32cm",
+    "n": "Medium 32cm",
     "p": 15
    },
    {
     "k": "L",
-    "n": "Grande 40cm",
+    "n": "Large 40cm",
     "p": 28
    },
    {
@@ -568,48 +568,48 @@ module.exports = {
   ],
   "doughs": [
    {
-    "n": "Classique",
+    "n": "Classic",
     "p": 0,
-    "d": "Fermentée 48h"
+    "d": "48h fermented"
    },
    {
-    "n": "Fine Croustillante",
+    "n": "Thin & Crispy",
     "p": 5,
-    "d": "Style romana"
+    "d": "Roman style"
    },
    {
-    "n": "Épaisse Moelleuse",
+    "n": "Thick & Soft",
     "p": 6,
     "d": "Style Chicago soft"
    },
    {
-    "n": "Farcie Fromage",
+    "n": "Cheese-Stuffed",
     "p": 14,
-    "d": "Bords mozzarella"
+    "d": "Mozzarella edges"
    }
   ],
   "sauces": [
    {
     "k": "tomate",
-    "n": "Tomate San Marzano",
+    "n": "San Marzano Tomato",
     "p": 0,
     "c": "#E63A2E"
    },
    {
     "k": "blanche",
-    "n": "Blanche Crème",
+    "n": "White Cream",
     "p": 4,
     "c": "#FFF3DC"
    },
    {
     "k": "pesto",
-    "n": "Pesto Basilic",
+    "n": "Basil Pesto",
     "p": 6,
     "c": "#3FA34D"
    },
    {
     "k": "bbq",
-    "n": "BBQ Fumée",
+    "n": "Smoky BBQ",
     "p": 4,
     "c": "#7A3B1E"
    }
@@ -624,7 +624,7 @@ module.exports = {
     "p": 12
    },
    {
-    "n": "Parmesan 24 mois",
+    "n": "24-month Parmesan",
     "p": 8
    },
    {
@@ -632,7 +632,7 @@ module.exports = {
     "p": 9
    },
    {
-    "n": "Ricotta fumée",
+    "n": "Smoked Ricotta",
     "p": 7
    },
    {
@@ -644,94 +644,94 @@ module.exports = {
    {
     "n": "Pepperoni",
     "p": 8,
-    "c": "#C0392B"
+    "c": "#8C4A38"
    },
    {
-    "n": "Champignons",
+    "n": "Mushrooms",
     "p": 6,
-    "c": "#D9C6A5"
+    "c": "#C9BBA4"
    },
    {
-    "n": "Poivrons",
+    "n": "Peppers",
     "p": 5,
-    "c": "#27AE60"
+    "c": "#5E7A53"
    },
    {
-    "n": "Olives noires",
+    "n": "Black Olives",
     "p": 5,
-    "c": "#2C2C2C"
+    "c": "#3A342B"
    },
    {
-    "n": "Oignons rouges",
+    "n": "Red Onions",
     "p": 4,
-    "c": "#9B59B6"
+    "c": "#7A6A78"
    },
    {
-    "n": "Jambon halal",
+    "n": "Halal Ham",
     "p": 9,
-    "c": "#F1948A"
+    "c": "#D9B0A4"
    },
    {
-    "n": "Thon",
+    "n": "Tuna",
     "p": 10,
-    "c": "#7FB3D5"
+    "c": "#8FA3B8"
    },
    {
-    "n": "Crevettes",
+    "n": "Shrimp",
     "p": 14,
-    "c": "#F5B041"
+    "c": "#C9A05A"
    },
    {
-    "n": "Roquette",
+    "n": "Arugula",
     "p": 6,
-    "c": "#1E8449"
+    "c": "#4A6247"
    },
    {
-    "n": "Maïs",
+    "n": "Corn",
     "p": 4,
-    "c": "#F7DC6F"
+    "c": "#D8C98F"
    },
    {
     "n": "Jalapeños",
     "p": 5,
-    "c": "#196F3D"
+    "c": "#3F5B42"
    },
    {
-    "n": "Truffe",
+    "n": "Truffle",
     "p": 18,
-    "c": "#5D4037"
+    "c": "#4E4238"
    }
   ]
  },
  "offers": {
   "featured": {
-   "badge": "WEEK-END FAMIGLIA",
-   "line1": "2 PIZZAS GRANDES",
-   "line2": "+ 4 BOISSONS + TIRAMISU",
+   "badge": "FAMIGLIA WEEKEND",
+   "line1": "2 LARGE PIZZAS",
+   "line2": "+ 4 DRINKS + TIRAMISU",
    "price": 129,
    "oldPrice": 176,
-   "desc": "Valable vendredi → dimanche • Sur place, à emporter & livraison.",
+   "desc": "Valid Friday → Sunday • Dine-in, takeaway & delivery.",
    "code": "FAMIGLIA129",
    "itemId": "pack-familia"
   },
   "cards": [
    {
     "style": "yellow",
-    "badge": "ÉTUDIANTS -15%",
-    "title": "Show ta carte, on s'occupe du reste !",
-    "desc": "Universités de Tripoli • Sur place."
+    "badge": "STUDENTS -15%",
+    "title": "Show your ID, we handle the rest!",
+    "desc": "Tripoli universities • Dine-in."
    },
    {
     "style": "green",
-    "badge": "MIDI EXPRESS 29 LYD",
-    "title": "Margherita + boisson en 15 min",
-    "desc": "Lun-Jeu • 12h-15h • À emporter."
+    "badge": "LUNCH EXPRESS 29 LYD",
+    "title": "Margherita + drink in 15 min",
+    "desc": "Mon–Thu • 12pm–3pm • Takeaway."
    },
    {
     "style": "pink",
-    "badge": "FIDÉLITÉ",
-    "title": "8 pizzas = la 9ème OFFERTE",
-    "desc": "Carte tamponnée en caisse & en ligne."
+    "badge": "LOYALTY",
+    "title": "8 pizzas = the 9th FREE",
+    "desc": "Stamp card at the till & online."
    }
   ]
  },
@@ -747,7 +747,7 @@ module.exports = {
    "free": "tiramisu"
   },
   {
-   "label": "Livraison",
+   "label": "Delivery",
    "code": "FREEDEL",
    "free": null
   },
@@ -757,7 +757,7 @@ module.exports = {
    "free": null
   },
   {
-   "label": "Boisson",
+   "label": "Drink",
    "code": null,
    "free": "sanpel"
   },

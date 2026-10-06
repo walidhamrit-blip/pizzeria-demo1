@@ -33,12 +33,12 @@ const MIME = {
   '.woff': 'font/woff', '.woff2': 'font/woff2', '.ttf': 'font/ttf', '.otf': 'font/otf'
 };
 
-const PAGE_404 = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>404 — Pizza Demo</title>
+const PAGE_404 = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>404 — Pizza Demo</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍕</text></svg>"></head>
-<body style="font-family:sans-serif;background:#FFF7E9;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0">
-<div style="text-align:center;border:3px solid #1E0E0A;border-radius:24px;background:#fff;padding:48px 64px;box-shadow:6px 6px 0 #1E0E0A">
-<div style="font-size:64px">🍕</div><h1 style="margin:.2em 0">404 — Mamma mia !</h1>
-<p style="color:#777">Cette page n'existe pas.</p><a href="/" style="color:#FF2E4C;font-weight:800">← Retour à la pizzeria</a></div></body></html>`;
+<body style="font-family:ui-sans-serif,system-ui,sans-serif;background:#FAF9F6;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0">
+<div style="text-align:center;border:1px solid #E7E2D9;border-radius:14px;background:#fff;padding:48px 64px;box-shadow:0 1px 2px rgba(23,20,15,.06)">
+<h1 style="margin:.2em 0;font-weight:650;letter-spacing:-.01em">404 — Page not found</h1>
+<p style="color:#8A8378">This page is out of the oven.</p><a href="/" style="color:#A6522F;font-weight:600;text-decoration:none;border-bottom:1px solid currentColor">← Back to the pizzeria</a></div></body></html>`;
 
 /* ---------------- fichiers statiques ---------------- */
 async function serveStatic(req, res, pathname) {

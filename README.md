@@ -20,21 +20,34 @@ node server.js      # ou : npm start
 - Variables d'environnement : `PORT` (défaut `8080`), `ADMIN_PASSWORD` (mot de passe initial, au premier lancement uniquement).
 - Aucune dépendance : Node.js ≥ 18 suffit (fonction `fetch` native). Pour déployer sur **Vercel**, voir la section *Déploiement* ci-dessous.
 
-## 🌍 Sélecteur de langues (FR / EN / AR)
+## 🌍 Sélecteur de langues (EN / AR)
 
-Le site public dispose d'un sélecteur de langues (barre de navigation, et menu mobile sur téléphone) :
+Le site public est **anglophone par défaut** (la langue française a été retirée du site).
+Le sélecteur `EN | ع` (barre de navigation + menu mobile) fonctionne ainsi :
 
-- **FR** (source), **EN**, **AR** — le choix est mémorisé (`localStorage`) et appliqué à chaque visite.
-- L'arabe bascule la page en **RTL** (`dir=rtl`) avec des ajustements CSS dédiés.
-- Fonctionnement (fichier `assets/i18n.js`, zéro dépendance) : un dictionnaire traduit FR → EN/AR
-  chaque nœud texte du DOM, les `placeholder`/`title`, le `<title>` de l'onglet et les messages
-  composés par le JS ; un `MutationObserver` retraduit automatiquement tout ce qui est rendu
-  ensuite (panier, menu, refresh auto depuis l'admin).
-- Le **contenu éditable** (menu, promos…) est traduit pour les valeurs par défaut du seed ;
-  si vous renommez un plat ou modifiez un texte dans l'admin, la nouvelle valeur s'affiche
-  telle quelle (langue source) tant qu'elle n'est pas ajoutée au dictionnaire
-  (`DICT.en` / `DICT.ar` dans `assets/i18n.js`, clés = texte français exact).
-- Le panneau d'administration reste en français.
+- **EN = langue source** : tout `index.html`, le contenu par défaut (`data/seed.json`) et
+  l'admin sont en anglais pour les valeurs éditées côté visiteur.
+- Un dictionnaire **EN → AR** (~345 phrases, `assets/i18n.js`, zéro dépendance) traduit
+  chaque nœud texte du DOM, les `placeholder`/`title`, le `<title>` de l'onglet et les
+  messages composés par le JS ; un `MutationObserver` retraduit tout ce qui est rendu
+  ensuite (panier, menu, refresh auto depuis l'admin). Clés normalisées (espaces,
+  apostrophes) : une phrase tapée dans l'admin garde sa traduction.
+- L'arabe bascule la page en **RTL** (`dir=rtl`) avec ajustements CSS dédiés.
+- Le choix est mémorisé (`localStorage pd_lang`), appliqué avant le premier rendu (aucun
+  flash), et un ancien réglage `fr` retombe proprement sur `en`.
+- Une chaîne inconnue du dictionnaire s'affiche telle quelle (langue source).
+- Le panneau d'administration (`/admin`) reste **entièrement en français** (outil exploitant).
+
+## 🎨 Design minimaliste
+
+Palette volontairement sobre : papier `#FAF9F6`, encre `#17140F`, **un seul accent**
+terracotta `#A6522F` + tons sable/olive/pierre. Bordures fines 1 px, ombres discrètes,
+animations neutres (rotations/ballottements désactivés), et **photos de fond
+contextualisées** (Unsplash, servis avec voile sombre + texte blanc) : pizza au premier
+plan du hero, salle du restaurant derrière le Builder, plan de table derrière la
+réservation, four à bois sur le bandeau « Slow dough » et la carte promo — via les classes `.hero-min` / `.off-photo` / `.band-min` /
+`#createur` / `#reservation` / `.site-footer`. Les polices Fredoka/Nunito/Caveat ne sont
+plus utilisées (stack système + serif italique pour les accents).
 
 ## 🛠️ Ce qu'on peut modifier depuis l'admin
 
@@ -57,7 +70,7 @@ Le site public dispose d'un sélecteur de langues (barre de navigation, et menu 
 
 ## 🎨 Assets locaux (aucun CDN requis)
 
-Le site **ne dépend d'aucun CDN** : Tailwind (CSS compilé), polices (Fredoka, Nunito, Caveat), Font Awesome et canvas-confetti sont servis localement depuis `assets/vendor/`. Il s'affiche donc correctement même sur un réseau où les CDN sont bloqués ou lents.
+Le site **ne dépend d'aucun CDN** : Tailwind (CSS compilé, palette minimaliste), polices locales, Font Awesome et canvas-confetti sont servis depuis `assets/vendor/`. Il s'affiche donc correctement même sur un réseau où les CDN sont bloqués ou lents.
 
 Après avoir modifié des classes CSS dans `index.html` / `admin.html`, recompiler le CSS :
 

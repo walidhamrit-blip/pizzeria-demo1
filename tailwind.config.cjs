@@ -3,6 +3,8 @@
  *  Le scanner lit les classes dans index.html et admin.html (y compris celles
  *  présentes dans les template literals JS). La safelist couvre les classes
  *  construites dynamiquement (couleurs des chiffres clés, modifiables via l'admin).
+ *  NB : palette volontairement sobre (style minimaliste) — un seul accent
+ *  terracotta, tons sable/pierre, ombres discrètes.
  */
 module.exports = {
   content: ['./index.html', './admin.html'],
@@ -13,17 +15,19 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        fredoka: ['Fredoka', 'sans-serif'],
-        nunito: ['Nunito', 'sans-serif'],
-        caveat: ['Caveat', 'cursive'],
+        fredoka: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+        nunito: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+        caveat: ['"Iowan Old Style"', 'Palatino', 'Georgia', 'serif'],
       },
       colors: {
-        brandRed: '#FF2E4C', brandOrange: '#FF7A00', brandYellow: '#FFC700',
-        brandGreen: '#00B25C', brandPink: '#FF4D8D', brandPurple: '#7C3AED',
-        cream: '#FFF7E9', ink: '#1E0E0A',
+        brandRed: '#A6522F', brandOrange: '#B08A3E', brandYellow: '#B08A3E',
+        brandGreen: '#55664F', brandPink: '#9C948A', brandPurple: '#4A443C',
+        cream: '#FAF9F6', ink: '#17140F',
       },
       boxShadow: {
-        pop: '6px 6px 0 #1E0E0A', pops: '8px 8px 0 #1E0E0A', popsm: '4px 4px 0 #1E0E0A',
+        pop: '0 1px 2px rgba(23,20,15,.07)',
+        pops: '0 6px 18px rgba(23,20,15,.09)',
+        popsm: '0 1px 1px rgba(23,20,15,.05)',
       },
     },
   },
